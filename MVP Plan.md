@@ -80,12 +80,12 @@ Sistem ini mengimplementasikan konsep **Shortest Job First (SJF)** menggunakan s
 
 ### Milestone 3: Customer Portal & Real-time Tracking (Minggu 3)
 **Fokus: User Experience Pelanggan & Monitoring**
-- [ ] **Pelanggan - Digital Menu:**
+- [x] **Pelanggan - Digital Menu:**
     - Halaman publik (atau via login) untuk melihat produk tanpa fitur beli (Read-only Catalog).
-- [ ] **Pelanggan - Queue Tracking Page:**
+- [x] **Pelanggan - Queue Tracking Page:**
     - Visualisasi Antrian: List pesanan yang sedang "Waiting" dan "Processing".
     - Highlight "Pesanan Saya" (berdasarkan ID atau Akun) untuk melihat estimasi sisa waktu.
-- [ ] **Admin/Kasir - Queue Monitoring Dashboard:**
+- [x] **Admin/Kasir - Queue Monitoring Dashboard:**
     - Kanban Board atau List View yang terupdate otomatis via **Supabase Realtime**.
     - Tombol Aksi: "Start Processing" (Pindah ke akar heap) dan "Mark as Done" (Extract Min).
 

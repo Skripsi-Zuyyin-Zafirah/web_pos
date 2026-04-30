@@ -45,6 +45,7 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = request.nextUrl.pathname.startsWith('/auth')
   const isAdminPage = request.nextUrl.pathname.startsWith('/admin')
   const isCashierPage = request.nextUrl.pathname.startsWith('/cashier')
+  const isPublicPage = ['/menu', '/queue'].some(path => request.nextUrl.pathname.startsWith(path))
 
   if (!user && (isAdminPage || isCashierPage)) {
     return NextResponse.redirect(new URL('/auth/login', request.url))

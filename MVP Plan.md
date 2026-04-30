@@ -68,14 +68,14 @@ Sistem ini mengimplementasikan konsep **Shortest Job First (SJF)** menggunakan s
 
 ### Milestone 2: Cashier POS & Algorithm Core (Minggu 2)
 **Fokus: Transaksi & Operasional Antrian**
-- [ ] **Kasir - POS Interface:**
+- [x] **Kasir - POS Interface:**
     - UI Katalog Produk (Grid View) dengan pencarian cepat.
     - Sistem Keranjang (Cart) yang mendukung penambahan/pengurangan item secara dinamis.
     - Tombol Checkout yang memicu kalkulasi otomatis `EWP = Items * 30s`.
-- [ ] **Algoritma Min-Heap:**
+- [x] **Algoritma Min-Heap:**
     - Implementasi Class `MinHeap` untuk mengelola urutan pesanan secara lokal (client-side) dan database.
     - Logic Tie-breaker: Membandingkan `created_at` jika `EWP` identik.
-- [ ] **Data Persistence:**
+- [x] **Data Persistence:**
     - Simpan transaksi ke tabel `orders` dan `order_items` di Supabase.
 
 ### Milestone 3: Customer Portal & Real-time Tracking (Minggu 3)

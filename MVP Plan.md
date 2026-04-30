@@ -53,17 +53,17 @@ Sistem ini mengimplementasikan konsep **Shortest Job First (SJF)** menggunakan s
 
 ### Milestone 1: Foundation & Admin Management (Minggu 1)
 **Fokus: Infrastruktur Dasar & Kontrol Data**
-- [ ] **Infrastruktur & Auth:**
+- [x] **Infrastruktur & Auth:**
     - Setup Next.js 15, Tailwind v4, & shadcn/ui.
     - **Halaman Login & Register:** Desain UI menggunakan shadcn/ui.
     - **Integrasi Supabase Auth:** Fitur Sign In, Sign Up, dan Sign Out.
     - **Trigger Database:** Setup tabel `profiles` dan trigger Supabase untuk otomatis membuat data profil (dengan default role: Pelanggan) saat user baru register.
     - **Middleware:** Proteksi rute (Auth Guard) untuk memisahkan akses Admin, Kasir, dan Pelanggan.
-- [ ] **Admin - Product Management Page:**
+- [x] **Admin - Product Management Page:**
     - UI Tabel Produk dengan fitur search, filter, dan pagination.
     - Form Modal (Tambah/Edit) Produk + Upload Gambar (Supabase Storage).
     - Manajemen Kategori Produk untuk pengelompokan di POS.
-- [ ] **Admin - User Management Page:**
+- [x] **Admin - User Management Page:**
     - Daftar akun staff (Kasir) dengan fitur reset password atau ganti role.
 
 ### Milestone 2: Cashier POS & Algorithm Core (Minggu 2)

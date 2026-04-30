@@ -19,161 +19,45 @@ import { IconDashboard, IconListDetails, IconChartBar, IconFolder, IconUsers, Ic
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: "Admin User",
+    email: "admin@example.com",
+    avatar: "/avatars/admin.jpg",
   },
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
-      icon: (
-        <IconDashboard
-        />
-      ),
+      url: "/admin",
+      icon: <IconDashboard />,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: (
-        <IconListDetails
-        />
-      ),
+      title: "Product Management",
+      url: "/admin/products",
+      icon: <IconDatabase />,
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: (
-        <IconChartBar
-        />
-      ),
+      title: "Categories",
+      url: "/admin/categories",
+      icon: <IconListDetails />,
     },
     {
-      title: "Projects",
-      url: "#",
-      icon: (
-        <IconFolder
-        />
-      ),
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: (
-        <IconUsers
-        />
-      ),
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: (
-        <IconCamera
-        />
-      ),
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: (
-        <IconFileDescription
-        />
-      ),
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: (
-        <IconFileAi
-        />
-      ),
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      title: "User Management",
+      url: "/admin/users",
+      icon: <IconUsers />,
     },
   ],
   navSecondary: [
     {
-      title: "Settings",
-      url: "#",
-      icon: (
-        <IconSettings
-        />
-      ),
+      title: "POS Interface",
+      url: "/cashier/pos",
+      icon: <IconInnerShadowTop />,
     },
     {
-      title: "Get Help",
-      url: "#",
-      icon: (
-        <IconHelp
-        />
-      ),
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: (
-        <IconSearch
-        />
-      ),
+      title: "Order Queue",
+      url: "/queue",
+      icon: <IconListDetails />,
     },
   ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: (
-        <IconDatabase
-        />
-      ),
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: (
-        <IconReport
-        />
-      ),
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: (
-        <IconFileWord
-        />
-      ),
-    },
-  ],
+  documents: [],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

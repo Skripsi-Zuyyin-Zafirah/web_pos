@@ -91,10 +91,10 @@ Sistem ini mengimplementasikan konsep **Shortest Job First (SJF)** menggunakan s
 
 ### Milestone 4: Analytics & Final Optimization (Minggu 4)
 **Fokus: Insight & Stabilitas**
-- [ ] **Admin - Analytics Page:**
+- [x] **Admin - Analytics Page:**
     - Grafik Recharts: Total transaksi per hari, Produk terlaris.
     - Statistik Antrian: Rata-rata waktu tunggu pelanggan.
-- [ ] **Quality Assurance:**
+- [x] **Quality Assurance:**
     - Uji coba skenario "SJF": Memasukkan pesanan banyak item, lalu memasukkan pesanan 1 item (harus menyalip ke atas).
     - Validasi Keamanan (RLS Policies): Pelanggan tidak bisa mengubah status antrian.
-- [ ] **Polishing:** Final UI adjustments & Dokumentasi Kode.
+- [x] **Polishing:** Final UI adjustments & Dokumentasi Kode.

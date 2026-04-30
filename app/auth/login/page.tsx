@@ -22,7 +22,7 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
@@ -33,7 +33,7 @@ export default function LoginPage() {
       return
     }
 
-    const { data: { user } } = await supabase.auth.getUser()
+    const user = data.user
 
     if (user) {
       const { data: profile } = await supabase
@@ -43,14 +43,13 @@ export default function LoginPage() {
         .single()
 
       toast.success('Successfully logged in!')
-      router.refresh()
-
+      
       if (profile?.role === 'admin') {
-        router.push('/admin')
+        window.location.href = '/admin'
       } else if (profile?.role === 'cashier') {
-        router.push('/cashier/pos')
+        window.location.href = '/cashier/pos'
       } else {
-        router.push('/menu')
+        window.location.href = '/menu'
       }
     }
   }

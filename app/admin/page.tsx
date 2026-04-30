@@ -71,7 +71,7 @@ export default function AdminDashboard() {
     if (items) {
       const productSales: Record<string, number> = {}
       items.forEach(item => {
-        const name = item.products?.name || 'Unknown'
+        const name = (item.products as any)?.name || 'Unknown'
         productSales[name] = (productSales[name] || 0) + item.quantity
       })
       

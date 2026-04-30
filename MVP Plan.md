@@ -98,3 +98,17 @@ Sistem ini mengimplementasikan konsep **Shortest Job First (SJF)** menggunakan s
     - Uji coba skenario "SJF": Memasukkan pesanan banyak item, lalu memasukkan pesanan 1 item (harus menyalip ke atas).
     - Validasi Keamanan (RLS Policies): Pelanggan tidak bisa mengubah status antrian.
 - [x] **Polishing:** Final UI adjustments & Dokumentasi Kode.
+101: 
+102: ### Milestone 5: Role-Based UI Refactor & Standardization (Minggu 5)
+103: **Fokus: Konsistensi UI & Premium Dashboard Experience**
+104: - [x] **Standardisasi Layout:**
+105:     - Refactor seluruh halaman Admin (`/admin/*`) menggunakan `SidebarProvider` dan `SiteHeader` sesuai style `@app/dashboard`.
+106:     - Pastikan penggunaan `AppSidebar variant="inset"` konsisten di seluruh role Admin dan Kasir.
+107: - [x] **Admin Refactor:**
+108:     - Halaman Manajemen Produk: Integrasi style tabel dan modal yang lebih modern.
+109:     - Halaman Manajemen Kategori & User: Penyesuaian ke layout sidebar baru.
+110: - [x] **Kasir Refactor:**
+111:     - Halaman POS & Queue: Update header dan sidebar agar sesuai dengan standar desain baru.
+112: - [x] **Polishing:**
+113:     - Implementasi Breadcrumbs dinamis di `SiteHeader`.
+114:     - Transisi antar halaman yang lebih smooth.

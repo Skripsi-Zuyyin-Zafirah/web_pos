@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from 'sonner'
-import { IconPlus, IconTrash, IconEdit, IconLoader2 } from '@tabler/icons-react'
+import { IconPlus, IconTrash, IconEdit, IconLoader2, IconCategory, IconCalendar } from '@tabler/icons-react'
 
 type Category = {
   id: string
@@ -93,106 +93,149 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
+    <div className="space-y-8 max-w-5xl mx-auto">
+      <div className="space-y-1 text-center md:text-left">
+        <h1 className="text-3xl font-black tracking-tighter uppercase">Categories</h1>
+        <p className="text-muted-foreground font-medium">Organize your products into logical groups.</p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Add New Category</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleAdd} className="flex gap-4">
-            <Input
-              placeholder="Category name..."
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className="max-w-sm"
-            />
-            <Button type="submit">
-              <IconPlus className="mr-2 h-4 w-4" /> Add
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+      <div className="grid gap-8 md:grid-cols-12">
+        <div className="md:col-span-4">
+          <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
+            <CardHeader className="bg-primary/5 pb-6">
+              <CardTitle className="text-xl font-black">Add New</CardTitle>
+              <CardDescription className="font-medium text-xs uppercase tracking-widest">Create a new group</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <form onSubmit={handleAdd} className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold ml-1">Category Name</label>
+                  <Input
+                    placeholder="e.g. Staple Foods"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    className="h-11 rounded-xl shadow-inner border-none bg-muted/50"
+                  />
+                </div>
+                <Button type="submit" className="w-full h-11 font-bold rounded-xl shadow-lg">
+                  <IconPlus className="mr-2 h-5 w-5" /> Add Category
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
 
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Created At</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center py-8">
-                    <IconLoader2 className="mx-auto h-6 w-6 animate-spin text-muted-foreground" />
-                  </TableCell>
-                </TableRow>
-              ) : categories.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
-                    No categories found.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                categories.map((category) => (
-                  <TableRow key={category.id}>
-                    <TableCell>
-                      {editingId === category.id ? (
-                        <Input
-                          value={editName}
-                          onChange={(e) => setEditName(e.target.value)}
-                          className="h-8"
-                          autoFocus
-                        />
-                      ) : (
-                        category.name
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(category.created_at).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="text-right space-x-2">
-                      {editingId === category.id ? (
-                        <>
-                          <Button size="sm" onClick={() => handleUpdate(category.id)}>
-                            Save
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => setEditingId(null)}>
-                            Cancel
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => {
-                              setEditingId(category.id)
-                              setEditName(category.name)
-                            }}
-                          >
-                            <IconEdit className="h-4 w-4 text-blue-500" />
-                          </Button>
-                          <Button size="icon" variant="ghost" onClick={() => handleDelete(category.id)}>
-                            <IconTrash className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </>
-                      )}
-                    </TableCell>
+        <div className="md:col-span-8">
+          <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
+            <CardHeader className="bg-muted/30 pb-6 pt-6 border-b">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <CardTitle className="text-xl font-black tracking-tight">Existing Categories</CardTitle>
+                  <CardDescription className="font-medium text-xs uppercase tracking-widest">Manage your taxonomy</CardDescription>
+                </div>
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <IconCategory size={20} />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader className="bg-muted/10">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="font-bold py-4 pl-6">Name</TableHead>
+                    <TableHead className="font-bold py-4">Created At</TableHead>
+                    <TableHead className="text-right font-bold py-4 pr-6">Actions</TableHead>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                </TableHeader>
+                <TableBody>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center py-20">
+                        <IconLoader2 className="mx-auto h-10 w-10 animate-spin text-primary opacity-20" />
+                      </TableCell>
+                    </TableRow>
+                  ) : categories.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center py-20 text-muted-foreground">
+                        <div className="flex flex-col items-center gap-2 opacity-50 font-medium">
+                          <IconCategory size={48} />
+                          <p>No categories found.</p>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    categories.map((category) => (
+                      <TableRow key={category.id} className="group hover:bg-muted/30 transition-colors">
+                        <TableCell className="py-4 pl-6">
+                          {editingId === category.id ? (
+                            <Input
+                              value={editName}
+                              onChange={(e) => setEditName(e.target.value)}
+                              className="h-10 rounded-lg shadow-inner"
+                              autoFocus
+                            />
+                          ) : (
+                            <span className="font-bold text-base">{category.name}</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="py-4">
+                          <div className="flex items-center gap-2 text-muted-foreground font-medium text-sm">
+                            <IconCalendar size={14} />
+                            {new Date(category.created_at).toLocaleDateString()}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right py-4 pr-6 space-x-1">
+                          {editingId === category.id ? (
+                            <>
+                              <Button 
+                                size="sm" 
+                                className="rounded-lg h-9 font-bold px-4 shadow-sm"
+                                onClick={() => handleUpdate(category.id)}
+                              >
+                                Save
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="ghost" 
+                                className="rounded-lg h-9 font-medium"
+                                onClick={() => setEditingId(null)}
+                              >
+                                Cancel
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-9 w-9 rounded-xl hover:bg-blue-500/10 text-blue-500"
+                                onClick={() => {
+                                  setEditingId(category.id)
+                                  setEditName(category.name)
+                                }}
+                              >
+                                <IconEdit className="h-5 w-5" />
+                              </Button>
+                              <Button 
+                                size="icon" 
+                                variant="ghost" 
+                                className="h-9 w-9 rounded-xl hover:bg-destructive/10 text-destructive"
+                                onClick={() => handleDelete(category.id)}
+                              >
+                                <IconTrash className="h-5 w-5" />
+                              </Button>
+                            </>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   )
 }

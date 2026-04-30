@@ -1,10 +1,19 @@
-"use client"
+'use client'
 
 import * as React from "react"
+import {
+  IconArchive,
+  IconCategory,
+  IconChartBar,
+  IconLayoutDashboard,
+  IconSettings,
+  IconShoppingCart,
+  IconUsers,
+  IconHistory,
+  IconPackage
+} from "@tabler/icons-react"
 
-import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -15,76 +24,83 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { IconDashboard, IconListDetails, IconChartBar, IconFolder, IconUsers, IconCamera, IconFileDescription, IconFileAi, IconSettings, IconHelp, IconSearch, IconDatabase, IconReport, IconFileWord, IconInnerShadowTop } from "@tabler/icons-react"
+import { useAuth } from "@/components/providers/auth-provider"
 
-const data = {
-  user: {
-    name: "Admin User",
-    email: "admin@example.com",
-    avatar: "/avatars/admin.jpg",
-  },
-  navMain: [
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuth()
+  
+  // Define menu items based on role
+  const adminItems = [
     {
       title: "Dashboard",
       url: "/admin",
-      icon: <IconDashboard />,
+      icon: IconLayoutDashboard,
     },
     {
-      title: "Product Management",
-      url: "/admin/products",
-      icon: <IconDatabase />,
+      title: "Inventory",
+      url: "#",
+      icon: IconPackage,
+      isActive: true,
+      items: [
+        {
+          title: "Products",
+          url: "/admin/products",
+        },
+        {
+          title: "Categories",
+          url: "/admin/categories",
+        },
+      ],
     },
     {
-      title: "Categories",
-      url: "/admin/categories",
-      icon: <IconListDetails />,
-    },
-    {
-      title: "User Management",
+      title: "Users",
       url: "/admin/users",
-      icon: <IconUsers />,
+      icon: IconUsers,
     },
-  ],
-  navSecondary: [
+  ]
+
+  const cashierItems = [
     {
       title: "POS Interface",
       url: "/cashier/pos",
-      icon: <IconInnerShadowTop />,
+      icon: IconShoppingCart,
     },
     {
       title: "Order Queue",
-      url: "/queue",
-      icon: <IconListDetails />,
+      url: "/cashier/queue",
+      icon: IconHistory,
     },
-  ],
-  documents: [],
-}
+  ]
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
-            >
-              <a href="#">
-                <IconInnerShadowTop className="size-5!" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+            <SidebarMenuButton size="lg" asChild>
+              <a href="/">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                  <IconArchive className="size-5" />
+                </div>
+                <div className="flex flex-col gap-0.5 leading-none">
+                  <span className="font-semibold">Wholesale POS</span>
+                  <span className="">v1.0.0</span>
+                </div>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={adminItems} label="Management" />
+        <NavMain items={cashierItems} label="Transactions" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={{
+          name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User",
+          email: user?.email || "",
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`
+        }} />
       </SidebarFooter>
     </Sidebar>
   )

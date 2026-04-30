@@ -9,9 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
-import { IconPlus, IconTrash, IconEdit, IconLoader2, IconSearch, IconFilter } from '@tabler/icons-react'
-import Image from 'next/image'
+import { IconPlus, IconTrash, IconEdit, IconLoader2, IconSearch, IconFilter, IconPackage, IconTag, IconCurrencyDollar } from '@tabler/icons-react'
 
 type Product = {
   id: string
@@ -162,46 +163,51 @@ export default function ProductsPage() {
   )
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Products</h1>
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black tracking-tighter uppercase">Product Inventory</h1>
+          <p className="text-muted-foreground font-medium">Manage your wholesale catalog and stock levels.</p>
+        </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
           setIsDialogOpen(open)
           if (!open) resetForm()
         }}>
           <DialogTrigger asChild>
-            <Button onClick={() => setIsDialogOpen(true)}>
-              <IconPlus className="mr-2 h-4 w-4" /> Add Product
+            <Button onClick={() => setIsDialogOpen(true)} className="h-12 px-6 font-bold rounded-xl shadow-lg">
+              <IconPlus className="mr-2 h-5 w-5" /> Add New Product
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl">
             <form onSubmit={handleSave}>
               <DialogHeader>
-                <DialogTitle>{editingProduct ? 'Edit Product' : 'Add New Product'}</DialogTitle>
-                <DialogDescription>
-                  Fill in the details for your product. Click save when you're done.
+                <DialogTitle className="text-2xl font-black">{editingProduct ? 'Update Product' : 'Create Product'}</DialogTitle>
+                <DialogDescription className="font-medium">
+                  Enter the details for your wholesale product.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
+              <div className="grid gap-6 py-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name" className="font-bold">Product Name</Label>
                   <Input
                     id="name"
+                    placeholder="e.g. Premium Rice 25kg"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
+                    className="h-11 rounded-xl"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="category">Category</Label>
+                  <Label htmlFor="category" className="font-bold">Category</Label>
                   <Select
                     value={formData.category_id}
                     onValueChange={(value) => setFormData({ ...formData, category_id: value })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-11 rounded-xl">
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-xl">
                       {categories.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id}>
                           {cat.name}
@@ -212,47 +218,52 @@ export default function ProductsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="price">Price</Label>
+                    <Label htmlFor="price" className="font-bold">Price (Rp)</Label>
                     <Input
                       id="price"
                       type="number"
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
                       required
+                      className="h-11 rounded-xl"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="stock">Stock</Label>
+                    <Label htmlFor="stock" className="font-bold">Stock Quantity</Label>
                     <Input
                       id="stock"
                       type="number"
                       value={formData.stock}
                       onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) })}
                       required
+                      className="h-11 rounded-xl"
                     />
                   </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description" className="font-bold">Description</Label>
                   <Textarea
                     id="description"
+                    placeholder="Brief description of the product..."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="rounded-xl min-h-[100px]"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="image">Image</Label>
+                  <Label htmlFor="image" className="font-bold">Product Image</Label>
                   <Input
                     id="image"
                     type="file"
                     accept="image/*"
                     onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
+                    className="h-11 rounded-xl pt-2.5"
                   />
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" disabled={loading}>
-                  {loading ? <IconLoader2 className="animate-spin" /> : 'Save Changes'}
+                <Button type="submit" disabled={loading} className="w-full h-12 font-bold rounded-xl">
+                  {loading ? <IconLoader2 className="animate-spin" /> : editingProduct ? 'Update Product' : 'Save Product'}
                 </Button>
               </DialogFooter>
             </form>
@@ -260,95 +271,158 @@ export default function ProductsPage() {
         </Dialog>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1">
-          <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search products..."
-            className="pl-8"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <Button variant="outline">
-          <IconFilter className="mr-2 h-4 w-4" /> Filter
-        </Button>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="border-none shadow-sm bg-blue-500/5">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-blue-600">Total Products</CardTitle>
+            <IconPackage className="h-5 w-5 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-black">{products.length} Items</div>
+          </CardContent>
+        </Card>
+        <Card className="border-none shadow-sm bg-emerald-500/5">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-emerald-600">Categories</CardTitle>
+            <IconTag className="h-5 w-5 text-emerald-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-black">{categories.length} Types</div>
+          </CardContent>
+        </Card>
+        <Card className="border-none shadow-sm bg-amber-500/5">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-amber-600">Stock Value</CardTitle>
+            <IconCurrencyDollar className="h-5 w-5 text-amber-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-black">Rp {products.reduce((acc, p) => acc + (p.price * p.stock), 0).toLocaleString()}</div>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="rounded-md border bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[80px]">Image</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-8">
-                  <IconLoader2 className="mx-auto h-6 w-6 animate-spin text-muted-foreground" />
-                </TableCell>
+      <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
+        <CardHeader className="bg-muted/30 pb-6 pt-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <CardTitle className="text-xl font-black tracking-tight">Active Inventory</CardTitle>
+              <CardDescription className="font-medium text-xs uppercase tracking-widest">Real-time product data</CardDescription>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative w-full md:w-80">
+                <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Filter products..."
+                  className="pl-10 h-11 rounded-xl bg-background border-none shadow-inner"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <Button variant="outline" className="h-11 rounded-xl border-2 font-bold">
+                <IconFilter className="mr-2 h-4 w-4" /> Filter
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-muted/10">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-[100px] font-bold py-4">Image</TableHead>
+                <TableHead className="font-bold py-4">Name</TableHead>
+                <TableHead className="font-bold py-4">Category</TableHead>
+                <TableHead className="font-bold py-4">Price</TableHead>
+                <TableHead className="font-bold py-4">Stock</TableHead>
+                <TableHead className="text-right font-bold py-4 pr-6">Actions</TableHead>
               </TableRow>
-            ) : filteredProducts.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                  No products found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredProducts.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>
-                    {product.image_url ? (
-                      <img
-                        src={product.image_url}
-                        alt={product.name}
-                        className="h-10 w-10 rounded-md object-cover border"
-                      />
-                    ) : (
-                      <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center text-xs text-muted-foreground">
-                        No Image
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>{product.categories?.name || 'Uncategorized'}</TableCell>
-                  <TableCell>Rp {product.price.toLocaleString()}</TableCell>
-                  <TableCell>{product.stock}</TableCell>
-                  <TableCell className="text-right space-x-2">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => {
-                        setEditingProduct(product)
-                        setFormData({
-                          name: product.name,
-                          description: product.description || '',
-                          price: product.price,
-                          stock: product.stock,
-                          category_id: product.category_id || '',
-                          image: null,
-                        })
-                        setIsDialogOpen(true)
-                      }}
-                    >
-                      <IconEdit className="h-4 w-4 text-blue-500" />
-                    </Button>
-                    <Button size="icon" variant="ghost" onClick={() => handleDelete(product.id)}>
-                      <IconTrash className="h-4 w-4 text-destructive" />
-                    </Button>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-20">
+                    <IconLoader2 className="mx-auto h-10 w-10 animate-spin text-primary opacity-20" />
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ) : filteredProducts.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-20 text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2 opacity-50 font-medium">
+                      <IconPackage size={48} />
+                      <p>No products found in your inventory.</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredProducts.map((product) => (
+                  <TableRow key={product.id} className="group hover:bg-muted/30 transition-colors">
+                    <TableCell className="py-4">
+                      {product.image_url ? (
+                        <div className="h-12 w-12 rounded-xl overflow-hidden border-2 border-muted shadow-sm">
+                          <img
+                            src={product.image_url}
+                            alt={product.name}
+                            className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center text-[10px] text-muted-foreground font-bold">
+                          N/A
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-bold text-base py-4">{product.name}</TableCell>
+                    <TableCell className="py-4">
+                      <Badge variant="secondary" className="font-medium rounded-lg">
+                        {product.categories?.name || 'Uncategorized'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="font-black text-primary py-4">
+                      Rp {product.price.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <Badge 
+                        variant={product.stock <= 5 ? "destructive" : "outline"} 
+                        className={`font-bold ${product.stock > 5 ? 'border-2' : ''} rounded-lg`}
+                      >
+                        {product.stock} Units
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right py-4 pr-6 space-x-1">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-9 w-9 rounded-xl hover:bg-blue-500/10 text-blue-500"
+                        onClick={() => {
+                          setEditingProduct(product)
+                          setFormData({
+                            name: product.name,
+                            description: product.description || '',
+                            price: product.price,
+                            stock: product.stock,
+                            category_id: product.category_id || '',
+                            image: null,
+                          })
+                          setIsDialogOpen(true)
+                        }}
+                      >
+                        <IconEdit className="h-5 w-5" />
+                      </Button>
+                      <Button 
+                        size="icon" 
+                        variant="ghost" 
+                        className="h-9 w-9 rounded-xl hover:bg-destructive/10 text-destructive"
+                        onClick={() => handleDelete(product.id)}
+                      >
+                        <IconTrash className="h-5 w-5" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   )
 }

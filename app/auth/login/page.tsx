@@ -33,9 +33,26 @@ export default function LoginPage() {
       return
     }
 
-    toast.success('Successfully logged in!')
-    router.refresh()
-    router.push('/')
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      toast.success('Successfully logged in!')
+      router.refresh()
+
+      if (profile?.role === 'admin') {
+        router.push('/admin')
+      } else if (profile?.role === 'cashier') {
+        router.push('/cashier/pos')
+      } else {
+        router.push('/menu')
+      }
+    }
   }
 
   return (

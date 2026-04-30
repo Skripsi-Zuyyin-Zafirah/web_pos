@@ -41,21 +41,35 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Route protection
+  // Route categories
   const isAuthPage = request.nextUrl.pathname.startsWith('/auth')
   const isAdminPage = request.nextUrl.pathname.startsWith('/admin')
   const isCashierPage = request.nextUrl.pathname.startsWith('/cashier')
-  const isPublicPage = ['/menu', '/queue'].some(path => request.nextUrl.pathname.startsWith(path))
+  const isPublicPage = ['/', '/menu', '/queue'].includes(request.nextUrl.pathname)
 
+  // 1. If user is logged in and trying to access auth pages (login/register), redirect to their dashboard
+  if (user && isAuthPage) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.role === 'admin') {
+      return NextResponse.redirect(new URL('/admin', request.url))
+    } else if (profile?.role === 'cashier') {
+      return NextResponse.redirect(new URL('/cashier/pos', request.url))
+    } else {
+      return NextResponse.redirect(new URL('/menu', request.url))
+    }
+  }
+
+  // 2. If user is NOT logged in and trying to access private pages, redirect to login
   if (!user && (isAdminPage || isCashierPage)) {
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
 
-  if (user && isAuthPage) {
-    return NextResponse.redirect(new URL('/', request.url))
-  }
-
-  // Role-based protection for Admin and Cashier
+  // 3. If user is logged in and trying to access restricted pages, check roles
   if (user && (isAdminPage || isCashierPage)) {
     const { data: profile } = await supabase
       .from('profiles')
@@ -63,6 +77,7 @@ export async function middleware(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
+    // Redirect if no profile or wrong role
     if (isAdminPage && profile?.role !== 'admin') {
       return NextResponse.redirect(new URL('/', request.url))
     }

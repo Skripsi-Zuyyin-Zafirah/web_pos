@@ -20,7 +20,9 @@ import {
   IconShoppingCart, 
   IconClock, 
   IconCheck, 
-  IconLoader2 
+  IconLoader2,
+  IconPackage,
+  IconUser
 } from '@tabler/icons-react'
 import { useAuth } from '@/components/providers/auth-provider'
 
@@ -45,6 +47,7 @@ export default function POSPage() {
   const [search, setSearch] = useState('')
   const [customerName, setCustomerName] = useState('')
   const [checkoutLoading, setCheckoutLoading] = useState(false)
+  const [activeCategory, setActiveCategory] = useState('all')
   
   const { user } = useAuth()
   const supabase = createClient()
@@ -83,7 +86,7 @@ export default function POSPage() {
       .from('orders')
       .insert([
         {
-          user_id: null, // Optional link to auth user
+          user_id: null,
           cashier_id: user?.id,
           customer_name: customerName || 'Guest',
           total_price: cart.totalPrice(),
@@ -115,7 +118,6 @@ export default function POSPage() {
 
     if (itemsError) {
       toast.error('Failed to save order items')
-      // Note: In production, you'd want a transaction or cleanup here
     } else {
       toast.success('Order placed successfully!')
       cart.clearCart()
@@ -125,69 +127,88 @@ export default function POSPage() {
     setCheckoutLoading(false)
   }
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase())
+    const matchesCategory = activeCategory === 'all' || p.category_id === activeCategory
+    return matchesSearch && matchesCategory
+  })
 
   return (
-    <div className="flex h-[calc(100vh-4rem)]">
+    <div className="flex h-full overflow-hidden bg-muted/20">
       {/* Product Catalog */}
-      <div className="flex-1 p-6 space-y-6 overflow-hidden flex flex-col">
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1">
-            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search products..." 
-              className="pl-10 h-11"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+      <div className="flex-1 flex flex-col min-w-0 border-r">
+        <div className="p-6 bg-background border-b space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-black tracking-tight uppercase">Terminal POS</h1>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Select products to add to cart</p>
+            </div>
+            <div className="relative w-full md:w-80">
+              <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Find items..." 
+                className="pl-10 h-11 rounded-xl bg-muted/30 border-none shadow-inner"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
           </div>
-          <Tabs defaultValue="all" className="w-fit">
-            <TabsList className="h-11">
-              <TabsTrigger value="all" className="px-6">All</TabsTrigger>
-              {categories.slice(0, 3).map(cat => (
-                <TabsTrigger key={cat.id} value={cat.id} className="px-6">{cat.name}</TabsTrigger>
+          
+          <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
+            <TabsList className="h-11 bg-muted/30 p-1 rounded-xl">
+              <TabsTrigger value="all" className="px-6 rounded-lg font-bold">All Products</TabsTrigger>
+              {categories.map(cat => (
+                <TabsTrigger key={cat.id} value={cat.id} className="px-6 rounded-lg font-bold">{cat.name}</TabsTrigger>
               ))}
             </TabsList>
           </Tabs>
         </div>
 
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 p-6">
           {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {[...Array(8)].map((_, i) => (
-                <Card key={i} className="animate-pulse bg-muted h-64" />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {[...Array(15)].map((_, i) => (
+                <Card key={i} className="animate-pulse bg-muted/50 h-64 border-none rounded-3xl" />
               ))}
             </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-40 text-muted-foreground opacity-50">
+              <IconPackage size={64} />
+              <p className="mt-4 font-bold">No products found in this category</p>
+            </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
               {filteredProducts.map((product) => (
                 <Card 
                   key={product.id} 
-                  className="group hover:shadow-md transition-all cursor-pointer overflow-hidden border-primary/5"
+                  className="group relative flex flex-col border-none shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer overflow-hidden rounded-3xl bg-background"
                   onClick={() => cart.addItem(product)}
                 >
-                  <div className="aspect-square relative overflow-hidden bg-muted">
+                  <div className="aspect-square relative overflow-hidden bg-muted/30">
                     {product.image_url ? (
                       <img 
                         src={product.image_url} 
                         alt={product.name}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                        className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
                       />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-muted-foreground">
+                      <div className="flex items-center justify-center h-full text-muted-foreground text-xs font-bold uppercase tracking-widest opacity-30">
                         No Image
                       </div>
                     )}
+                    <div className="absolute top-3 right-3">
+                      <Badge className="bg-background/80 backdrop-blur-md text-primary border-none shadow-sm font-black px-2 py-1 rounded-lg">
+                        {product.stock}
+                      </Badge>
+                    </div>
                   </div>
-                  <CardHeader className="p-3 space-y-1">
-                    <CardTitle className="text-sm line-clamp-1">{product.name}</CardTitle>
-                    <div className="flex items-center justify-between">
-                      <span className="text-primary font-bold">Rp {product.price.toLocaleString()}</span>
-                      <Badge variant="outline" className="text-[10px]">Stok: {product.stock}</Badge>
+                  <CardHeader className="p-4 flex-1">
+                    <CardTitle className="text-base font-black leading-tight mb-1">{product.name}</CardTitle>
+                    <div className="mt-auto flex items-center justify-between">
+                      <span className="text-primary font-black text-lg">Rp {product.price.toLocaleString()}</span>
                     </div>
                   </CardHeader>
+                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 </Card>
               ))}
             </div>
@@ -196,78 +217,91 @@ export default function POSPage() {
       </div>
 
       {/* Cart Sidebar */}
-      <div className="w-[400px] bg-card border-l flex flex-col shadow-xl">
-        <div className="p-6 border-b flex items-center justify-between bg-muted/30">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <IconShoppingCart className="h-5 w-5 text-primary" />
+      <div className="w-[420px] bg-background flex flex-col shadow-2xl relative z-10">
+        <div className="p-6 border-b flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shadow-sm border border-primary/10">
+              <IconShoppingCart className="h-5 w-5" />
             </div>
-            <h2 className="font-bold text-lg">Current Cart</h2>
+            <div className="space-y-0.5">
+              <h2 className="font-black text-lg uppercase tracking-tight">Active Cart</h2>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{cart.totalItems()} Items selected</p>
+            </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => cart.clearCart()}>Clear</Button>
+          <Button variant="ghost" size="sm" className="font-bold text-xs uppercase tracking-widest hover:bg-destructive/10 hover:text-destructive rounded-lg" onClick={() => cart.clearCart()}>Clear</Button>
         </div>
 
-        <div className="p-4 border-b">
-          <Label htmlFor="customer">Customer Name</Label>
-          <Input 
-            id="customer" 
-            placeholder="Guest" 
-            value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
-            className="mt-1"
-          />
+        <div className="p-6 bg-muted/10 border-b space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="customer" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Customer Attribution</Label>
+            <div className="relative">
+              <IconUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                id="customer" 
+                placeholder="Guest Customer" 
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="pl-10 h-11 rounded-xl bg-background border-none shadow-inner"
+              />
+            </div>
+          </div>
         </div>
 
-        <ScrollArea className="flex-1 p-4">
+        <ScrollArea className="flex-1">
           {cart.items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-2 opacity-50 py-20">
-              <IconShoppingCart size={48} />
-              <p>Cart is empty</p>
+            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground opacity-30 px-10 text-center">
+              <IconShoppingCart size={80} strokeWidth={1} />
+              <p className="mt-4 font-black uppercase tracking-widest text-sm">Cart is empty</p>
+              <p className="mt-2 text-xs font-medium">Select products from the catalog to begin checkout.</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="p-4 space-y-3">
               {cart.items.map((item) => (
-                <div key={item.id} className="flex gap-3">
-                  <div className="h-14 w-14 rounded-lg bg-muted overflow-hidden flex-shrink-0 border">
-                    {item.image_url ? (
-                      <img src={item.image_url} alt={item.name} className="object-cover w-full h-full" />
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-[10px]">N/A</div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium line-clamp-1">{item.name}</p>
-                    <p className="text-xs text-muted-foreground">Rp {item.price.toLocaleString()}</p>
-                    <div className="flex items-center gap-2 mt-2">
+                <div key={item.id} className="group relative bg-muted/20 hover:bg-muted/40 p-3 rounded-2xl transition-all border border-transparent hover:border-muted-foreground/10">
+                  <div className="flex gap-4">
+                    <div className="h-16 w-16 rounded-xl bg-background overflow-hidden flex-shrink-0 shadow-sm border">
+                      {item.image_url ? (
+                        <img src={item.image_url} alt={item.name} className="object-cover w-full h-full" />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-[10px] font-black opacity-20 uppercase">N/A</div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                      <div>
+                        <p className="text-sm font-black line-clamp-1">{item.name}</p>
+                        <p className="text-xs font-bold text-primary">Rp {item.price.toLocaleString()}</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          size="icon" 
+                          variant="secondary" 
+                          className="h-7 w-7 rounded-lg shadow-sm"
+                          onClick={() => cart.updateQuantity(item.id, item.quantity - 1)}
+                        >
+                          <IconMinus size={14} />
+                        </Button>
+                        <span className="text-xs font-black w-4 text-center">{item.quantity}</span>
+                        <Button 
+                          size="icon" 
+                          variant="secondary" 
+                          className="h-7 w-7 rounded-lg shadow-sm"
+                          onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}
+                        >
+                          <IconPlus size={14} />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-right flex flex-col justify-between items-end">
+                      <p className="text-sm font-black">Rp {(item.price * item.quantity).toLocaleString()}</p>
                       <Button 
+                        variant="ghost" 
                         size="icon" 
-                        variant="outline" 
-                        className="h-7 w-7"
-                        onClick={() => cart.updateQuantity(item.id, item.quantity - 1)}
+                        className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => cart.removeItem(item.id)}
                       >
-                        <IconMinus size={14} />
-                      </Button>
-                      <span className="text-sm font-medium w-6 text-center">{item.quantity}</span>
-                      <Button 
-                        size="icon" 
-                        variant="outline" 
-                        className="h-7 w-7"
-                        onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}
-                      >
-                        <IconPlus size={14} />
+                        <IconTrash size={16} />
                       </Button>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold">Rp {(item.price * item.quantity).toLocaleString()}</p>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 text-destructive hover:bg-destructive/10 mt-1"
-                      onClick={() => cart.removeItem(item.id)}
-                    >
-                      <IconTrash size={16} />
-                    </Button>
                   </div>
                 </div>
               ))}
@@ -275,34 +309,41 @@ export default function POSPage() {
           )}
         </ScrollArea>
 
-        <div className="p-6 bg-muted/30 border-t space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Total Items</span>
-              <span className="font-medium">{cart.totalItems()} Items</span>
+        <div className="p-6 bg-background border-t space-y-6 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
+          <div className="space-y-3">
+            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground px-1">
+              <span>Total Volume</span>
+              <span>{cart.totalItems()} Units</span>
             </div>
-            <div className="flex justify-between items-center bg-blue-500/10 p-3 rounded-lg border border-blue-500/20">
+            
+            <div className="flex justify-between items-center bg-blue-500/5 p-4 rounded-2xl border-2 border-blue-500/10">
               <div className="flex items-center gap-2 text-blue-600">
-                <IconClock size={18} />
-                <span className="text-sm font-semibold">Estimated Work (EWP)</span>
+                <IconClock size={18} strokeWidth={2.5} />
+                <span className="text-xs font-black uppercase tracking-tighter">Production Load (EWP)</span>
               </div>
-              <span className="font-bold text-blue-700">{cart.ewp() / 60} Min</span>
+              <span className="font-black text-blue-700 text-sm">{Math.round(cart.ewp() / 60)} Min</span>
             </div>
-            <Separator className="my-4" />
-            <div className="flex justify-between text-lg font-bold">
-              <span>Total Amount</span>
-              <span className="text-primary">Rp {cart.totalPrice().toLocaleString()}</span>
+            
+            <Separator className="my-2 opacity-50" />
+            
+            <div className="flex justify-between items-end px-1">
+              <span className="text-xs font-black uppercase tracking-widest text-muted-foreground pb-1">Grand Total</span>
+              <span className="text-3xl font-black text-primary leading-none tracking-tighter">Rp {cart.totalPrice().toLocaleString()}</span>
             </div>
           </div>
+          
           <Button 
-            className="w-full h-14 text-lg font-bold shadow-lg" 
+            className="w-full h-16 text-lg font-black uppercase tracking-tighter rounded-2xl shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]" 
             disabled={cart.items.length === 0 || checkoutLoading}
             onClick={handleCheckout}
           >
             {checkoutLoading ? (
-              <IconLoader2 className="animate-spin mr-2" />
+              <IconLoader2 className="animate-spin h-6 w-6" />
             ) : (
-              <>Checkout <IconCheck className="ml-2" /></>
+              <div className="flex items-center gap-3">
+                Process Transaction
+                <IconCheck className="h-6 w-6" strokeWidth={3} />
+              </div>
             )}
           </Button>
         </div>

@@ -27,7 +27,9 @@ import {
 import { useAuth } from "@/components/providers/auth-provider"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
+  
+  const role = profile?.role || 'pelanggan'
   
   // Define menu items based on role
   const adminItems = [
@@ -92,8 +94,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={adminItems} label="Management" />
-        <NavMain items={cashierItems} label="Transactions" />
+        {role === 'admin' && <NavMain items={adminItems} label="Management" />}
+        {(role === 'admin' || role === 'cashier') && <NavMain items={cashierItems} label="Transactions" />}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={{

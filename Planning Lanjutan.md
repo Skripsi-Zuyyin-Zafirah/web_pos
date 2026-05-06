@@ -36,9 +36,9 @@ Dokumen ini merincikan tahapan pengembangan untuk 7 fitur utama pada Halaman Kas
 
 ## 💰 Milestone 6: Finalisasi & Integrasi Stok (Hari 7)
 **Fokus:** Implementasi **Fitur 7 (Konfirmasi Pembayaran & Selesai)**.
-- [ ] **Cash Payment Flow:** Dialog konfirmasi pembayaran tunai.
-- [ ] **Auto-Stock Update:** Trigger otomatis untuk mengurangi stok di database saat transaksi selesai.
-- [ ] **Staff Reset Logic:** Mengembalikan status pegawai menjadi *Idle* secara otomatis setelah klik "Selesai".
+- [x] **Cash Payment Flow:** Dialog konfirmasi pembayaran tunai.
+- [x] **Auto-Stock Update:** Trigger otomatis untuk mengurangi stok di database saat transaksi selesai.
+- [x] **Staff Reset Logic:** Mengembalikan status pegawai menjadi *Idle* secara otomatis setelah klik "Selesai".
 
 ---
 

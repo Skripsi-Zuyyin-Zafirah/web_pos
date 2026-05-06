@@ -25,12 +25,15 @@ import {
 } from '@tabler/icons-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { OrderDetailsDialog } from '@/components/cashier/order-details'
+import { PaymentConfirmationDialog } from '@/components/cashier/payment-dialog'
 
 export default function QueuePage() {
   const [orders, setOrders] = useState<HeapItem[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+  const [paymentTarget, setPaymentTarget] = useState<any>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -245,7 +248,10 @@ export default function QueuePage() {
                         ) : (
                           <Button 
                             className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700 border-none" 
-                            onClick={() => updateStatus(order.id, 'done')}
+                            onClick={() => {
+                              setPaymentTarget(order)
+                              setIsPaymentOpen(true)
+                            }}
                           >
                             <IconCheck className="mr-2 h-5 w-5" strokeWidth={3} /> Finish
                           </Button>
@@ -267,6 +273,16 @@ export default function QueuePage() {
         orderId={selectedOrderId} 
         isOpen={isDetailsOpen} 
         onClose={() => setIsDetailsOpen(false)} 
+      />
+
+      <PaymentConfirmationDialog 
+        isOpen={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
+        orderId={paymentTarget?.id}
+        customerName={paymentTarget?.customer_name || ''}
+        totalPrice={paymentTarget?.total_price || 0}
+        staffId={paymentTarget?.assigned_staff_id}
+        onSuccess={fetchOrders}
       />
     </div>
   )

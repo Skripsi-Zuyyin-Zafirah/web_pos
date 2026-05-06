@@ -3,15 +3,20 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useStaff } from '@/hooks/use-staff'
+import { useAutoDispatch } from '@/hooks/use-auto-dispatch'
 import { StaffStatusGrid, QueueStatsCounter } from '@/components/cashier/dashboard-components'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { IconLayoutDashboard, IconActivity, IconRefresh, IconArrowRight, IconChefHat } from '@tabler/icons-react'
+import { IconLayoutDashboard, IconActivity, IconRefresh, IconArrowRight, IconChefHat, IconRobot, IconSettings } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 
 export default function CashierDashboardPage() {
+  const [autoDispatchEnabled, setAutoDispatchEnabled] = useState(true)
   const { staff, loading: staffLoading } = useStaff()
+  const { isProcessing: dispatching } = useAutoDispatch(autoDispatchEnabled)
   const [stats, setStats] = useState({ waiting: 0, processing: 0, done: 0 })
   const [activeOrders, setActiveOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -79,11 +84,22 @@ export default function CashierDashboardPage() {
           </div>
           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-10">Real-time store & staff monitoring</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="rounded-xl font-bold uppercase tracking-widest text-[10px]" onClick={fetchOrderStats}>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center space-x-2 bg-background border px-4 py-2 rounded-xl shadow-sm">
+            <IconRobot size={18} className={autoDispatchEnabled ? "text-primary animate-bounce" : "text-muted-foreground"} />
+            <Label htmlFor="auto-dispatch" className="text-[10px] font-black uppercase tracking-widest cursor-pointer">
+              Auto-Dispatch {autoDispatchEnabled ? 'ON' : 'OFF'}
+            </Label>
+            <Switch 
+              id="auto-dispatch" 
+              checked={autoDispatchEnabled} 
+              onCheckedChange={setAutoDispatchEnabled}
+            />
+          </div>
+          <Button variant="outline" size="sm" className="h-10 rounded-xl font-bold uppercase tracking-widest text-[10px]" onClick={fetchOrderStats}>
             <IconRefresh size={14} className="mr-2" /> Refresh
           </Button>
-          <Button asChild className="rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
+          <Button asChild className="h-10 rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
             <Link href="/cashier/queue">
               View Queue <IconArrowRight size={16} className="ml-2" />
             </Link>

@@ -24,9 +24,9 @@ Dokumen ini merincikan tahapan pengembangan untuk 7 fitur utama pada Halaman Kas
 
 ## 🤖 Milestone 4: Engine Distribusi Otomatis (Hari 5)
 **Fokus:** Implementasi **Fitur 3 (Distribusi Otomatis)**.
-- [ ] **Trigger Extract-Min:** Pengembangan logika yang otomatis mengambil pesanan teratas saat ada pegawai berstatus *Idle*.
-- [ ] **Notification System:** Notifikasi "toast" atau alert di layar kasir saat penugasan otomatis berhasil dilakukan.
-- [ ] **Single Queue Multiple Server Logic:** Memastikan satu pesanan hanya diambil oleh satu pegawai yang tersedia.
+- [x] **Trigger Extract-Min:** Pengembangan logika yang otomatis mengambil pesanan teratas saat ada pegawai berstatus *Idle*.
+- [x] **Notification System:** Notifikasi "toast" atau alert di layar kasir saat penugasan otomatis berhasil dilakukan.
+- [x] **Single Queue Multiple Server Logic:** Memastikan satu pesanan hanya diambil oleh satu pegawai yang tersedia.
 
 ## 📄 Milestone 5: Detail Pesanan & Dokumentasi Fisik (Hari 6)
 **Fokus:** Implementasi **Fitur 4 (Detail Pesanan)** dan **Fitur 6 (Cetak Struk Kerja)**.

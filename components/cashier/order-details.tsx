@@ -49,7 +49,7 @@ export function OrderDetailsDialog({
       .eq('order_id', orderId)
 
     if (orderError || itemsError) {
-      toast.error('Failed to fetch order details')
+      toast.error('Gagal mengambil detail pesanan')
     } else {
       setOrder(orderData)
       setItems(itemsData)
@@ -72,7 +72,7 @@ export function OrderDetailsDialog({
               <Badge variant="outline" className="font-mono text-[10px] font-black uppercase tracking-widest bg-muted/50 border-none">
                 #{orderId?.slice(0, 8).toUpperCase()}
               </Badge>
-              <DialogTitle className="text-2xl font-black tracking-tighter uppercase">Order Details</DialogTitle>
+              <DialogTitle className="text-2xl font-black tracking-tighter uppercase">Detail Pesanan</DialogTitle>
             </div>
             <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl" onClick={handlePrint} disabled={loading || !order}>
               <IconPrinter size={20} strokeWidth={2.5} />
@@ -83,24 +83,24 @@ export function OrderDetailsDialog({
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center gap-4 opacity-50">
             <IconLoader2 className="animate-spin h-10 w-10 text-primary" />
-            <p className="font-black uppercase tracking-widest text-[10px]">Fetching Details...</p>
+            <p className="font-black uppercase tracking-widest text-[10px]">Mengambil Detail...</p>
           </div>
         ) : order ? (
           <div className="space-y-6 pt-4">
             {/* Order Info Cards */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-muted/30 p-4 rounded-2xl space-y-1">
-                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Customer</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Pelanggan</p>
                 <div className="flex items-center gap-2">
                   <IconUser size={16} className="text-primary" />
                   <span className="font-bold text-sm">{order.customer_name}</span>
                 </div>
               </div>
               <div className="bg-muted/30 p-4 rounded-2xl space-y-1">
-                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Assigned To</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Ditugaskan Ke</p>
                 <div className="flex items-center gap-2">
                   <IconId size={16} className="text-primary" />
-                  <span className="font-bold text-sm">{order.staff?.name || 'Waiting Distribution'}</span>
+                  <span className="font-bold text-sm">{order.staff?.name || 'Menunggu Distribusi'}</span>
                 </div>
               </div>
             </div>
@@ -109,14 +109,14 @@ export function OrderDetailsDialog({
             <div className="space-y-3">
               <div className="flex items-center gap-2 px-1">
                 <IconShoppingCart size={16} className="text-primary" strokeWidth={3} />
-                <h3 className="font-black uppercase tracking-widest text-[10px]">Product List</h3>
+                <h3 className="font-black uppercase tracking-widest text-[10px]">Daftar Produk</h3>
               </div>
               <div className="border rounded-2xl overflow-hidden bg-background">
                 <table className="w-full text-left text-sm">
                   <thead>
                     <tr className="bg-muted/50 border-b">
-                      <th className="px-4 py-3 font-black uppercase tracking-widest text-[9px]">Product</th>
-                      <th className="px-4 py-3 font-black uppercase tracking-widest text-[9px] text-center">Qty</th>
+                      <th className="px-4 py-3 font-black uppercase tracking-widest text-[9px]">Produk</th>
+                      <th className="px-4 py-3 font-black uppercase tracking-widest text-[9px] text-center">Jml</th>
                       <th className="px-4 py-3 font-black uppercase tracking-widest text-[9px] text-right">Subtotal</th>
                     </tr>
                   </thead>
@@ -138,7 +138,7 @@ export function OrderDetailsDialog({
                   </tbody>
                   <tfoot>
                     <tr className="bg-primary/5">
-                      <td colSpan={2} className="px-4 py-4 font-black uppercase tracking-widest text-[10px]">Total Estimation</td>
+                      <td colSpan={2} className="px-4 py-4 font-black uppercase tracking-widest text-[10px]">Estimasi Total</td>
                       <td className="px-4 py-4 text-right font-black text-lg tracking-tighter text-primary">
                         Rp {order.total_price?.toLocaleString()}
                       </td>
@@ -196,10 +196,10 @@ export function OrderDetailsDialog({
 
         <DialogFooter className="pt-4 border-t">
           <Button variant="ghost" onClick={onClose} className="rounded-xl font-bold uppercase tracking-widest text-[10px]">
-            Close
+            Tutup
           </Button>
           <Button className="rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20" onClick={handlePrint}>
-            <IconPrinter size={16} className="mr-2" /> Print Work Receipt
+            <IconPrinter size={16} className="mr-2" /> Cetak Struk Kerja
           </Button>
         </DialogFooter>
       </DialogContent>

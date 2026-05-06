@@ -105,55 +105,55 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8 pb-10">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-        <p className="text-muted-foreground text-lg">Detailed overview of your wholesale POS performance.</p>
+        <h1 className="text-3xl font-bold tracking-tight">Dasbor Admin</h1>
+        <p className="text-muted-foreground text-lg">Gambaran rinci tentang performa POS grosir Anda.</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card className="border-none shadow-sm bg-blue-50/50 dark:bg-blue-950/20">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold text-blue-600 uppercase tracking-wider">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-bold text-blue-600 uppercase tracking-wider">Total Pendapatan</CardTitle>
             <IconCurrencyDollar className="h-6 w-6 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-black">Rp {stats.totalRevenue.toLocaleString()}</div>
             <p className="text-xs text-blue-500 mt-1 font-bold flex items-center gap-1">
-              <IconTrendingUp size={14} /> +12.5% from last month
+              <IconTrendingUp size={14} /> +12.5% dari bulan lalu
             </p>
           </CardContent>
         </Card>
         
         <Card className="border-none shadow-sm bg-emerald-50/50 dark:bg-emerald-950/20">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold text-emerald-600 uppercase tracking-wider">Total Orders</CardTitle>
+            <CardTitle className="text-sm font-bold text-emerald-600 uppercase tracking-wider">Total Pesanan</CardTitle>
             <IconShoppingCart className="h-6 w-6 text-emerald-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-black">{stats.totalOrders}</div>
-            <p className="text-xs text-emerald-500 mt-1 font-bold italic">Orders successfully processed</p>
+            <p className="text-xs text-emerald-500 mt-1 font-bold italic">Pesanan berhasil diproses</p>
           </CardContent>
         </Card>
 
         <Card className="border-none shadow-sm bg-amber-50/50 dark:bg-amber-950/20">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold text-amber-600 uppercase tracking-wider">Avg. Wait Time</CardTitle>
+            <CardTitle className="text-sm font-bold text-amber-600 uppercase tracking-wider">Rerata Waktu Tunggu</CardTitle>
             <IconClock className="h-6 w-6 text-amber-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-black">{stats.avgEwp} Min</div>
-            <p className="text-xs text-amber-500 mt-1 font-bold italic text-opacity-80">Based on Min-Heap efficiency</p>
+            <div className="text-3xl font-black">{stats.avgEwp} Menit</div>
+            <p className="text-xs text-amber-500 mt-1 font-bold italic text-opacity-80">Berdasarkan efisiensi Min-Heap</p>
           </CardContent>
         </Card>
 
         <Card className="border-none shadow-sm bg-purple-50/50 dark:bg-purple-950/20">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold text-purple-600 uppercase tracking-wider">Total Users</CardTitle>
+            <CardTitle className="text-sm font-bold text-purple-600 uppercase tracking-wider">Total Pengguna</CardTitle>
             <IconUsers className="h-6 w-6 text-purple-500" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-black">{stats.totalUsers}</div>
-            <p className="text-xs text-purple-500 mt-1 font-bold italic text-opacity-80">Registered customers & staff</p>
+            <p className="text-xs text-purple-500 mt-1 font-bold italic text-opacity-80">Pelanggan & staf terdaftar</p>
           </CardContent>
         </Card>
       </div>
@@ -162,7 +162,7 @@ export default function AdminDashboard() {
         {/* Sales Chart */}
         <Card className="border-none shadow-lg rounded-2xl overflow-hidden">
           <CardHeader className="bg-muted/30 pb-6">
-            <CardTitle className="text-xl font-black tracking-tight">Revenue Trends</CardTitle>
+            <CardTitle className="text-xl font-black tracking-tight">Tren Pendapatan</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <div className="h-[300px] w-full">
@@ -191,7 +191,7 @@ export default function AdminDashboard() {
         {/* Top Products */}
         <Card className="border-none shadow-lg rounded-2xl overflow-hidden">
           <CardHeader className="bg-muted/30 pb-6">
-            <CardTitle className="text-xl font-black tracking-tight">Top Selling Products</CardTitle>
+            <CardTitle className="text-xl font-black tracking-tight">Produk Terlaris</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <div className="h-[300px] w-full">

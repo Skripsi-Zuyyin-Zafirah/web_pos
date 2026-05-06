@@ -63,7 +63,7 @@ export default function QueuePage() {
       .neq('status', 'cancelled')
 
     if (error) {
-      toast.error('Failed to fetch queue')
+      toast.error('Gagal mengambil antrean')
     } else {
       const heap = new MinHeap()
       data.forEach((order) => heap.push(order))
@@ -85,7 +85,7 @@ export default function QueuePage() {
           .single()
 
         if (!idleStaff) {
-          toast.error('No staff available! Please wait or free up a staff member.')
+          toast.error('Staf tidak tersedia! Harap tunggu atau bebaskan anggota staf.')
           setLoading(false)
           return
         }
@@ -114,7 +114,7 @@ export default function QueuePage() {
 
         if (staffError) throw staffError
 
-        toast.success(`Order started by ${idleStaff.name}`)
+        toast.success(`Pesanan dimulai oleh ${idleStaff.name}`)
       } else {
         // For other status (like cancelled, if implemented)
         const { error } = await supabase
@@ -123,7 +123,7 @@ export default function QueuePage() {
           .eq('id', orderId)
 
         if (error) throw error
-        toast.success(`Order status updated to ${status}`)
+        toast.success(`Status pesanan diperbarui ke ${status}`)
       }
     } catch (err: any) {
       console.error('Update status error:', err)
@@ -142,15 +142,15 @@ export default function QueuePage() {
             <div className="p-2 bg-primary/10 rounded-lg text-primary">
               <IconHistory size={20} strokeWidth={3} />
             </div>
-            <h1 className="text-2xl font-black tracking-tighter uppercase">Kitchen Dispatch</h1>
+            <h1 className="text-2xl font-black tracking-tighter uppercase">Antrean Dapur</h1>
           </div>
           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-10">
-            SJF Min-Heap: Priority = (Items × 30s) + Arrival Tie-breaker
+            SJF Min-Heap: Prioritas = (Item × 30d) + Waktu Kedatangan
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Badge className="h-10 px-4 rounded-xl font-black bg-primary/10 text-primary border-primary/20 shadow-none text-sm uppercase tracking-wider">
-            {orders.length} ACTIVE ORDERS
+            {orders.length} PESANAN AKTIF
           </Badge>
           <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl" onClick={fetchOrders}>
             <IconRefresh size={20} />
@@ -163,7 +163,7 @@ export default function QueuePage() {
           {loading ? (
             <div className="col-span-full flex flex-col items-center justify-center py-40 gap-4 opacity-20">
               <IconLoader2 className="animate-spin h-12 w-12 text-primary" />
-              <p className="font-black uppercase tracking-widest text-sm">Loading Queue...</p>
+              <p className="font-black uppercase tracking-widest text-sm">Memuat Antrean...</p>
             </div>
           ) : orders.length === 0 ? (
             <Card className="col-span-full border-none shadow-xl rounded-3xl overflow-hidden bg-background py-20 text-center">
@@ -172,8 +172,8 @@ export default function QueuePage() {
                   <IconCheck size={48} strokeWidth={3} />
                 </div>
                 <div className="space-y-2">
-                  <p className="font-black text-2xl text-foreground uppercase tracking-tighter">Kitchen is Empty</p>
-                  <p className="font-medium">All orders have been successfully processed.</p>
+                  <p className="font-black text-2xl text-foreground uppercase tracking-tighter">Dapur Kosong</p>
+                  <p className="font-medium">Semua pesanan telah berhasil diproses.</p>
                 </div>
               </CardContent>
             </Card>
@@ -201,7 +201,7 @@ export default function QueuePage() {
                   >
                     {index === 0 && (
                       <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-bl-2xl flex items-center gap-1.5 z-20 shadow-lg">
-                        <IconAlertCircle size={14} strokeWidth={3} /> TOP PRIORITY
+                        <IconAlertCircle size={14} strokeWidth={3} /> PRIORITAS UTAMA
                       </div>
                     )}
                     
@@ -222,16 +222,16 @@ export default function QueuePage() {
                       <div className="space-y-3">
                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/70">
                           <IconVariable size={14} strokeWidth={3} />
-                          <span>EWP Calculation</span>
+                          <span>Perhitungan EWP</span>
                         </div>
                         <div className="bg-muted/30 p-4 rounded-2xl border-2 border-dashed border-muted flex flex-col gap-2">
                           <div className="flex justify-between items-center text-sm">
                             <span className="font-bold flex items-center gap-1.5">
                               <IconShoppingCart size={14} className="text-blue-500" />
-                              {order.total_items} items
+                              {order.total_items} item
                             </span>
                             <span className="text-muted-foreground">×</span>
-                            <span className="font-bold">30s</span>
+                            <span className="font-bold">30d</span>
                             <span className="text-muted-foreground">=</span>
                             <Badge className="bg-blue-500 text-white font-black border-none">
                               {order.ewp}s
@@ -252,11 +252,11 @@ export default function QueuePage() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/70">
                           <IconCalendarEvent size={14} strokeWidth={3} />
-                          <span>Tie-Breaker Logic</span>
+                          <span>Logika Tie-Breaker</span>
                         </div>
                         <div className="flex justify-between items-center px-1">
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-bold text-muted-foreground uppercase">Arrived At</span>
+                            <span className="text-[9px] font-bold text-muted-foreground uppercase">Tiba Pada</span>
                             <span className="font-black text-xs">
                               {new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                             </span>
@@ -285,14 +285,14 @@ export default function QueuePage() {
                             setIsDetailsOpen(true)
                           }}
                         >
-                          <IconEye size={18} className="mr-2" strokeWidth={3} /> Details
+                          <IconEye size={18} className="mr-2" strokeWidth={3} /> Detail
                         </Button>
                         {order.status === 'waiting' ? (
                           <Button 
                             className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20" 
                             onClick={() => updateStatus(order.id, 'processing')}
                           >
-                            <IconPlayerPlay className="mr-2 h-5 w-5" strokeWidth={3} /> Start
+                            <IconPlayerPlay className="mr-2 h-5 w-5" strokeWidth={3} /> Mulai
                           </Button>
                         ) : (
                           <Button 
@@ -302,7 +302,7 @@ export default function QueuePage() {
                               setIsPaymentOpen(true)
                             }}
                           >
-                            <IconCheck className="mr-2 h-5 w-5" strokeWidth={3} /> Finish
+                            <IconCheck className="mr-2 h-5 w-5" strokeWidth={3} /> Selesai
                           </Button>
                         )}
                         <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl text-destructive hover:bg-destructive/10 border-2">

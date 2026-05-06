@@ -65,7 +65,7 @@ export default function POSPage() {
     ])
 
     if (prodRes.error || catRes.error) {
-      toast.error('Failed to fetch data')
+      toast.error('Gagal mengambil data')
     } else {
       setProducts(prodRes.data || [])
       setCategories(catRes.data || [])
@@ -75,7 +75,7 @@ export default function POSPage() {
 
   const handleCheckout = async () => {
     if (cart.items.length === 0) {
-      toast.error('Cart is empty')
+      toast.error('Keranjang kosong')
       return
     }
 
@@ -88,7 +88,7 @@ export default function POSPage() {
         {
           user_id: null,
           cashier_id: user?.id,
-          customer_name: customerName || 'Guest',
+          customer_name: customerName || 'Tamu',
           total_price: cart.totalPrice(),
           total_items: cart.totalItems(),
           ewp: cart.ewp(),
@@ -99,7 +99,7 @@ export default function POSPage() {
       .single()
 
     if (orderError) {
-      toast.error('Failed to create order: ' + orderError.message)
+      toast.error('Gagal membuat pesanan: ' + orderError.message)
       setCheckoutLoading(false)
       return
     }
@@ -117,9 +117,9 @@ export default function POSPage() {
       .insert(orderItems)
 
     if (itemsError) {
-      toast.error('Failed to save order items')
+      toast.error('Gagal menyimpan item pesanan')
     } else {
-      toast.success('Order placed successfully!')
+      toast.success('Pesanan berhasil dibuat!')
       cart.clearCart()
       setCustomerName('')
     }
@@ -140,13 +140,13 @@ export default function POSPage() {
         <div className="p-6 bg-background border-b space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
-              <h1 className="text-2xl font-black tracking-tight uppercase">Terminal POS</h1>
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Select products to add to cart</p>
+              <h1 className="text-2xl font-black tracking-tight uppercase">Terminal Kasir</h1>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Pilih produk untuk ditambahkan ke keranjang</p>
             </div>
             <div className="relative w-full md:w-80">
               <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
-                placeholder="Find items..." 
+                placeholder="Cari item..." 
                 className="pl-10 h-11 rounded-xl bg-muted/30 border-none shadow-inner"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -156,7 +156,7 @@ export default function POSPage() {
           
           <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
             <TabsList className="h-11 bg-muted/30 p-1 rounded-xl">
-              <TabsTrigger value="all" className="px-6 rounded-lg font-bold">All Products</TabsTrigger>
+              <TabsTrigger value="all" className="px-6 rounded-lg font-bold">Semua Produk</TabsTrigger>
               {categories.map(cat => (
                 <TabsTrigger key={cat.id} value={cat.id} className="px-6 rounded-lg font-bold">{cat.name}</TabsTrigger>
               ))}
@@ -174,7 +174,7 @@ export default function POSPage() {
           ) : filteredProducts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-40 text-muted-foreground opacity-50">
               <IconPackage size={64} />
-              <p className="mt-4 font-bold">No products found in this category</p>
+              <p className="mt-4 font-bold">Tidak ada produk ditemukan di kategori ini</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
@@ -193,7 +193,7 @@ export default function POSPage() {
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full text-muted-foreground text-xs font-bold uppercase tracking-widest opacity-30">
-                        No Image
+                        Tanpa Gambar
                       </div>
                     )}
                     <div className="absolute top-3 right-3">
@@ -224,21 +224,21 @@ export default function POSPage() {
               <IconShoppingCart className="h-5 w-5" />
             </div>
             <div className="space-y-0.5">
-              <h2 className="font-black text-lg uppercase tracking-tight">Active Cart</h2>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{cart.totalItems()} Items selected</p>
+              <h2 className="font-black text-lg uppercase tracking-tight">Keranjang Aktif</h2>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{cart.totalItems()} Item terpilih</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" className="font-bold text-xs uppercase tracking-widest hover:bg-destructive/10 hover:text-destructive rounded-lg" onClick={() => cart.clearCart()}>Clear</Button>
+          <Button variant="ghost" size="sm" className="font-bold text-xs uppercase tracking-widest hover:bg-destructive/10 hover:text-destructive rounded-lg" onClick={() => cart.clearCart()}>Hapus</Button>
         </div>
 
         <div className="p-6 bg-muted/10 border-b space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="customer" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Customer Attribution</Label>
+            <Label htmlFor="customer" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Atribusi Pelanggan</Label>
             <div className="relative">
               <IconUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 id="customer" 
-                placeholder="Guest Customer" 
+                placeholder="Pelanggan Tamu" 
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 className="pl-10 h-11 rounded-xl bg-background border-none shadow-inner"
@@ -251,8 +251,8 @@ export default function POSPage() {
           {cart.items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-muted-foreground opacity-30 px-10 text-center">
               <IconShoppingCart size={80} strokeWidth={1} />
-              <p className="mt-4 font-black uppercase tracking-widest text-sm">Cart is empty</p>
-              <p className="mt-2 text-xs font-medium">Select products from the catalog to begin checkout.</p>
+              <p className="mt-4 font-black uppercase tracking-widest text-sm">Keranjang kosong</p>
+              <p className="mt-2 text-xs font-medium">Pilih produk dari katalog untuk memulai checkout.</p>
             </div>
           ) : (
             <div className="p-4 space-y-3">
@@ -263,7 +263,7 @@ export default function POSPage() {
                       {item.image_url ? (
                         <img src={item.image_url} alt={item.name} className="object-cover w-full h-full" />
                       ) : (
-                        <div className="flex items-center justify-center h-full text-[10px] font-black opacity-20 uppercase">N/A</div>
+                        <div className="flex items-center justify-center h-full text-[10px] font-black opacity-20 uppercase">Kosong</div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
@@ -313,21 +313,21 @@ export default function POSPage() {
           <div className="space-y-3">
             <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground px-1">
               <span>Total Volume</span>
-              <span>{cart.totalItems()} Units</span>
+              <span>{cart.totalItems()} Unit</span>
             </div>
             
             <div className="flex justify-between items-center bg-blue-500/5 p-4 rounded-2xl border-2 border-blue-500/10">
               <div className="flex items-center gap-2 text-blue-600">
                 <IconClock size={18} strokeWidth={2.5} />
-                <span className="text-xs font-black uppercase tracking-tighter">Production Load (EWP)</span>
+                <span className="text-xs font-black uppercase tracking-tighter">Beban Produksi (EWP)</span>
               </div>
-              <span className="font-black text-blue-700 text-sm">{Math.round(cart.ewp() / 60)} Min</span>
+              <span className="font-black text-blue-700 text-sm">{Math.round(cart.ewp() / 60)} Menit</span>
             </div>
             
             <Separator className="my-2 opacity-50" />
             
             <div className="flex justify-between items-end px-1">
-              <span className="text-xs font-black uppercase tracking-widest text-muted-foreground pb-1">Grand Total</span>
+              <span className="text-xs font-black uppercase tracking-widest text-muted-foreground pb-1">Total Keseluruhan</span>
               <span className="text-3xl font-black text-primary leading-none tracking-tighter">Rp {cart.totalPrice().toLocaleString()}</span>
             </div>
           </div>
@@ -341,7 +341,7 @@ export default function POSPage() {
               <IconLoader2 className="animate-spin h-6 w-6" />
             ) : (
               <div className="flex items-center gap-3">
-                Process Transaction
+                Proses Transaksi
                 <IconCheck className="h-6 w-6" strokeWidth={3} />
               </div>
             )}

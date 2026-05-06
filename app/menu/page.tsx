@@ -63,9 +63,9 @@ export default function MenuPage() {
           <IconChefHat size={120} />
         </div>
         <div className="max-w-6xl mx-auto space-y-4 relative z-10">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Digital Menu</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Menu Digital</h1>
           <p className="text-primary-foreground/80 text-lg max-w-2xl">
-            Explore our fresh collection of wholesale products. Freshness guaranteed every single day.
+            Jelajahi koleksi produk grosir kami yang segar. Kesegaran terjamin setiap hari.
           </p>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default function MenuPage() {
             <div className="relative">
               <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input 
-                placeholder="Search for your favorites..." 
+                placeholder="Cari produk favorit Anda..." 
                 className="pl-10 h-14 text-lg bg-muted/30 border-none shadow-inner"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -87,7 +87,7 @@ export default function MenuPage() {
             <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedCategory}>
               <ScrollArea className="w-full whitespace-nowrap">
                 <TabsList className="h-12 inline-flex w-full md:w-auto p-1 bg-muted/50">
-                  <TabsTrigger value="all" className="px-8 font-medium">All Items</TabsTrigger>
+                  <TabsTrigger value="all" className="px-8 font-medium">Semua Produk</TabsTrigger>
                   {categories.map(cat => (
                     <TabsTrigger key={cat.id} value={cat.id} className="px-8 font-medium">
                       {cat.name}
@@ -109,7 +109,7 @@ export default function MenuPage() {
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-20 space-y-4">
             <IconSoup className="mx-auto h-16 w-16 text-muted-foreground opacity-20" />
-            <p className="text-xl text-muted-foreground font-medium">No products found matching your search.</p>
+            <p className="text-xl text-muted-foreground font-medium">Tidak ada produk yang cocok dengan pencarian Anda.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -133,13 +133,13 @@ export default function MenuPage() {
                   {product.stock > 0 && product.stock <= 5 && (
                     <div className="absolute top-3 right-3">
                       <Badge variant="destructive" className="flex items-center gap-1 shadow-lg border-none">
-                        <IconFlame size={12} /> Low Stock
+                        <IconFlame size={12} /> Stok Menipis
                       </Badge>
                     </div>
                   )}
                   {product.stock === 0 && (
                     <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px] flex items-center justify-center">
-                      <Badge variant="outline" className="text-lg font-bold py-2 px-6 border-2">Sold Out</Badge>
+                      <Badge variant="outline" className="text-lg font-bold py-2 px-6 border-2">Habis</Badge>
                     </div>
                   )}
                 </div>
@@ -150,21 +150,21 @@ export default function MenuPage() {
                         {product.name}
                       </CardTitle>
                       <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mt-1">
-                        {categories.find(c => c.id === product.category_id)?.name || 'General'}
+                        {categories.find(c => c.id === product.category_id)?.name || 'Umum'}
                       </p>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="p-5 pt-0">
                   <p className="text-sm text-muted-foreground line-clamp-2 h-10 mb-4">
-                    {product.description || 'No description available for this item.'}
+                    {product.description || 'Tidak ada deskripsi tersedia untuk item ini.'}
                   </p>
                   <div className="flex items-center justify-between mt-auto">
                     <span className="text-2xl font-black text-primary">
                       Rp {product.price.toLocaleString()}
                     </span>
                     <Badge variant="secondary" className="font-medium">
-                      Stock: {product.stock}
+                      Stok: {product.stock}
                     </Badge>
                   </div>
                 </CardContent>

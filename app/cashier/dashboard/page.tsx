@@ -83,15 +83,15 @@ export default function CashierDashboardPage() {
             <div className="p-2 bg-primary/10 rounded-lg text-primary">
               <IconLayoutDashboard size={20} strokeWidth={3} />
             </div>
-            <h1 className="text-2xl font-black tracking-tighter uppercase">Cashier Dashboard</h1>
+            <h1 className="text-2xl font-black tracking-tighter uppercase">Dasbor Kasir</h1>
           </div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-10">Real-time store & staff monitoring</p>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-10">Pemantauan toko & staf real-time</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center space-x-2 bg-background border px-4 py-2 rounded-xl shadow-sm">
             <IconRobot size={18} className={autoDispatchEnabled ? "text-primary animate-bounce" : "text-muted-foreground"} />
             <Label htmlFor="auto-dispatch" className="text-[10px] font-black uppercase tracking-widest cursor-pointer">
-              Auto-Dispatch {autoDispatchEnabled ? 'ON' : 'OFF'}
+              Pengiriman Otomatis {autoDispatchEnabled ? 'ON' : 'OFF'}
             </Label>
             <Switch 
               id="auto-dispatch" 
@@ -100,11 +100,11 @@ export default function CashierDashboardPage() {
             />
           </div>
           <Button variant="outline" size="sm" className="h-10 rounded-xl font-bold uppercase tracking-widest text-[10px]" onClick={fetchOrderStats}>
-            <IconRefresh size={14} className="mr-2" /> Refresh
+            <IconRefresh size={14} className="mr-2" /> Segarkan
           </Button>
           <Button asChild className="h-10 rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
             <Link href="/cashier/queue">
-              View Queue <IconArrowRight size={16} className="ml-2" />
+              Lihat Antrean <IconArrowRight size={16} className="ml-2" />
             </Link>
           </Button>
         </div>
@@ -115,7 +115,7 @@ export default function CashierDashboardPage() {
         <div className="space-y-4">
           <div className="flex items-center gap-2 px-1">
             <IconActivity size={18} className="text-primary" strokeWidth={3} />
-            <h2 className="font-black uppercase tracking-widest text-xs">Live Statistics</h2>
+            <h2 className="font-black uppercase tracking-widest text-xs">Statistik Langsung</h2>
           </div>
           <QueueStatsCounter 
             waiting={stats.waiting} 
@@ -128,7 +128,7 @@ export default function CashierDashboardPage() {
         <div className="space-y-4">
           <div className="flex items-center gap-2 px-1">
             <IconChefHat size={18} className="text-primary" strokeWidth={3} />
-            <h2 className="font-black uppercase tracking-widest text-xs">Staff Availability</h2>
+            <h2 className="font-black uppercase tracking-widest text-xs">Ketersediaan Staf</h2>
           </div>
           <StaffStatusGrid staff={staff} loading={staffLoading} />
         </div>
@@ -137,7 +137,7 @@ export default function CashierDashboardPage() {
         <div className="space-y-4">
           <div className="flex items-center gap-2 px-1">
             <IconActivity size={18} className="text-primary" strokeWidth={3} />
-            <h2 className="font-black uppercase tracking-widest text-xs">Active Tasks</h2>
+            <h2 className="font-black uppercase tracking-widest text-xs">Tugas Aktif</h2>
           </div>
           <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-background">
             <CardContent className="p-0">
@@ -145,9 +145,9 @@ export default function CashierDashboardPage() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="bg-muted/50 border-b">
-                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Order ID</th>
-                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Customer</th>
-                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Assigned To</th>
+                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">ID Pesanan</th>
+                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pelanggan</th>
+                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ditugaskan Ke</th>
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Status</th>
                     </tr>
                   </thead>
@@ -155,7 +155,7 @@ export default function CashierDashboardPage() {
                     {activeOrders.length === 0 ? (
                       <tr>
                         <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground font-medium">
-                          No orders are currently being processed.
+                          Tidak ada pesanan yang sedang diproses.
                         </td>
                       </tr>
                     ) : (
@@ -174,7 +174,7 @@ export default function CashierDashboardPage() {
                               <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                 <IconChefHat size={16} />
                               </div>
-                              <span className="font-bold text-sm">{order.staff?.name || 'Unassigned'}</span>
+                              <span className="font-bold text-sm">{order.staff?.name || 'Belum Ditugaskan'}</span>
                             </div>
                           </td>
                           <td className="px-6 py-4 text-right">
@@ -188,10 +188,10 @@ export default function CashierDashboardPage() {
                                   setIsDetailsOpen(true)
                                 }}
                               >
-                                <IconEye size={14} className="mr-1" /> View
+                                <IconEye size={14} className="mr-1" /> Lihat
                               </Button>
                               <Badge className="bg-amber-500/10 text-amber-700 border-none font-black text-[9px] uppercase tracking-widest animate-pulse">
-                                Processing
+                                Diproses
                               </Badge>
                             </div>
                           </td>

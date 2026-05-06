@@ -19,7 +19,7 @@ export default function CashierLayout({
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader breadcrumbs={[{ label: "Cashier", href: "/cashier/pos" }, { label: "POS Interface" }]} />
+        <SiteHeader breadcrumbs={[{ label: "Kasir", href: "/cashier/pos" }, { label: "Antarmuka POS" }]} />
         <div className="flex flex-1 flex-col overflow-hidden">
           {children}
         </div>

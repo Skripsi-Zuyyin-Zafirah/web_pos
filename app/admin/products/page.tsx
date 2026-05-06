@@ -62,7 +62,7 @@ export default function ProductsPage() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      toast.error('Failed to fetch products')
+      toast.error('Gagal mengambil produk')
     } else {
       setProducts(data || [])
     }
@@ -88,7 +88,7 @@ export default function ProductsPage() {
         .upload(fileName, formData.image)
 
       if (uploadError) {
-        toast.error('Image upload failed')
+        toast.error('Unggah gambar gagal')
         setLoading(false)
         return
       }
@@ -126,7 +126,7 @@ export default function ProductsPage() {
     if (error) {
       toast.error(error.message)
     } else {
-      toast.success(editingProduct ? 'Product updated' : 'Product added')
+      toast.success(editingProduct ? 'Produk diperbarui' : 'Produk ditambahkan')
       setIsDialogOpen(false)
       resetForm()
       fetchProducts()
@@ -135,13 +135,13 @@ export default function ProductsPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return
+    if (!confirm('Apakah Anda yakin ingin menghapus produk ini?')) return
 
     const { error } = await supabase.from('products').delete().eq('id', id)
     if (error) {
       toast.error(error.message)
     } else {
-      toast.success('Product deleted')
+      toast.success('Produk dihapus')
       fetchProducts()
     }
   }
@@ -166,8 +166,8 @@ export default function ProductsPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tighter uppercase">Product Inventory</h1>
-          <p className="text-muted-foreground font-medium">Manage your wholesale catalog and stock levels.</p>
+          <h1 className="text-3xl font-black tracking-tighter uppercase">Inventaris Produk</h1>
+          <p className="text-muted-foreground font-medium">Kelola katalog grosir dan tingkat stok Anda.</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
           setIsDialogOpen(open)
@@ -175,20 +175,20 @@ export default function ProductsPage() {
         }}>
           <DialogTrigger asChild>
             <Button onClick={() => setIsDialogOpen(true)} className="h-12 px-6 font-bold rounded-xl shadow-lg">
-              <IconPlus className="mr-2 h-5 w-5" /> Add New Product
+              <IconPlus className="mr-2 h-5 w-5" /> Tambah Produk Baru
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px] rounded-3xl">
             <form onSubmit={handleSave}>
               <DialogHeader>
-                <DialogTitle className="text-2xl font-black">{editingProduct ? 'Update Product' : 'Create Product'}</DialogTitle>
+                <DialogTitle className="text-2xl font-black">{editingProduct ? 'Perbarui Produk' : 'Buat Produk'}</DialogTitle>
                 <DialogDescription className="font-medium">
-                  Enter the details for your wholesale product.
+                  Masukkan detail untuk produk grosir Anda.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-6 py-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="name" className="font-bold">Product Name</Label>
+                  <Label htmlFor="name" className="font-bold">Nama Produk</Label>
                   <Input
                     id="name"
                     placeholder="e.g. Premium Rice 25kg"
@@ -199,13 +199,13 @@ export default function ProductsPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="category" className="font-bold">Category</Label>
+                  <Label htmlFor="category" className="font-bold">Kategori</Label>
                   <Select
                     value={formData.category_id}
                     onValueChange={(value) => setFormData({ ...formData, category_id: value })}
                   >
                     <SelectTrigger className="h-11 rounded-xl">
-                      <SelectValue placeholder="Select Category" />
+                      <SelectValue placeholder="Pilih Kategori" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
                       {categories.map((cat) => (
@@ -218,7 +218,7 @@ export default function ProductsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="price" className="font-bold">Price (Rp)</Label>
+                    <Label htmlFor="price" className="font-bold">Harga (Rp)</Label>
                     <Input
                       id="price"
                       type="number"
@@ -229,7 +229,7 @@ export default function ProductsPage() {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="stock" className="font-bold">Stock Quantity</Label>
+                    <Label htmlFor="stock" className="font-bold">Jumlah Stok</Label>
                     <Input
                       id="stock"
                       type="number"
@@ -241,17 +241,17 @@ export default function ProductsPage() {
                   </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="description" className="font-bold">Description</Label>
+                  <Label htmlFor="description" className="font-bold">Deskripsi</Label>
                   <Textarea
                     id="description"
-                    placeholder="Brief description of the product..."
+                    placeholder="Deskripsi singkat produk..."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     className="rounded-xl min-h-[100px]"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="image" className="font-bold">Product Image</Label>
+                  <Label htmlFor="image" className="font-bold">Gambar Produk</Label>
                   <Input
                     id="image"
                     type="file"
@@ -263,7 +263,7 @@ export default function ProductsPage() {
               </div>
               <DialogFooter>
                 <Button type="submit" disabled={loading} className="w-full h-12 font-bold rounded-xl">
-                  {loading ? <IconLoader2 className="animate-spin" /> : editingProduct ? 'Update Product' : 'Save Product'}
+                  {loading ? <IconLoader2 className="animate-spin" /> : editingProduct ? 'Perbarui Produk' : 'Simpan Produk'}
                 </Button>
               </DialogFooter>
             </form>
@@ -274,25 +274,25 @@ export default function ProductsPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card className="border-none shadow-sm bg-blue-500/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold uppercase tracking-wider text-blue-600">Total Products</CardTitle>
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-blue-600">Total Produk</CardTitle>
             <IconPackage className="h-5 w-5 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black">{products.length} Items</div>
+            <div className="text-2xl font-black">{products.length} Barang</div>
           </CardContent>
         </Card>
         <Card className="border-none shadow-sm bg-emerald-500/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold uppercase tracking-wider text-emerald-600">Categories</CardTitle>
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-emerald-600">Kategori</CardTitle>
             <IconTag className="h-5 w-5 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black">{categories.length} Types</div>
+            <div className="text-2xl font-black">{categories.length} Jenis</div>
           </CardContent>
         </Card>
         <Card className="border-none shadow-sm bg-amber-500/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold uppercase tracking-wider text-amber-600">Stock Value</CardTitle>
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-amber-600">Nilai Stok</CardTitle>
             <IconCurrencyDollar className="h-5 w-5 text-amber-500" />
           </CardHeader>
           <CardContent>
@@ -305,14 +305,14 @@ export default function ProductsPage() {
         <CardHeader className="bg-muted/30 pb-6 pt-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
-              <CardTitle className="text-xl font-black tracking-tight">Active Inventory</CardTitle>
-              <CardDescription className="font-medium text-xs uppercase tracking-widest">Real-time product data</CardDescription>
+              <CardTitle className="text-xl font-black tracking-tight">Inventaris Aktif</CardTitle>
+              <CardDescription className="font-medium text-xs uppercase tracking-widest">Data produk waktu nyata</CardDescription>
             </div>
             <div className="flex items-center gap-3">
               <div className="relative w-full md:w-80">
                 <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Filter products..."
+                  placeholder="Filter produk..."
                   className="pl-10 h-11 rounded-xl bg-background border-none shadow-inner"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -328,12 +328,12 @@ export default function ProductsPage() {
           <Table>
             <TableHeader className="bg-muted/10">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="w-[100px] font-bold py-4">Image</TableHead>
-                <TableHead className="font-bold py-4">Name</TableHead>
-                <TableHead className="font-bold py-4">Category</TableHead>
-                <TableHead className="font-bold py-4">Price</TableHead>
-                <TableHead className="font-bold py-4">Stock</TableHead>
-                <TableHead className="text-right font-bold py-4 pr-6">Actions</TableHead>
+                <TableHead className="w-[100px] font-bold py-4">Gambar</TableHead>
+                <TableHead className="font-bold py-4">Nama</TableHead>
+                <TableHead className="font-bold py-4">Kategori</TableHead>
+                <TableHead className="font-bold py-4">Harga</TableHead>
+                <TableHead className="font-bold py-4">Stok</TableHead>
+                <TableHead className="text-right font-bold py-4 pr-6">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -348,7 +348,7 @@ export default function ProductsPage() {
                   <TableCell colSpan={6} className="text-center py-20 text-muted-foreground">
                     <div className="flex flex-col items-center gap-2 opacity-50 font-medium">
                       <IconPackage size={48} />
-                      <p>No products found in your inventory.</p>
+                      <p>Tidak ada produk ditemukan di inventaris Anda.</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -373,7 +373,7 @@ export default function ProductsPage() {
                     <TableCell className="font-bold text-base py-4">{product.name}</TableCell>
                     <TableCell className="py-4">
                       <Badge variant="secondary" className="font-medium rounded-lg">
-                        {product.categories?.name || 'Uncategorized'}
+                        {product.categories?.name || 'Tanpa Kategori'}
                       </Badge>
                     </TableCell>
                     <TableCell className="font-black text-primary py-4">
@@ -384,7 +384,7 @@ export default function ProductsPage() {
                         variant={product.stock <= 5 ? "destructive" : "outline"} 
                         className={`font-bold ${product.stock > 5 ? 'border-2' : ''} rounded-lg`}
                       >
-                        {product.stock} Units
+                        {product.stock} Unit
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right py-4 pr-6 space-x-1">

@@ -35,7 +35,7 @@ export default function CategoriesPage() {
       .order('name', { ascending: true })
 
     if (error) {
-      toast.error('Failed to fetch categories')
+      toast.error('Gagal mengambil kategori')
     } else {
       setCategories(data || [])
     }
@@ -53,7 +53,7 @@ export default function CategoriesPage() {
     if (error) {
       toast.error(error.message)
     } else {
-      toast.success('Category added')
+      toast.success('Kategori ditambahkan')
       setNewName('')
       fetchCategories()
     }
@@ -70,14 +70,14 @@ export default function CategoriesPage() {
     if (error) {
       toast.error(error.message)
     } else {
-      toast.success('Category updated')
+      toast.success('Kategori diperbarui')
       setEditingId(null)
       fetchCategories()
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return
+    if (!confirm('Apakah Anda yakin ingin menghapus kategori ini?')) return
 
     const { error } = await supabase
       .from('categories')
@@ -87,7 +87,7 @@ export default function CategoriesPage() {
     if (error) {
       toast.error(error.message)
     } else {
-      toast.success('Category deleted')
+      toast.success('Kategori dihapus')
       fetchCategories()
     }
   }
@@ -95,21 +95,21 @@ export default function CategoriesPage() {
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
       <div className="space-y-1 text-center md:text-left">
-        <h1 className="text-3xl font-black tracking-tighter uppercase">Categories</h1>
-        <p className="text-muted-foreground font-medium">Organize your products into logical groups.</p>
+        <h1 className="text-3xl font-black tracking-tighter uppercase">Kategori</h1>
+        <p className="text-muted-foreground font-medium">Atur produk Anda ke dalam kelompok yang logis.</p>
       </div>
 
       <div className="grid gap-8 md:grid-cols-12">
         <div className="md:col-span-4">
           <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
             <CardHeader className="bg-primary/5 pb-6">
-              <CardTitle className="text-xl font-black">Add New</CardTitle>
-              <CardDescription className="font-medium text-xs uppercase tracking-widest">Create a new group</CardDescription>
+              <CardTitle className="text-xl font-black">Tambah Baru</CardTitle>
+              <CardDescription className="font-medium text-xs uppercase tracking-widest">Buat kelompok baru</CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
               <form onSubmit={handleAdd} className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold ml-1">Category Name</label>
+                  <label className="text-sm font-bold ml-1">Nama Kategori</label>
                   <Input
                     placeholder="e.g. Staple Foods"
                     value={newName}
@@ -118,7 +118,7 @@ export default function CategoriesPage() {
                   />
                 </div>
                 <Button type="submit" className="w-full h-11 font-bold rounded-xl shadow-lg">
-                  <IconPlus className="mr-2 h-5 w-5" /> Add Category
+                  <IconPlus className="mr-2 h-5 w-5" /> Tambah Kategori
                 </Button>
               </form>
             </CardContent>
@@ -130,8 +130,8 @@ export default function CategoriesPage() {
             <CardHeader className="bg-muted/30 pb-6 pt-6 border-b">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <CardTitle className="text-xl font-black tracking-tight">Existing Categories</CardTitle>
-                  <CardDescription className="font-medium text-xs uppercase tracking-widest">Manage your taxonomy</CardDescription>
+                  <CardTitle className="text-xl font-black tracking-tight">Kategori yang Ada</CardTitle>
+                  <CardDescription className="font-medium text-xs uppercase tracking-widest">Kelola taksonomi Anda</CardDescription>
                 </div>
                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                   <IconCategory size={20} />
@@ -142,9 +142,9 @@ export default function CategoriesPage() {
               <Table>
                 <TableHeader className="bg-muted/10">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="font-bold py-4 pl-6">Name</TableHead>
-                    <TableHead className="font-bold py-4">Created At</TableHead>
-                    <TableHead className="text-right font-bold py-4 pr-6">Actions</TableHead>
+                    <TableHead className="font-bold py-4 pl-6">Nama</TableHead>
+                    <TableHead className="font-bold py-4">Dibuat Pada</TableHead>
+                    <TableHead className="text-right font-bold py-4 pr-6">Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -159,7 +159,7 @@ export default function CategoriesPage() {
                       <TableCell colSpan={3} className="text-center py-20 text-muted-foreground">
                         <div className="flex flex-col items-center gap-2 opacity-50 font-medium">
                           <IconCategory size={48} />
-                          <p>No categories found.</p>
+                          <p>Kategori tidak ditemukan.</p>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -192,7 +192,7 @@ export default function CategoriesPage() {
                                 className="rounded-lg h-9 font-bold px-4 shadow-sm"
                                 onClick={() => handleUpdate(category.id)}
                               >
-                                Save
+                                Simpan
                               </Button>
                               <Button 
                                 size="sm" 
@@ -200,7 +200,7 @@ export default function CategoriesPage() {
                                 className="rounded-lg h-9 font-medium"
                                 onClick={() => setEditingId(null)}
                               >
-                                Cancel
+                                Batal
                               </Button>
                             </>
                           ) : (

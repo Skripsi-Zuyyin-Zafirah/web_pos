@@ -35,28 +35,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Define menu items based on role
   const adminItems = [
     {
-      title: "Dashboard",
+      title: "Dasbor",
       url: "/admin",
       icon: IconLayoutDashboard,
     },
     {
-      title: "Inventory",
+      title: "Inventaris",
       url: "#",
       icon: IconPackage,
       isActive: true,
       items: [
         {
-          title: "Products",
+          title: "Produk",
           url: "/admin/products",
         },
         {
-          title: "Categories",
+          title: "Kategori",
           url: "/admin/categories",
         },
       ],
     },
     {
-      title: "Users",
+      title: "Pengguna",
       url: "/admin/users",
       icon: IconUsers,
     },
@@ -64,17 +64,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const cashierItems = [
     {
-      title: "Dashboard",
+      title: "Dasbor",
       url: "/cashier/dashboard",
       icon: IconLayoutDashboard,
     },
     {
-      title: "POS Interface",
+      title: "Antarmuka POS",
       url: "/cashier/pos",
       icon: IconShoppingCart,
     },
     {
-      title: "Order Queue",
+      title: "Antrean Pesanan",
       url: "/cashier/queue",
       icon: IconHistory,
     },
@@ -100,8 +100,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {role === 'admin' && <NavMain items={adminItems} label="Management" />}
-        {(role === 'admin' || role === 'cashier') && <NavMain items={cashierItems} label="Transactions" />}
+        {role === 'admin' && <NavMain items={adminItems} label="Manajemen" />}
+        {(role === 'admin' || role === 'cashier') && <NavMain items={cashierItems} label="Transaksi" />}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={{

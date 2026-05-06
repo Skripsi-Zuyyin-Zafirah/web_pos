@@ -42,7 +42,7 @@ export function PaymentConfirmationDialog({
   const handleFinalize = async () => {
     if (!orderId || !staffId) return
     if ((parseFloat(cashAmount) || 0) < totalPrice) {
-      toast.error('Insufficient cash amount')
+      toast.error('Jumlah uang tunai tidak mencukupi')
       return
     }
 
@@ -56,10 +56,10 @@ export function PaymentConfirmationDialog({
 
     if (error) {
       console.error('Finalize error:', error)
-      toast.error('Failed to finalize payment: ' + error.message)
+      toast.error('Gagal menyelesaikan pembayaran: ' + error.message)
     } else {
-      toast.success('Payment confirmed!', {
-        description: `Order #${orderId.slice(0, 8).toUpperCase()} for ${customerName} is completed.`,
+      toast.success('Pembayaran dikonfirmasi!', {
+        description: `Pesanan #${orderId.slice(0, 8).toUpperCase()} untuk ${customerName} telah selesai.`,
         icon: '💰'
       })
       onSuccess()
@@ -77,9 +77,9 @@ export function PaymentConfirmationDialog({
               <IconCash size={28} strokeWidth={2.5} />
             </div>
             <div>
-              <DialogTitle className="text-2xl font-black tracking-tighter uppercase">Confirm Payment</DialogTitle>
+              <DialogTitle className="text-2xl font-black tracking-tighter uppercase">Konfirmasi Pembayaran</DialogTitle>
               <DialogDescription className="text-xs font-bold uppercase tracking-widest opacity-70">
-                Cash Transaction Only
+                Hanya Transaksi Tunai
               </DialogDescription>
             </div>
           </div>
@@ -89,18 +89,18 @@ export function PaymentConfirmationDialog({
           {/* Summary Card */}
           <div className="bg-muted/30 p-6 rounded-3xl space-y-4 border-2 border-dashed border-muted">
             <div className="flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Bill</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Tagihan</span>
               <span className="text-2xl font-black tracking-tighter text-foreground">Rp {totalPrice.toLocaleString()}</span>
             </div>
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Customer</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pelanggan</p>
               <p className="font-bold uppercase">{customerName}</p>
             </div>
           </div>
 
           {/* Input Section */}
           <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground px-1">Cash Received</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground px-1">Uang Diterima</label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-muted-foreground">Rp</span>
               <Input 
@@ -117,7 +117,7 @@ export function PaymentConfirmationDialog({
           {/* Change Display */}
           {parseFloat(cashAmount) >= totalPrice && (
             <div className="bg-emerald-500/10 p-4 rounded-2xl flex justify-between items-center animate-in fade-in slide-in-from-top-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700">Change</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700">Kembalian</span>
               <span className="font-black text-xl text-emerald-700">Rp {change.toLocaleString()}</span>
             </div>
           )}
@@ -125,14 +125,14 @@ export function PaymentConfirmationDialog({
           {parseFloat(cashAmount) > 0 && parseFloat(cashAmount) < totalPrice && (
             <div className="bg-red-500/10 p-4 rounded-2xl flex items-center gap-2 text-red-600 animate-pulse">
               <IconAlertTriangle size={18} strokeWidth={3} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Insufficient Funds</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Dana Tidak Cukup</span>
             </div>
           )}
         </div>
 
         <DialogFooter className="pt-4 gap-2">
           <Button variant="ghost" onClick={onClose} disabled={loading} className="rounded-xl font-bold uppercase tracking-widest text-[10px]">
-            Cancel
+            Batal
           </Button>
           <Button 
             className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700 border-none"
@@ -144,7 +144,7 @@ export function PaymentConfirmationDialog({
             ) : (
               <IconCheck size={18} className="mr-2" strokeWidth={3} />
             )}
-            Confirm & Finalize
+            Konfirmasi & Selesaikan
           </Button>
         </DialogFooter>
       </DialogContent>

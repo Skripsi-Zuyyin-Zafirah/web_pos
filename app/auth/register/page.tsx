@@ -39,7 +39,7 @@ export default function RegisterPage() {
       return
     }
 
-    toast.success('Registration successful! Please check your email for verification.')
+    toast.success('Pendaftaran berhasil! Silakan periksa email Anda untuk verifikasi.')
     router.push('/auth/login')
   }
 
@@ -47,15 +47,15 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
       <Card className="w-full max-w-md shadow-lg border-primary/10">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Create an Account</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Buat Akun</CardTitle>
           <CardDescription className="text-center">
-            Enter your details to register as a new customer
+            Masukkan detail Anda untuk mendaftar sebagai pelanggan baru
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleRegister}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName">Nama Lengkap</Label>
               <Input
                 id="fullName"
                 type="text"
@@ -79,7 +79,7 @@ export default function RegisterPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Kata Sandi</Label>
               <Input
                 id="password"
                 type="password"
@@ -96,14 +96,14 @@ export default function RegisterPage() {
                 <IconLoader2 className="mr-2 h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  <IconUserPlus className="mr-2 h-5 w-5" /> Sign Up
+                  <IconUserPlus className="mr-2 h-5 w-5" /> Daftar
                 </>
               )}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
+              Sudah punya akun?{' '}
               <Link href="/auth/login" className="text-primary hover:underline font-medium">
-                Sign In
+                Masuk
               </Link>
             </p>
           </CardFooter>

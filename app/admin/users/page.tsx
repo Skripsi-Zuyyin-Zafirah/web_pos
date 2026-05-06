@@ -34,7 +34,7 @@ export default function UsersPage() {
       .order('full_name', { ascending: true })
 
     if (error) {
-      toast.error('Failed to fetch users')
+      toast.error('Gagal mengambil pengguna')
     } else {
       setProfiles(data || [])
     }
@@ -50,7 +50,7 @@ export default function UsersPage() {
     if (error) {
       toast.error(error.message)
     } else {
-      toast.success('User role updated')
+      toast.success('Peran pengguna diperbarui')
       fetchProfiles()
     }
   }
@@ -66,13 +66,13 @@ export default function UsersPage() {
       case 'cashier':
         return (
           <Badge variant="default" className="bg-blue-600 hover:bg-blue-700 font-bold rounded-lg px-3 py-1 gap-2 border-none">
-            <IconTruck size={14} /> Cashier
+            <IconTruck size={14} /> Kasir
           </Badge>
         )
       default:
         return (
           <Badge variant="secondary" className="font-bold rounded-lg px-3 py-1 gap-2">
-            <IconUser size={14} /> Customer
+            <IconUser size={14} /> Pelanggan
           </Badge>
         )
     }
@@ -82,37 +82,37 @@ export default function UsersPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tighter uppercase">User Access Control</h1>
-          <p className="text-muted-foreground font-medium">Manage permissions and roles for your team and customers.</p>
+          <h1 className="text-3xl font-black tracking-tighter uppercase">Kontrol Akses Pengguna</h1>
+          <p className="text-muted-foreground font-medium">Kelola izin dan peran untuk tim dan pelanggan Anda.</p>
         </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="border-none shadow-sm bg-red-500/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold uppercase tracking-wider text-red-600">Admins</CardTitle>
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-red-600">Admin</CardTitle>
             <IconUserShield className="h-5 w-5 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black">{profiles.filter(p => p.role === 'admin').length} Users</div>
+            <div className="text-2xl font-black">{profiles.filter(p => p.role === 'admin').length} Pengguna</div>
           </CardContent>
         </Card>
         <Card className="border-none shadow-sm bg-blue-500/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold uppercase tracking-wider text-blue-600">Cashiers</CardTitle>
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-blue-600">Kasir</CardTitle>
             <IconTruck className="h-5 w-5 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black">{profiles.filter(p => p.role === 'cashier').length} Users</div>
+            <div className="text-2xl font-black">{profiles.filter(p => p.role === 'cashier').length} Pengguna</div>
           </CardContent>
         </Card>
         <Card className="border-none shadow-sm bg-slate-500/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-bold uppercase tracking-wider text-slate-600">Customers</CardTitle>
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-slate-600">Pelanggan</CardTitle>
             <IconUser className="h-5 w-5 text-slate-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black">{profiles.filter(p => p.role === 'customer').length} Users</div>
+            <div className="text-2xl font-black">{profiles.filter(p => p.role === 'customer').length} Pengguna</div>
           </CardContent>
         </Card>
       </div>
@@ -121,8 +121,8 @@ export default function UsersPage() {
         <CardHeader className="bg-muted/30 pb-6 pt-6 border-b">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <CardTitle className="text-xl font-black tracking-tight">System Profiles</CardTitle>
-              <CardDescription className="font-medium text-xs uppercase tracking-widest">Database accounts</CardDescription>
+              <CardTitle className="text-xl font-black tracking-tight">Profil Sistem</CardTitle>
+              <CardDescription className="font-medium text-xs uppercase tracking-widest">Akun database</CardDescription>
             </div>
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
               <IconUsers size={20} />
@@ -133,10 +133,10 @@ export default function UsersPage() {
           <Table>
             <TableHeader className="bg-muted/10">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="font-bold py-4 pl-6">Profile</TableHead>
-                <TableHead className="font-bold py-4">Current Role</TableHead>
-                <TableHead className="font-bold py-4">Last Activity</TableHead>
-                <TableHead className="text-right font-bold py-4 pr-6">Change Access</TableHead>
+                <TableHead className="font-bold py-4 pl-6">Profil</TableHead>
+                <TableHead className="font-bold py-4">Peran Saat Ini</TableHead>
+                <TableHead className="font-bold py-4">Aktivitas Terakhir</TableHead>
+                <TableHead className="text-right font-bold py-4 pr-6">Ubah Akses</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -151,7 +151,7 @@ export default function UsersPage() {
                   <TableCell colSpan={4} className="text-center py-20 text-muted-foreground">
                     <div className="flex flex-col items-center gap-2 opacity-50 font-medium">
                       <IconUsers size={48} />
-                      <p>No user profiles found.</p>
+                      <p>Tidak ada profil pengguna ditemukan.</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -164,7 +164,7 @@ export default function UsersPage() {
                           {profile.full_name?.charAt(0) || '?'}
                         </div>
                         <div className="flex flex-col">
-                          <span className="font-bold text-base leading-tight">{profile.full_name || 'Anonymous User'}</span>
+                          <span className="font-bold text-base leading-tight">{profile.full_name || 'Pengguna Anonim'}</span>
                           <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider font-mono">ID: {profile.id.slice(0, 8)}...</span>
                         </div>
                       </div>
@@ -173,7 +173,7 @@ export default function UsersPage() {
                       {getRoleBadge(profile.role)}
                     </TableCell>
                     <TableCell className="py-4 font-medium text-sm text-muted-foreground">
-                      {new Date(profile.updated_at).toLocaleDateString()} at {new Date(profile.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(profile.updated_at).toLocaleDateString()} pada {new Date(profile.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </TableCell>
                     <TableCell className="text-right py-4 pr-6">
                       <Select
@@ -181,12 +181,12 @@ export default function UsersPage() {
                         onValueChange={(value) => handleRoleChange(profile.id, value as any)}
                       >
                         <SelectTrigger className="w-[160px] ml-auto h-10 rounded-xl font-bold shadow-sm border-2">
-                          <SelectValue placeholder="Change Role" />
+                          <SelectValue placeholder="Ubah Peran" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
-                          <SelectItem value="admin" className="font-bold text-red-600">Admin Access</SelectItem>
-                          <SelectItem value="cashier" className="font-bold text-blue-600">Cashier Access</SelectItem>
-                          <SelectItem value="customer" className="font-bold">Customer Access</SelectItem>
+                          <SelectItem value="admin" className="font-bold text-red-600">Akses Admin</SelectItem>
+                          <SelectItem value="cashier" className="font-bold text-blue-600">Akses Kasir</SelectItem>
+                          <SelectItem value="customer" className="font-bold">Akses Pelanggan</SelectItem>
                         </SelectContent>
                       </Select>
                     </TableCell>

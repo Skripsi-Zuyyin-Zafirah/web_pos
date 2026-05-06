@@ -119,7 +119,7 @@ function DragHandle({ id }: { id: number }) {
       className="size-7 text-muted-foreground hover:bg-transparent"
     >
       <IconGripVertical className="size-3 text-muted-foreground" />
-      <span className="sr-only">Drag to reorder</span>
+      <span className="sr-only">Tarik untuk mengatur ulang</span>
     </Button>
   )
 }
@@ -140,7 +140,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label="Pilih semua"
         />
       </div>
     ),
@@ -149,7 +149,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label="Pilih baris"
         />
       </div>
     ),
@@ -166,7 +166,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     accessorKey: "type",
-    header: "Section Type",
+    header: "Tipe Bagian",
     cell: ({ row }) => (
       <div className="w-32">
         <Badge variant="outline" className="px-1.5 text-muted-foreground">
@@ -242,9 +242,9 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     accessorKey: "reviewer",
-    header: "Reviewer",
+    header: "Peninjau",
     cell: ({ row }) => {
-      const isAssigned = row.original.reviewer !== "Assign reviewer"
+      const isAssigned = row.original.reviewer !== "Tugaskan peninjau"
 
       if (isAssigned) {
         return row.original.reviewer
@@ -261,7 +261,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
               size="sm"
               id={`${row.original.id}-reviewer`}
             >
-              <SelectValue placeholder="Assign reviewer" />
+              <SelectValue placeholder="Tugaskan peninjau" />
             </SelectTrigger>
             <SelectContent align="end">
               <SelectGroup>
@@ -288,15 +288,15 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           >
             <IconDotsVertical
             />
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">Buka menu</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
+          <DropdownMenuItem>Ubah</DropdownMenuItem>
+          <DropdownMenuItem>Buat salinan</DropdownMenuItem>
+          <DropdownMenuItem>Favorit</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+          <DropdownMenuItem variant="destructive">Hapus</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
@@ -408,33 +408,33 @@ export function DataTable({
             size="sm"
             id="view-selector"
           >
-            <SelectValue placeholder="Select a view" />
+            <SelectValue placeholder="Pilih tampilan" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="outline">Outline</SelectItem>
-              <SelectItem value="past-performance">Past Performance</SelectItem>
-              <SelectItem value="key-personnel">Key Personnel</SelectItem>
-              <SelectItem value="focus-documents">Focus Documents</SelectItem>
+              <SelectItem value="outline">Garis Besar</SelectItem>
+              <SelectItem value="past-performance">Kinerja Masa Lalu</SelectItem>
+              <SelectItem value="key-personnel">Personel Kunci</SelectItem>
+              <SelectItem value="focus-documents">Dokumen Fokus</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
         <TabsList className="hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex">
-          <TabsTrigger value="outline">Outline</TabsTrigger>
+          <TabsTrigger value="outline">Garis Besar</TabsTrigger>
           <TabsTrigger value="past-performance">
-            Past Performance <Badge variant="secondary">3</Badge>
+            Kinerja Masa Lalu <Badge variant="secondary">3</Badge>
           </TabsTrigger>
           <TabsTrigger value="key-personnel">
-            Key Personnel <Badge variant="secondary">2</Badge>
+            Personel Kunci <Badge variant="secondary">2</Badge>
           </TabsTrigger>
-          <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
+          <TabsTrigger value="focus-documents">Dokumen Fokus</TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
                 <IconLayoutColumns data-icon="inline-start" />
-                Columns
+                Kolom
                 <IconChevronDown data-icon="inline-end" />
               </Button>
             </DropdownMenuTrigger>
@@ -465,7 +465,7 @@ export function DataTable({
           <Button variant="outline" size="sm">
             <IconPlus
             />
-            <span className="hidden lg:inline">Add Section</span>
+            <span className="hidden lg:inline">Tambah Bagian</span>
           </Button>
         </div>
       </div>
@@ -516,7 +516,7 @@ export function DataTable({
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      Tidak ada hasil.
                     </TableCell>
                   </TableRow>
                 )}
@@ -526,13 +526,13 @@ export function DataTable({
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+            {table.getFilteredSelectedRowModel().rows.length} dari{" "}
+            {table.getFilteredRowModel().rows.length} baris dipilih.
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
               <Label htmlFor="rows-per-page" className="text-sm font-medium">
-                Rows per page
+                Baris per halaman
               </Label>
               <Select
                 value={`${table.getState().pagination.pageSize}`}
@@ -557,7 +557,7 @@ export function DataTable({
               </Select>
             </div>
             <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              Halaman {table.getState().pagination.pageIndex + 1} dari{" "}
               {table.getPageCount()}
             </div>
             <div className="ml-auto flex items-center gap-2 lg:ml-0">
@@ -567,7 +567,7 @@ export function DataTable({
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
               >
-                <span className="sr-only">Go to first page</span>
+                <span className="sr-only">Ke halaman pertama</span>
                 <IconChevronsLeft
                 />
               </Button>
@@ -578,7 +578,7 @@ export function DataTable({
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
-                <span className="sr-only">Go to previous page</span>
+                <span className="sr-only">Ke halaman sebelumnya</span>
                 <IconChevronLeft
                 />
               </Button>
@@ -589,7 +589,7 @@ export function DataTable({
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
-                <span className="sr-only">Go to next page</span>
+                <span className="sr-only">Ke halaman berikutnya</span>
                 <IconChevronRight
                 />
               </Button>
@@ -600,7 +600,7 @@ export function DataTable({
                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                 disabled={!table.getCanNextPage()}
               >
-                <span className="sr-only">Go to last page</span>
+                <span className="sr-only">Ke halaman terakhir</span>
                 <IconChevronsRight
                 />
               </Button>
@@ -661,7 +661,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
         <DrawerHeader className="gap-1">
           <DrawerTitle>{item.header}</DrawerTitle>
           <DrawerDescription>
-            Showing total visitors for the last 6 months
+            Menampilkan total pengunjung selama 6 bulan terakhir
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
@@ -710,7 +710,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
               <Separator />
               <div className="grid gap-2">
                 <div className="flex gap-2 leading-none font-medium">
-                  Trending up by 5.2% this month{" "}
+                  Meningkat sebesar 5,2% bulan ini{" "}
                   <IconTrendingUp className="size-4" />
                 </div>
                 <div className="text-muted-foreground">

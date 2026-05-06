@@ -42,7 +42,7 @@ export default function LoginPage() {
         .eq('id', user.id)
         .single()
 
-      toast.success('Successfully logged in!')
+      toast.success('Berhasil masuk!')
       
       if (profile?.role === 'admin') {
         window.location.href = '/admin'
@@ -58,9 +58,9 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
       <Card className="w-full max-w-md shadow-lg border-primary/10">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Selamat Datang Kembali</CardTitle>
           <CardDescription className="text-center">
-            Enter your credentials to access your account
+            Masukkan kredensial Anda untuk mengakses akun
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
@@ -79,7 +79,7 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Kata Sandi</Label>
               </div>
               <Input
                 id="password"
@@ -97,14 +97,14 @@ export default function LoginPage() {
                 <IconLoader2 className="mr-2 h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Sign In <IconArrowRight className="ml-2 h-5 w-5" />
+                  Masuk <IconArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              Don't have an account?{' '}
+              Belum punya akun?{' '}
               <Link href="/auth/register" className="text-primary hover:underline font-medium">
-                Sign Up
+                Daftar
               </Link>
             </p>
           </CardFooter>

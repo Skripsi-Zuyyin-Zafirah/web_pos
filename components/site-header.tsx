@@ -42,7 +42,7 @@ export function SiteHeader({ title, breadcrumbs }: SiteHeaderProps) {
               ))
             ) : (
               <BreadcrumbItem>
-                <BreadcrumbPage>{title || "Dashboard"}</BreadcrumbPage>
+                <BreadcrumbPage>{title || "Dasbor"}</BreadcrumbPage>
               </BreadcrumbItem>
             )}
           </BreadcrumbList>

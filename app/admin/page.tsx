@@ -36,54 +36,60 @@ export default function AdminDashboard() {
   const fetchDashboardData = async () => {
     setLoading(true)
     
-    // 1. Fetch Stats
-    const { data: orders } = await supabase.from('orders').select('total_price, ewp, created_at')
-    const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true })
+    try {
+      // Parallel fetch all required data
+      const [
+        { data: orders },
+        { count: userCount },
+        { data: items }
+      ] = await Promise.all([
+        supabase.from('orders').select('total_price, ewp, created_at'),
+        supabase.from('profiles').select('*', { count: 'exact', head: true }),
+        supabase.from('order_items').select('quantity, products(name)')
+      ])
 
-    if (orders) {
-      const revenue = orders.reduce((acc, curr) => acc + Number(curr.total_price), 0)
-      const avgEwp = orders.length > 0 
-        ? orders.reduce((acc, curr) => acc + curr.ewp, 0) / orders.length 
-        : 0
-      
-      setStats({
-        totalRevenue: revenue,
-        totalOrders: orders.length,
-        avgEwp: Math.round(avgEwp / 60),
-        totalUsers: userCount || 0
-      })
+      if (orders) {
+        const revenue = orders.reduce((acc, curr) => acc + Number(curr.total_price), 0)
+        const avgEwp = orders.length > 0 
+          ? orders.reduce((acc, curr) => acc + curr.ewp, 0) / orders.length 
+          : 0
+        
+        setStats({
+          totalRevenue: revenue,
+          totalOrders: orders.length,
+          avgEwp: Math.round(avgEwp / 60),
+          totalUsers: userCount || 0
+        })
 
-      // 2. Prepare Chart Data (Daily Sales)
-      const dailyData: Record<string, number> = {}
-      orders.forEach(order => {
-        const date = new Date(order.created_at).toLocaleDateString()
-        dailyData[date] = (dailyData[date] || 0) + Number(order.total_price)
-      })
-      
-      setChartData(Object.entries(dailyData).map(([name, total]) => ({ name, total })))
+        // Prepare Chart Data (Daily Sales)
+        const dailyData: Record<string, number> = {}
+        orders.forEach(order => {
+          const date = new Date(order.created_at).toLocaleDateString()
+          dailyData[date] = (dailyData[date] || 0) + Number(order.total_price)
+        })
+        
+        setChartData(Object.entries(dailyData).map(([name, total]) => ({ name, total })))
+      }
+
+      if (items) {
+        const productSales: Record<string, number> = {}
+        items.forEach(item => {
+          const name = (item.products as any)?.name || 'Unknown'
+          productSales[name] = (productSales[name] || 0) + item.quantity
+        })
+        
+        const sortedProducts = Object.entries(productSales)
+          .map(([name, value]) => ({ name, value }))
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 5)
+        
+        setTopProducts(sortedProducts)
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+    } finally {
+      setLoading(false)
     }
-
-    // 3. Fetch Top Products
-    const { data: items } = await supabase
-      .from('order_items')
-      .select('quantity, products(name)')
-    
-    if (items) {
-      const productSales: Record<string, number> = {}
-      items.forEach(item => {
-        const name = (item.products as any)?.name || 'Unknown'
-        productSales[name] = (productSales[name] || 0) + item.quantity
-      })
-      
-      const sortedProducts = Object.entries(productSales)
-        .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 5)
-      
-      setTopProducts(sortedProducts)
-    }
-
-    setLoading(false)
   }
 
   if (loading) {

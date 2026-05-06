@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from "react"
+import Link from "next/link"
 import {
   IconArchive,
   IconCategory,
@@ -63,6 +64,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const cashierItems = [
     {
+      title: "Dashboard",
+      url: "/cashier/dashboard",
+      icon: IconLayoutDashboard,
+    },
+    {
       title: "POS Interface",
       url: "/cashier/pos",
       icon: IconShoppingCart,
@@ -80,7 +86,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/">
+              <Link href="/">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <IconArchive className="size-5" />
                 </div>
@@ -88,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <span className="font-semibold">Wholesale POS</span>
                   <span className="">v1.0.0</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

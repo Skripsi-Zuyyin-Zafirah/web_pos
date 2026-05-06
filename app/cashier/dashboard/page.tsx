@@ -7,11 +7,12 @@ import { useAutoDispatch } from '@/hooks/use-auto-dispatch'
 import { StaffStatusGrid, QueueStatsCounter } from '@/components/cashier/dashboard-components'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { IconLayoutDashboard, IconActivity, IconRefresh, IconArrowRight, IconChefHat, IconRobot, IconSettings } from '@tabler/icons-react'
+import { IconLayoutDashboard, IconActivity, IconRefresh, IconArrowRight, IconChefHat, IconRobot, IconSettings, IconEye } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
+import { OrderDetailsDialog } from '@/components/cashier/order-details'
 
 export default function CashierDashboardPage() {
   const [autoDispatchEnabled, setAutoDispatchEnabled] = useState(true)
@@ -20,6 +21,8 @@ export default function CashierDashboardPage() {
   const [stats, setStats] = useState({ waiting: 0, processing: 0, done: 0 })
   const [activeOrders, setActiveOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -175,9 +178,22 @@ export default function CashierDashboardPage() {
                             </div>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <Badge className="bg-amber-500/10 text-amber-700 border-none font-black text-[9px] uppercase tracking-widest animate-pulse">
-                              Processing
-                            </Badge>
+                            <div className="flex items-center justify-end gap-2">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-8 rounded-lg font-bold uppercase tracking-widest text-[9px]"
+                                onClick={() => {
+                                  setSelectedOrderId(order.id)
+                                  setIsDetailsOpen(true)
+                                }}
+                              >
+                                <IconEye size={14} className="mr-1" /> View
+                              </Button>
+                              <Badge className="bg-amber-500/10 text-amber-700 border-none font-black text-[9px] uppercase tracking-widest animate-pulse">
+                                Processing
+                              </Badge>
+                            </div>
                           </td>
                         </tr>
                       ))
@@ -189,6 +205,12 @@ export default function CashierDashboardPage() {
           </Card>
         </div>
       </div>
+
+      <OrderDetailsDialog 
+        orderId={selectedOrderId} 
+        isOpen={isDetailsOpen} 
+        onClose={() => setIsDetailsOpen(false)} 
+      />
     </div>
   )
 }

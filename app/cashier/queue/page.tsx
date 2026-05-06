@@ -19,13 +19,18 @@ import {
   IconShoppingCart,
   IconArrowDown,
   IconVariable,
-  IconCalendarEvent
+  IconCalendarEvent,
+  IconRefresh,
+  IconEye
 } from '@tabler/icons-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { OrderDetailsDialog } from '@/components/cashier/order-details'
 
 export default function QueuePage() {
   const [orders, setOrders] = useState<HeapItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -220,6 +225,16 @@ export default function QueuePage() {
                       </div>
 
                       <div className="mt-auto flex gap-2 pt-2">
+                        <Button 
+                          variant="outline" 
+                          className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl border-2 hover:bg-muted"
+                          onClick={() => {
+                            setSelectedOrderId(order.id)
+                            setIsDetailsOpen(true)
+                          }}
+                        >
+                          <IconEye size={18} className="mr-2" strokeWidth={3} /> Details
+                        </Button>
                         {order.status === 'waiting' ? (
                           <Button 
                             className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20" 
@@ -247,25 +262,13 @@ export default function QueuePage() {
           )}
         </div>
       </div>
+
+      <OrderDetailsDialog 
+        orderId={selectedOrderId} 
+        isOpen={isDetailsOpen} 
+        onClose={() => setIsDetailsOpen(false)} 
+      />
     </div>
   )
 }
 
-function IconRefresh({ size = 24, className = "" }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" /><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-    </svg>
-  )
-}

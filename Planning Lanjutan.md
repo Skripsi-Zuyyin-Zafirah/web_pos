@@ -30,9 +30,9 @@ Dokumen ini merincikan tahapan pengembangan untuk 7 fitur utama pada Halaman Kas
 
 ## 📄 Milestone 5: Detail Pesanan & Dokumentasi Fisik (Hari 6)
 **Fokus:** Implementasi **Fitur 4 (Detail Pesanan)** dan **Fitur 6 (Cetak Struk Kerja)**.
-- [ ] **Verification Modal:** UI detail untuk meninjau produk, jumlah, dan total harga sebelum diproses.
-- [ ] **Work Receipt Template:** Desain struk yang optimal untuk printer thermal/dot matrix yang berisi instruksi kerja pegawai.
-- [ ] **Print Service:** Integrasi fitur cetak langsung dari browser.
+- [x] **Verification Modal:** UI detail untuk meninjau produk, jumlah, dan total harga sebelum diproses.
+- [x] **Work Receipt Template:** Desain struk yang optimal untuk printer thermal/dot matrix yang berisi instruksi kerja pegawai.
+- [x] **Print Service:** Integrasi fitur cetak langsung dari browser.
 
 ## 💰 Milestone 6: Finalisasi & Integrasi Stok (Hari 7)
 **Fokus:** Implementasi **Fitur 7 (Konfirmasi Pembayaran & Selesai)**.

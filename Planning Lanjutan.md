@@ -18,9 +18,9 @@ Dokumen ini merincikan tahapan pengembangan untuk 7 fitur utama pada Halaman Kas
 
 ## 🏗️ Milestone 3: Visualisasi Algoritma Min-Heap (Hari 4)
 **Fokus:** Implementasi **Fitur 2 (Daftar Pesanan Masuk)**.
-- [ ] **Transparansi EWP:** Menampilkan kalkulasi detail `EWP = Item x 30s` pada setiap baris antrian.
-- [ ] **Logic Tie-Breaking:** Memastikan urutan antrian mematuhi aturan: Prioritas EWP terkecil, diikuti oleh waktu kedatangan (FIFO).
-- [ ] **Heap UI Animation:** Memberikan indikasi visual saat ada pesanan baru yang "menyalip" ke posisi atas karena EWP lebih kecil.
+- [x] **Transparansi EWP:** Menampilkan kalkulasi detail `EWP = Item x 30s` pada setiap baris antrian.
+- [x] **Logic Tie-Breaking:** Memastikan urutan antrian mematuhi aturan: Prioritas EWP terkecil, diikuti oleh waktu kedatangan (FIFO).
+- [x] **Heap UI Animation:** Memberikan indikasi visual saat ada pesanan baru yang "menyalip" ke posisi atas karena EWP lebih kecil.
 
 ## 🤖 Milestone 4: Engine Distribusi Otomatis (Hari 5)
 **Fokus:** Implementasi **Fitur 3 (Distribusi Otomatis)**.

@@ -73,15 +73,64 @@ export default function QueuePage() {
   }
 
   const updateStatus = async (orderId: string, status: string) => {
-    const { error } = await supabase
-      .from('orders')
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', orderId)
+    setLoading(true)
+    try {
+      if (status === 'processing') {
+        // Find an available staff
+        const { data: idleStaff } = await supabase
+          .from('staff')
+          .select('id, name')
+          .eq('status', 'idle')
+          .limit(1)
+          .single()
 
-    if (error) {
-      toast.error('Failed to update status')
-    } else {
-      toast.success(`Order moved to ${status}`)
+        if (!idleStaff) {
+          toast.error('No staff available! Please wait or free up a staff member.')
+          setLoading(false)
+          return
+        }
+
+        // Assign staff and update order
+        const { error: orderError } = await supabase
+          .from('orders')
+          .update({ 
+            status, 
+            assigned_staff_id: idleStaff.id,
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', orderId)
+
+        if (orderError) throw orderError
+
+        // Update staff status
+        const { error: staffError } = await supabase
+          .from('staff')
+          .update({ 
+            status: 'busy', 
+            current_order_id: orderId,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', idleStaff.id)
+
+        if (staffError) throw staffError
+
+        toast.success(`Order started by ${idleStaff.name}`)
+      } else {
+        // For other status (like cancelled, if implemented)
+        const { error } = await supabase
+          .from('orders')
+          .update({ status, updated_at: new Date().toISOString() })
+          .eq('id', orderId)
+
+        if (error) throw error
+        toast.success(`Order status updated to ${status}`)
+      }
+    } catch (err: any) {
+      console.error('Update status error:', err)
+      toast.error('Error: ' + (err.message || 'Operation failed'))
+    } finally {
+      fetchOrders()
+      setLoading(false)
     }
   }
 

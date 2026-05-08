@@ -15,6 +15,7 @@ type Product = {
   description: string | null
   price: number
   stock: number
+  unit: string
   image_url: string | null
   category_id: string | null
 }
@@ -35,6 +36,27 @@ export default function MenuPage() {
 
   useEffect(() => {
     fetchData()
+
+    const channel = supabase
+      .channel('public:products')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'products' },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setProducts(prev => [...prev, payload.new as Product].sort((a, b) => a.name.localeCompare(b.name)))
+          } else if (payload.eventType === 'UPDATE') {
+            setProducts(prev => prev.map(p => p.id === payload.new.id ? { ...p, ...payload.new } : p))
+          } else if (payload.eventType === 'DELETE') {
+            setProducts(prev => prev.filter(p => p.id !== payload.old.id))
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   const fetchData = async () => {
@@ -161,10 +183,10 @@ export default function MenuPage() {
                   </p>
                   <div className="flex items-center justify-between mt-auto">
                     <span className="text-2xl font-black text-primary">
-                      Rp {product.price.toLocaleString()}
+                      Rp {product.price.toLocaleString()} <span className="text-sm font-semibold text-muted-foreground">/ {product.unit || 'pcs'}</span>
                     </span>
                     <Badge variant="secondary" className="font-medium">
-                      Stok: {product.stock}
+                      Stok: {product.stock} {product.unit || 'pcs'}
                     </Badge>
                   </div>
                 </CardContent>

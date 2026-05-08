@@ -20,6 +20,7 @@ type Product = {
   description: string | null
   price: number
   stock: number
+  unit: string
   image_url: string | null
   category_id: string | null
   created_at: string
@@ -43,6 +44,7 @@ export default function ProductsPage() {
     description: '',
     price: 0,
     stock: 0,
+    unit: 'pcs',
     category_id: '',
     image: null as File | null,
   })
@@ -105,6 +107,7 @@ export default function ProductsPage() {
       description: formData.description,
       price: formData.price,
       stock: formData.stock,
+      unit: formData.unit,
       category_id: formData.category_id || null,
       image_url,
     }
@@ -152,6 +155,7 @@ export default function ProductsPage() {
       description: '',
       price: 0,
       stock: 0,
+      unit: 'pcs',
       category_id: '',
       image: null,
     })
@@ -216,7 +220,7 @@ export default function ProductsPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="price" className="font-bold">Harga (Rp)</Label>
                     <Input
@@ -238,6 +242,22 @@ export default function ProductsPage() {
                       required
                       className="h-11 rounded-xl"
                     />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="unit" className="font-bold">Satuan</Label>
+                    <Select
+                      value={formData.unit}
+                      onValueChange={(value) => setFormData({ ...formData, unit: value })}
+                    >
+                      <SelectTrigger className="h-11 rounded-xl">
+                        <SelectValue placeholder="Satuan" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        <SelectItem value="pcs">pcs</SelectItem>
+                        <SelectItem value="karton">karton</SelectItem>
+                        <SelectItem value="slop">slop</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <div className="grid gap-2">
@@ -384,7 +404,7 @@ export default function ProductsPage() {
                         variant={product.stock <= 5 ? "destructive" : "outline"} 
                         className={`font-bold ${product.stock > 5 ? 'border-2' : ''} rounded-lg`}
                       >
-                        {product.stock} Unit
+                        {product.stock} {product.unit || 'pcs'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right py-4 pr-6 space-x-1">
@@ -399,6 +419,7 @@ export default function ProductsPage() {
                             description: product.description || '',
                             price: product.price,
                             stock: product.stock,
+                            unit: product.unit || 'pcs',
                             category_id: product.category_id || '',
                             image: null,
                           })

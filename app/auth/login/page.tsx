@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { IconArrowRight, IconLoader2 } from '@tabler/icons-react'
+import { IconArrowRight, IconLoader2, IconChevronLeft } from '@tabler/icons-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -55,18 +55,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
-      <Card className="w-full max-w-md shadow-lg border-primary/10">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Selamat Datang Kembali</CardTitle>
-          <CardDescription className="text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4">
+      <div className="w-full max-w-md mb-4">
+        <Link href="/">
+          <Button variant="ghost" className="text-slate-600 hover:text-slate-900 font-bold hover:bg-slate-100 rounded-full">
+            <IconChevronLeft size={18} className="mr-2" /> Kembali ke Beranda
+          </Button>
+        </Link>
+      </div>
+      <Card className="w-full max-w-md border-slate-100 shadow-sm overflow-hidden">
+        <CardHeader className="space-y-2 border-b border-slate-100 pb-6">
+          <CardTitle className="text-3xl font-black tracking-tighter text-slate-900 text-center">Selamat Datang Kembali</CardTitle>
+          <CardDescription className="text-center text-slate-500 text-sm">
             Masukkan kredensial Anda untuk mengakses akun
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -74,12 +81,12 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-background"
+                className="bg-white border-slate-200 focus-visible:ring-[#2FA4AF]"
               />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Kata Sandi</Label>
+                <Label htmlFor="password" className="text-sm font-medium text-slate-700">Kata Sandi</Label>
               </div>
               <Input
                 id="password"
@@ -87,12 +94,12 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-background"
+                className="bg-white border-slate-200 focus-visible:ring-[#2FA4AF]"
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full h-11 text-base font-medium" disabled={loading}>
+          <CardFooter className="flex flex-col gap-4 mt-2">
+            <Button type="submit" className="w-full h-11 bg-[#2FA4AF] hover:bg-[#258a94] text-white rounded-full font-bold shadow-lg shadow-[#2FA4AF]/20 transition-colors" disabled={loading}>
               {loading ? (
                 <IconLoader2 className="mr-2 h-5 w-5 animate-spin" />
               ) : (
@@ -101,9 +108,9 @@ export default function LoginPage() {
                 </>
               )}
             </Button>
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="text-center text-sm text-slate-500">
               Belum punya akun?{' '}
-              <Link href="/auth/register" className="text-primary hover:underline font-medium">
+              <Link href="/auth/register" className="text-[#2FA4AF] hover:text-[#258a94] hover:underline font-bold">
                 Daftar
               </Link>
             </p>

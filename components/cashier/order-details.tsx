@@ -37,24 +37,31 @@ export function OrderDetailsDialog({
 
   const fetchOrderDetails = async () => {
     setLoading(true)
-    const { data: orderData, error: orderError } = await supabase
-      .from('orders')
-      .select('*, staff(name)')
-      .eq('id', orderId)
-      .single()
+    try {
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .select('*, staff!orders_assigned_staff_id_fkey(name)')
+        .eq('id', orderId)
+        .single()
 
-    const { data: itemsData, error: itemsError } = await supabase
-      .from('order_items')
-      .select('*, products(name, sku)')
-      .eq('order_id', orderId)
+      const { data: itemsData, error: itemsError } = await supabase
+        .from('order_items')
+        .select('*, products(name)')
+        .eq('order_id', orderId)
 
-    if (orderError || itemsError) {
-      toast.error('Gagal mengambil detail pesanan')
-    } else {
-      setOrder(orderData)
-      setItems(itemsData)
+      if (orderError || itemsError) {
+        console.error('Fetch details error:', { orderError, itemsError })
+        toast.error('Gagal mengambil detail pesanan')
+      } else {
+        setOrder(orderData)
+        setItems(itemsData)
+      }
+    } catch (e: any) {
+      console.error('Exception in fetchOrderDetails:', e)
+      toast.error('Terjadi kesalahan: ' + (e.message || 'Operasi gagal'))
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const handlePrint = () => {
@@ -125,7 +132,6 @@ export function OrderDetailsDialog({
                       <tr key={item.id}>
                         <td className="px-4 py-3">
                           <p className="font-bold uppercase tracking-tight">{item.products?.name}</p>
-                          <p className="text-[10px] text-muted-foreground font-mono">{item.products?.sku}</p>
                         </td>
                         <td className="px-4 py-3 text-center font-black">
                           {item.quantity}
@@ -177,7 +183,6 @@ export function OrderDetailsDialog({
                       <tr key={item.id}>
                         <td className="py-3">
                           <p className="font-bold text-lg">{item.products?.name}</p>
-                          <p className="text-sm font-mono">{item.products?.sku}</p>
                         </td>
                         <td className="py-3 text-center font-black text-2xl">
                           {item.quantity}

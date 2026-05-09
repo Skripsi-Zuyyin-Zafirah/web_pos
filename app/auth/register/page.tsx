@@ -44,18 +44,18 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
-      <Card className="w-full max-w-md shadow-lg border-primary/10">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Buat Akun</CardTitle>
-          <CardDescription className="text-center">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
+      <Card className="w-full max-w-md border-slate-100 shadow-sm overflow-hidden">
+        <CardHeader className="space-y-2 border-b border-slate-100 pb-6">
+          <CardTitle className="text-3xl font-black tracking-tighter text-slate-900 text-center">Buat Akun</CardTitle>
+          <CardDescription className="text-center text-slate-500 text-sm">
             Masukkan detail Anda untuk mendaftar sebagai pelanggan baru
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleRegister}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-6">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Nama Lengkap</Label>
+              <Label htmlFor="fullName" className="text-sm font-medium text-slate-700">Nama Lengkap</Label>
               <Input
                 id="fullName"
                 type="text"
@@ -63,11 +63,11 @@ export default function RegisterPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="bg-background"
+                className="bg-white border-slate-200 focus-visible:ring-[#2FA4AF]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -75,23 +75,23 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-background"
+                className="bg-white border-slate-200 focus-visible:ring-[#2FA4AF]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Kata Sandi</Label>
+              <Label htmlFor="password" className="text-sm font-medium text-slate-700">Kata Sandi</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-background"
+                className="bg-white border-slate-200 focus-visible:ring-[#2FA4AF]"
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full h-11 text-base font-medium" disabled={loading}>
+          <CardFooter className="flex flex-col gap-4 mt-2">
+            <Button type="submit" className="w-full h-11 bg-[#2FA4AF] hover:bg-[#258a94] text-white rounded-full font-bold shadow-lg shadow-[#2FA4AF]/20 transition-colors" disabled={loading}>
               {loading ? (
                 <IconLoader2 className="mr-2 h-5 w-5 animate-spin" />
               ) : (
@@ -100,9 +100,9 @@ export default function RegisterPage() {
                 </>
               )}
             </Button>
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="text-center text-sm text-slate-500">
               Sudah punya akun?{' '}
-              <Link href="/auth/login" className="text-primary hover:underline font-medium">
+              <Link href="/auth/login" className="text-[#2FA4AF] hover:text-[#258a94] hover:underline font-bold">
                 Masuk
               </Link>
             </p>

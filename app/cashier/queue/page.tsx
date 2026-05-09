@@ -56,23 +56,29 @@ export default function QueuePage() {
   }, [])
 
   const fetchOrders = async () => {
-    const { data, error } = await supabase
-      .from('orders')
-      .select('*')
-      .neq('status', 'done')
-      .neq('status', 'cancelled')
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .neq('status', 'done')
+        .neq('status', 'cancelled')
 
-    if (error) {
-      toast.error('Gagal mengambil antrean')
-    } else {
-      const heap = new MinHeap()
-      data.forEach((order) => heap.push(order))
-      setOrders(heap.getSortedItems())
+      if (error) {
+        toast.error('Gagal mengambil antrean')
+        console.error('Fetch orders error:', error)
+      } else if (data) {
+        const heap = new MinHeap()
+        data.forEach((order) => heap.push(order))
+        setOrders(heap.getSortedItems())
+      }
+    } catch (e) {
+      console.error('Exception in fetchOrders:', e)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
-  const updateStatus = async (orderId: string, status: string) => {
+  const updateStatus = async (orderId: string, status: string, assignedStaffId?: string | null) => {
     setLoading(true)
     try {
       if (status === 'processing') {
@@ -95,8 +101,7 @@ export default function QueuePage() {
           .from('orders')
           .update({ 
             status, 
-            assigned_staff_id: idleStaff.id,
-            updated_at: new Date().toISOString() 
+            assigned_staff_id: idleStaff.id
           })
           .eq('id', orderId)
 
@@ -115,11 +120,20 @@ export default function QueuePage() {
         if (staffError) throw staffError
 
         toast.success(`Pesanan dimulai oleh ${idleStaff.name}`)
+      } else if (status === 'cancelled') {
+        const { error } = await supabase.rpc('cancel_order_transaction', {
+          p_order_id: orderId,
+          p_staff_id: assignedStaffId || null
+        })
+
+        if (error) throw error
+        console.log("Cancel order transaction success")
+        toast.success(`Pesanan dibatalkan`)
       } else {
         // For other status (like cancelled, if implemented)
         const { error } = await supabase
           .from('orders')
-          .update({ status, updated_at: new Date().toISOString() })
+          .update({ status })
           .eq('id', orderId)
 
         if (error) throw error
@@ -127,6 +141,12 @@ export default function QueuePage() {
       }
     } catch (err: any) {
       console.error('Update status error:', err)
+      console.error('Error details:', {
+        message: err.message,
+        code: err.code,
+        details: err.details,
+        hint: err.hint
+      })
       toast.error('Error: ' + (err.message || 'Operation failed'))
     } finally {
       fetchOrders()
@@ -276,37 +296,48 @@ export default function QueuePage() {
                         </div>
                       </div>
 
-                      <div className="mt-auto flex gap-2 pt-2">
-                        <Button 
-                          variant="outline" 
-                          className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl border-2 hover:bg-muted"
-                          onClick={() => {
-                            setSelectedOrderId(order.id)
-                            setIsDetailsOpen(true)
-                          }}
-                        >
-                          <IconEye size={18} className="mr-2" strokeWidth={3} /> Detail
-                        </Button>
-                        {order.status === 'waiting' ? (
+                      <div className="mt-auto flex flex-col gap-2 pt-2">
+                        <div className="flex gap-2">
                           <Button 
-                            className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20" 
-                            onClick={() => updateStatus(order.id, 'processing')}
-                          >
-                            <IconPlayerPlay className="mr-2 h-5 w-5" strokeWidth={3} /> Mulai
-                          </Button>
-                        ) : (
-                          <Button 
-                            className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700 border-none" 
+                            variant="outline" 
+                            className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl border-2 hover:bg-muted"
                             onClick={() => {
-                              setPaymentTarget(order)
-                              setIsPaymentOpen(true)
+                              setSelectedOrderId(order.id)
+                              setIsDetailsOpen(true)
                             }}
                           >
-                            <IconCheck className="mr-2 h-5 w-5" strokeWidth={3} /> Selesai
+                            <IconEye size={18} className="mr-2" strokeWidth={3} /> Detail
                           </Button>
-                        )}
-                        <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl text-destructive hover:bg-destructive/10 border-2">
-                          <IconTrash size={20} strokeWidth={2.5} />
+                          {order.status === 'waiting' ? (
+                            <Button 
+                              className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20" 
+                              onClick={() => updateStatus(order.id, 'processing')}
+                            >
+                              <IconPlayerPlay className="mr-2 h-5 w-5" strokeWidth={3} /> Mulai
+                            </Button>
+                          ) : (
+                            <Button 
+                              className="flex-1 h-12 font-black uppercase tracking-widest rounded-xl shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700 border-none" 
+                              onClick={() => {
+                                setPaymentTarget(order)
+                                setIsPaymentOpen(true)
+                              }}
+                            >
+                              <IconCheck className="mr-2 h-5 w-5" strokeWidth={3} /> Selesai
+                            </Button>
+                          )}
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          className="w-full h-12 font-black uppercase tracking-widest rounded-xl text-destructive hover:bg-destructive/10 border-2"
+                          onClick={() => {
+                            console.log('Tombol batal diklik untuk pesanan:', order.id)
+                            if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
+                              updateStatus(order.id, 'cancelled', order.assigned_staff_id)
+                            }
+                          }}
+                        >
+                          <IconTrash size={20} strokeWidth={2.5} className="mr-2 inline-block" /> Batalkan Pesanan
                         </Button>
                       </div>
                     </CardContent>

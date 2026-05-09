@@ -47,25 +47,30 @@ export function PaymentConfirmationDialog({
     }
 
     setLoading(true)
-    
-    // Call the RPC for atomic transaction
-    const { error } = await supabase.rpc('finalize_order_transaction', {
-      p_order_id: orderId,
-      p_staff_id: staffId
-    })
-
-    if (error) {
-      console.error('Finalize error:', error)
-      toast.error('Gagal menyelesaikan pembayaran: ' + error.message)
-    } else {
-      toast.success('Pembayaran dikonfirmasi!', {
-        description: `Pesanan #${orderId.slice(0, 8).toUpperCase()} untuk ${customerName} telah selesai.`,
-        icon: '💰'
+    try {
+      // Call the RPC for atomic transaction
+      const { error } = await supabase.rpc('finalize_order_transaction', {
+        p_order_id: orderId,
+        p_staff_id: staffId
       })
-      onSuccess()
-      onClose()
+
+      if (error) {
+        console.error('Finalize error:', error)
+        toast.error('Gagal menyelesaikan pembayaran: ' + error.message)
+      } else {
+        toast.success('Pembayaran dikonfirmasi!', {
+          description: `Pesanan #${orderId.slice(0, 8).toUpperCase()} untuk ${customerName} telah selesai.`,
+          icon: '💰'
+        })
+        onSuccess()
+        onClose()
+      }
+    } catch (e: any) {
+      console.error('Exception in handleFinalize:', e)
+      toast.error('Terjadi kesalahan: ' + (e.message || 'Operasi gagal'))
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (

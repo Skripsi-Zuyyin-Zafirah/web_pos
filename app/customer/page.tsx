@@ -11,6 +11,13 @@ import {
 } from '@tabler/icons-react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 type Profile = {
   id: string
@@ -28,6 +35,15 @@ type Order = {
   ewp?: number
 }
 
+type OrderItem = {
+  id: string
+  quantity: number
+  price: number
+  products: {
+    name: string
+  } | null
+}
+
 export default function CustomerDashboard() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [stats, setStats] = useState({
@@ -39,6 +55,9 @@ export default function CustomerDashboard() {
   const [loading, setLoading] = useState(true)
   const [activeOrder, setActiveOrder] = useState<Order | null>(null)
   const [queuePosition, setQueuePosition] = useState(0)
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -136,6 +155,26 @@ export default function CustomerDashboard() {
       }
     }
   }, [])
+
+  const viewDetail = async (order: Order) => {
+    setSelectedOrder(order)
+    setIsModalOpen(true)
+    
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('order_items')
+      .select(`
+        id,
+        quantity,
+        price,
+        products (
+          name
+        )
+      `)
+      .eq('order_id', order.id)
+    
+    setOrderItems((data as unknown as OrderItem[]) || [])
+  }
 
   if (loading) {
     return (
@@ -290,7 +329,12 @@ export default function CustomerDashboard() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <Button variant="ghost" size="sm" className="text-[#2FA4AF] hover:text-[#258a94] hover:bg-[#2FA4AF]/5 font-bold">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-[#2FA4AF] hover:text-[#258a94] hover:bg-[#2FA4AF]/5 font-bold"
+                          onClick={() => viewDetail(order)}
+                        >
                           Detail
                         </Button>
                       </td>
@@ -302,6 +346,40 @@ export default function CustomerDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Detail Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="font-bold text-slate-900">Rincian Pesanan</DialogTitle>
+            <DialogDescription>
+              Pesanan #{selectedOrder?.id.slice(0, 8)}... pada {selectedOrder && new Date(selectedOrder.created_at).toLocaleDateString('id-ID')}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 space-y-4">
+            <div className="max-h-[300px] overflow-y-auto space-y-3">
+              {orderItems.length === 0 ? (
+                <p className="text-center text-slate-500 text-sm py-4">Memuat rincian...</p>
+              ) : (
+                orderItems.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center text-sm border-b border-slate-100 pb-2">
+                    <div>
+                      <p className="font-medium text-slate-900">{item.products?.name || 'Produk'}</p>
+                      <p className="text-xs text-slate-500">{item.quantity} x Rp {item.price.toLocaleString('id-ID')}</p>
+                    </div>
+                    <p className="font-bold text-slate-900">Rp {(item.quantity * item.price).toLocaleString('id-ID')}</p>
+                  </div>
+                ))
+              )}
+            </div>
+            
+            <div className="border-t border-slate-200 pt-3 flex justify-between items-center font-bold text-slate-900">
+              <span>Total</span>
+              <span>Rp {selectedOrder?.total_price.toLocaleString('id-ID')}</span>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -29,8 +29,8 @@ Mengubah halaman Dashboard Customer (`app/customer/page.tsx`) yang saat ini masi
 
 ### Milestone 3: Detail Pesanan (Hari 2)
 **Fokus:** Memberikan transparansi rincian belanja kepada customer.
-- [ ] **Modal Detail Riwayat:** Membuat komponen modal yang muncul ketika tombol "Detail" di tabel riwayat diklik.
-- [ ] **Fetch Order Items:** Mengambil data dari `order_items` yang berelasi dengan `order_id` tersebut, lengkap dengan nama produk dan harganya.
+- [x] **Modal Detail Riwayat:** Membuat komponen modal yang muncul ketika tombol "Detail" di tabel riwayat diklik.
+- [x] **Fetch Order Items:** Mengambil data dari `order_items` yang berelasi dengan `order_id` tersebut, lengkap dengan nama produk dan harganya.
 
 ---
 
@@ -39,8 +39,6 @@ Fitur ini bisa ditambahkan jika ingin membuat halaman customer lebih interaktif:
 
 1. **Self-Ordering (Pemesanan Mandiri):**
    - Mengubah halaman `app/customer/shop/page.tsx` dari yang saat ini hanya "Read-only Catalog" menjadi bisa menambah item ke keranjang dan melakukan checkout sendiri.
-2. **Sistem Poin Loyalitas:**
-   - Menambahkan kolom `points` pada tabel `profiles` dan menambahkan logika penambahan poin setiap kali pesanan selesai (misal: 10% dari total belanja).
 
 ---
 

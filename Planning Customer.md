@@ -13,19 +13,19 @@ Mengubah halaman Dashboard Customer (`app/customer/page.tsx`) yang saat ini masi
 
 ### Milestone 1: Data Dinamis & Integrasi Supabase (Hari 1)
 **Fokus:** Mengganti data mockup di dashboard dengan data riil.
-- [ ] **Fetch Profile User:** Mengambil nama pengguna yang sedang login dari tabel `profiles` atau Supabase Auth untuk ditampilkan di greeting ("Selamat datang, [Nama]").
-- [ ] **Kalkulasi Statistik Riil:**
+- [x] **Fetch Profile User:** Mengambil nama pengguna yang sedang login dari tabel `profiles` atau Supabase Auth untuk ditampilkan di greeting ("Selamat datang, [Nama]").
+- [x] **Kalkulasi Statistik Riil:**
   - **Pesanan Aktif:** Mengambil jumlah pesanan milik user dengan status `waiting` atau `processing`.
   - **Total Belanja:** Mengambil jumlah seluruh pesanan yang pernah dibuat oleh user tersebut.
   - **Estimasi Tunggu:** Menampilkan `ewp` dari pesanan aktif user (atau menghitung posisi antrean).
   - **Poin Loyalitas:** ⚠️ *Catatan: Tabel `profiles` saat ini belum memiliki kolom poin. Perlu diputuskan apakah akan menambahkan kolom `points` di tabel `profiles` atau menyembunyikan fitur ini.*
-- [ ] **Riwayat Pesanan Riil:** Mengambil data dari tabel `orders` yang difilter berdasarkan `user_id` yang sedang login dan diurutkan dari yang terbaru.
+- [x] **Riwayat Pesanan Riil:** Mengambil data dari tabel `orders` yang difilter berdasarkan `user_id` yang sedang login dan diurutkan dari yang terbaru.
 
 ### Milestone 2: Real-time Queue Tracking (Hari 1-2)
 **Fokus:** Visualisasi posisi antrean secara langsung.
-- [ ] **Supabase Realtime Subscription:** Mengaktifkan subscription pada tabel `orders` khusus untuk baris yang memiliki `user_id` sama dengan user yang login.
-- [ ] **Update Progress Otomatis:** Ketika kasir mengubah status pesanan menjadi `processing` atau `done`, UI di dashboard customer akan otomatis memperbarui progress bar dan status tanpa perlu reload halaman.
-- [ ] **Penentuan Nomor Antrean:** Menghitung posisi pesanan user di dalam antrean (berapa banyak pesanan dengan prioritas lebih tinggi/EWP lebih kecil yang berstatus `waiting` atau `processing`).
+- [x] **Supabase Realtime Subscription:** Mengaktifkan subscription pada tabel `orders` (tanpa filter user_id agar bisa hitung posisi antrean).
+- [x] **Update Progress Otomatis:** Ketika kasir mengubah status pesanan menjadi `processing` atau `done`, UI di dashboard customer akan otomatis memperbarui progress bar dan status tanpa perlu reload halaman.
+- [x] **Penentuan Nomor Antrean:** Menghitung posisi pesanan user di dalam antrean (berapa banyak pesanan dengan prioritas lebih tinggi/EWP lebih kecil yang berstatus `waiting` atau `processing`).
 
 ### Milestone 3: Detail Pesanan (Hari 2)
 **Fokus:** Memberikan transparansi rincian belanja kepada customer.

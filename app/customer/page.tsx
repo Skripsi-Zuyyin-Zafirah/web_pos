@@ -38,10 +38,14 @@ export default function CustomerDashboard() {
   const [recentOrders, setRecentOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [activeOrder, setActiveOrder] = useState<Order | null>(null)
+  const [queuePosition, setQueuePosition] = useState(0)
 
   useEffect(() => {
+    const supabase = createClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let channel: any
+
     const fetchData = async () => {
-      const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
 
       if (user) {
@@ -80,6 +84,19 @@ export default function CustomerDashboard() {
         const currentActive = (ordersData as Order[])?.find(o => o.status === 'waiting' || o.status === 'processing')
         setActiveOrder(currentActive || null)
 
+        // Calculate queue position
+        let queuePos = 0
+        if (currentActive) {
+          const { count: queueCount } = await supabase
+            .from('orders')
+            .select('*', { count: 'exact', head: true })
+            .in('status', ['waiting', 'processing'])
+            .lt('created_at', currentActive.created_at)
+          
+          queuePos = (queueCount || 0) + 1
+        }
+        setQueuePosition(queuePos)
+
         setStats({
           activeOrders: activeCount || 0,
           totalOrders: totalCount || 0,
@@ -89,7 +106,35 @@ export default function CustomerDashboard() {
       setLoading(false)
     }
 
+    const setupSubscription = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      channel = supabase
+        .channel('customer_dashboard')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'orders',
+          },
+          (payload) => {
+            console.log('Realtime change received:', payload)
+            fetchData()
+          }
+        )
+        .subscribe()
+    }
+
     fetchData()
+    setupSubscription()
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel)
+      }
+    }
   }, [])
 
   if (loading) {
@@ -150,7 +195,7 @@ export default function CustomerDashboard() {
                 <div className="absolute inset-0 bg-slate-100 rounded-full" />
                 <div className="absolute inset-0 border-4 border-[#2FA4AF] rounded-full border-t-transparent animate-spin-slow" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-3xl font-black text-[#2FA4AF]">#{activeOrder.ewp || '-'}</span>
+                  <span className="text-3xl font-black text-[#2FA4AF]">#{queuePosition || '-'}</span>
                   <span className="text-xs font-medium text-slate-500">Antrean</span>
                 </div>
               </div>

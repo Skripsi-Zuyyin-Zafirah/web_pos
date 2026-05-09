@@ -38,7 +38,7 @@ Mengubah halaman Dashboard Customer (`app/customer/page.tsx`) yang saat ini masi
 Fitur ini bisa ditambahkan jika ingin membuat halaman customer lebih interaktif:
 
 1. **Self-Ordering (Pemesanan Mandiri):**
-   - Mengubah halaman `app/customer/shop/page.tsx` dari yang saat ini hanya "Read-only Catalog" menjadi bisa menambah item ke keranjang dan melakukan checkout sendiri.
+   - [x] Mengubah halaman `app/customer/shop/page.tsx` dari yang saat ini hanya "Read-only Catalog" menjadi bisa menambah item ke keranjang dan melakukan checkout sendiri.
 
 ---
 

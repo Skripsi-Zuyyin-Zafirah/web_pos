@@ -7,8 +7,27 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { IconSearch, IconFlame, IconChefHat, IconGlassFull, IconSoup, IconFilter } from '@tabler/icons-react'
+import { Button } from '@/components/ui/button'
+import { 
+  IconSearch, 
+  IconFlame, 
+  IconChefHat, 
+  IconGlassFull, 
+  IconSoup, 
+  IconFilter,
+  IconShoppingCart,
+  IconPlus,
+  IconMinus,
+  IconTrash
+} from '@tabler/icons-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
 
 type Product = {
   id: string
@@ -32,10 +51,24 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [cart, setCart] = useState<{product: Product, quantity: number}[]>([])
+  const [isCartOpen, setIsCartOpen] = useState(false)
 
   const supabase = createClient()
 
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      const [prodRes, catRes] = await Promise.all([
+        supabase.from('products').select('*').order('name'),
+        supabase.from('categories').select('*').order('name')
+      ])
+
+      if (!prodRes.error) setProducts(prodRes.data || [])
+      if (!catRes.error) setCategories(catRes.data || [])
+      setLoading(false)
+    }
+
     fetchData()
 
     const channel = supabase
@@ -60,16 +93,97 @@ export default function ShopPage() {
     }
   }, [])
 
-  const fetchData = async () => {
-    setLoading(true)
-    const [prodRes, catRes] = await Promise.all([
-      supabase.from('products').select('*').order('name'),
-      supabase.from('categories').select('*').order('name')
-    ])
+  const addToCart = (product: Product) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.product.id === product.id)
+      if (existing) {
+        return prev.map(item => 
+          item.product.id === product.id 
+            ? { ...item, quantity: item.quantity + 1 } 
+            : item
+        )
+      }
+      return [...prev, { product, quantity: 1 }]
+    })
+  }
 
-    if (!prodRes.error) setProducts(prodRes.data || [])
-    if (!catRes.error) setCategories(catRes.data || [])
-    setLoading(false)
+  const updateQuantity = (productId: string, quantity: number) => {
+    if (quantity <= 0) {
+      setCart(prev => prev.filter(item => item.product.id !== productId))
+      return
+    }
+    setCart(prev => prev.map(item => 
+      item.product.id === productId ? { ...item, quantity } : item
+    ))
+  }
+
+  const removeFromCart = (productId: string) => {
+    setCart(prev => prev.filter(item => item.product.id !== productId))
+  }
+
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0)
+  const totalPrice = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0)
+
+  const handleCheckout = async () => {
+    console.log('Checkout triggered')
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      alert('Anda harus login terlebih dahulu!')
+      return
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('id', user.id)
+      .single()
+    
+    if (profileError) {
+      console.warn('Profile fetch error:', profileError)
+    }
+
+    // Create order
+    const { data: order, error: orderError } = await supabase
+      .from('orders')
+      .insert({
+        user_id: user.id,
+        customer_name: profile?.full_name || 'Customer',
+        total_price: totalPrice,
+        total_items: totalItems,
+        status: 'waiting',
+        payment_status: 'unpaid'
+      })
+      .select()
+      .single()
+
+    if (orderError) {
+      console.error('Error creating order:', orderError)
+      alert(`Gagal membuat pesanan! Error: ${orderError.message}`)
+      return
+    }
+
+    // Create order items
+    const orderItemsData = cart.map(item => ({
+      order_id: order.id,
+      product_id: item.product.id,
+      quantity: item.quantity,
+      price: item.product.price
+    }))
+
+    const { error: itemsError } = await supabase
+      .from('order_items')
+      .insert(orderItemsData)
+
+    if (itemsError) {
+      console.error('Error creating order items:', itemsError)
+      alert(`Gagal membuat item pesanan! Error: ${itemsError.message}`)
+      return
+    }
+
+    // Clear cart and close sheet
+    setCart([])
+    setIsCartOpen(false)
+    alert('Pesanan berhasil dibuat!')
   }
 
   const filteredProducts = products.filter(p => {
@@ -274,6 +388,15 @@ export default function ShopPage() {
                           {product.stock} {product.unit || 'pcs'}
                         </span>
                       </div>
+
+                      {/* Add to Cart Button */}
+                      <Button 
+                        className="w-full bg-[#2FA4AF] hover:bg-[#258a94] text-white font-bold rounded-xl gap-2"
+                        onClick={() => addToCart(product)}
+                        disabled={product.stock === 0}
+                      >
+                        <IconPlus size={16} /> Tambah
+                      </Button>
                     </div>
                   </div>
                 </Card>
@@ -282,10 +405,144 @@ export default function ShopPage() {
           </motion.div>
         )}
       </div>
+
+      {/* Floating Cart Button */}
+      {totalItems > 0 && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="fixed bottom-20 right-6 z-50"
+        >
+          <Button 
+            className="h-14 w-14 rounded-full bg-[#2FA4AF] hover:bg-[#258a94] text-white shadow-2xl flex items-center justify-center relative"
+            onClick={() => setIsCartOpen(true)}
+          >
+            <IconShoppingCart size={24} />
+            <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center">
+              {totalItems}
+            </span>
+          </Button>
+        </motion.div>
+      )}
+
+      {/* Cart Sheet */}
+      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+        <SheetContent side="bottom" className="w-full max-w-lg mx-auto flex flex-col h-[85vh] rounded-t-3xl border-t border-slate-100 shadow-2xl bg-white p-0">
+          {/* Handle bar for bottom sheet feeling */}
+          <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-3 flex-shrink-0" />
+          
+          <SheetHeader className="border-b border-slate-100 pb-4 px-6 mt-2">
+            <div className="flex items-center justify-between">
+              <SheetTitle className="font-bold text-slate-900 flex items-center gap-2 text-xl">
+                <IconShoppingCart size={24} className="text-[#2FA4AF]" />
+                Keranjang Belanja
+              </SheetTitle>
+              <Badge variant="outline" className="text-[#2FA4AF] border-[#2FA4AF]/20 bg-[#2FA4AF]/5 font-bold">
+                {totalItems} Item
+              </Badge>
+            </div>
+            <SheetDescription className="text-slate-500 text-xs">
+              Tinjau item Anda sebelum melakukan pemesanan.
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-slate-50/50">
+            {cart.length === 0 ? (
+              <div className="text-center py-20 text-slate-400">
+                <IconShoppingCart size={64} stroke={1} className="mx-auto text-slate-300 mb-4" />
+                <p className="font-bold text-slate-600 text-lg">Keranjang Kosong</p>
+                <p className="text-sm text-slate-400 mt-1 max-w-[200px] mx-auto">Tambahkan beberapa produk lezat untuk memulai.</p>
+              </div>
+            ) : (
+              <AnimatePresence>
+                {cart.map((item) => (
+                  <motion.div 
+                    key={item.product.id} 
+                    className="flex gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    layout
+                  >
+                    <div className="h-20 w-20 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100">
+                      {item.product.image_url ? (
+                        <img src={item.product.image_url} alt={item.product.name} className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-slate-300">
+                          <IconGlassFull size={28} stroke={1.5} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <h4 className="font-bold text-slate-900 text-sm line-clamp-1">{item.product.name}</h4>
+                        <div className="flex items-baseline gap-1 mt-0.5">
+                          <span className="text-sm font-black text-[#2FA4AF]">Rp {item.product.price.toLocaleString('id-ID')}</span>
+                          <span className="text-xs font-medium text-slate-400">/ {item.product.unit || 'pcs'}</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        {/* Quantity Controls */}
+                        <div className="flex items-center gap-1 bg-slate-50 rounded-full border border-slate-100 p-0.5">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-7 w-7 rounded-full text-slate-500 hover:text-[#2FA4AF] hover:bg-white transition-colors"
+                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                          >
+                            <IconMinus size={12} />
+                          </Button>
+                          <span className="text-xs font-bold w-6 text-center text-slate-700">{item.quantity}</span>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-7 w-7 rounded-full text-slate-500 hover:text-[#2FA4AF] hover:bg-white transition-colors"
+                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                          >
+                            <IconPlus size={12} />
+                          </Button>
+                        </div>
+                        
+                        {/* Remove Button */}
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-full h-8 w-8 transition-colors"
+                          onClick={() => removeFromCart(item.product.id)}
+                        >
+                          <IconTrash size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            )}
+          </div>
+
+          {/* Footer Section */}
+          <div className="border-t border-slate-100 p-6 space-y-4 bg-white">
+            <div className="flex justify-between items-center font-bold text-slate-900">
+              <div className="space-y-0.5">
+                <p className="text-xs text-slate-500 font-medium">Total Pembayaran</p>
+                <p className="text-xs text-slate-400 font-normal">Sudah termasuk PPN jika berlaku</p>
+              </div>
+              <span className="text-[#2FA4AF] text-2xl font-black">Rp {totalPrice.toLocaleString('id-ID')}</span>
+            </div>
+            <Button 
+              className="w-full bg-gradient-to-r from-[#2FA4AF] to-[#258a94] hover:from-[#258a94] hover:to-[#1a656c] text-white font-bold h-12 rounded-xl shadow-lg shadow-[#2FA4AF]/20 transition-all duration-300"
+              onClick={handleCheckout}
+              disabled={cart.length === 0}
+            >
+              Pesan Sekarang
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
 
-function cn(...classes: any[]) {
+function cn(...classes: (string | boolean | undefined | null)[]) {
   return classes.filter(Boolean).join(' ')
 }

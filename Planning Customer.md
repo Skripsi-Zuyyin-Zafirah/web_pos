@@ -1,68 +1,48 @@
-# 🗺️ Planning Milestone: Pengembangan Fitur Pelanggan (Customer Portal)
+# 📋 Planning: Penyelesaian Fitur Role Customer (Pelanggan)
 
-Dokumen ini berisi perencanaan tahap demi tahap (milestone) untuk mengembangkan antarmuka dan fitur-fitur pelanggan pada sistem Grosir. Pengembangan dibagi menjadi 4 Milestone utama agar proses pengerjaan lebih terstruktur, dapat diuji secara bertahap, dan meminimalkan risiko.
-
----
-
-## 🚩 Milestone 1: Eksplorasi Produk (Katalog & Pencarian)
-**Fokus:** Membangun fondasi utama bagi pelanggan untuk melihat dan mencari produk yang tersedia.
-
-*   **Tugas 1.1: Halaman Beranda / Katalog Produk**
-    *   Pembuatan antarmuka (UI) halaman beranda.
-    *   Integrasi API untuk mengambil seluruh daftar produk aktif dari database.
-    *   Menampilkan informasi detail: Nama produk, satuan (pcs/karton/slop), harga satuan, dan gambar (jika ada).
-    *   Pembuatan Indikator Stok Real-Time berdasarkan data stok terkini.
-*   **Tugas 1.2: Pencarian & Filter Produk**
-    *   Implementasi *search bar* untuk pencarian berbasis teks (nama produk).
-    *   Pembuatan fitur filter berdasarkan kategori produk (Jajanan, Kebutuhan Dapur, Rokok).
-    *   Optimalisasi efisiensi pencarian di sisi frontend/backend.
+Dokumen ini berisi rencana kerja untuk melengkapi dan menyelesaikan fitur-fitur pada halaman Customer agar terhubung dengan database Supabase dan tidak lagi menggunakan data statis (mockup).
 
 ---
 
-## 🚩 Milestone 2: Transaksi Inti (Keranjang & Checkout)
-**Fokus:** Memungkinkan pelanggan memilih produk dan membuat pesanan yang langsung terhubung dengan sistem antrian (Priority Queue).
-
-*   **Tugas 2.1: Keranjang Belanja (Cart)**
-    *   Pembuatan UI Keranjang Belanja (menampilkan item, *quantity selector*, harga).
-    *   Manajemen status keranjang (menambah, mengubah jumlah, menghapus item).
-    *   Kalkulasi Harga Otomatis: Penghitungan subtotal dan total estimasi harga secara dinamis.
-*   **Tugas 2.2: Checkout / Buat Pesanan Digital (Integrasi Min-Heap)**
-    *   Pembuatan antarmuka Checkout dan rangkuman pesanan.
-    *   Perekaman timestamp (waktu kedatangan) dan identitas pelanggan saat konfirmasi.
-    *   **Logika SJF (Shortest Job First):** Menghitung Estimasi Waktu Proses (EWP) otomatis (Jumlah Item × 30 detik).
-    *   Integrasi data pesanan ke struktur data Min-Heap (operasi *insert* dan *heapify-up*) di backend.
+## 🎯 Tujuan
+Mengubah halaman Dashboard Customer (`app/customer/page.tsx`) yang saat ini masih menggunakan data statis menjadi dinamis, serta melengkapi fitur pelacakan antrean dan riwayat pesanan.
 
 ---
 
-## 🚩 Milestone 3: Monitoring & Riwayat Pesanan
-**Fokus:** Memberikan transparansi proses kepada pelanggan setelah pesanan dibuat hingga selesai.
+## 📅 Rencana Kerja (Milestones)
 
-*   **Tugas 3.1: Status Pesanan (Monitoring Antrian Real-time)**
-    *   Pembuatan UI halaman status ("Menunggu", "Diproses", "Selesai").
-    *   Menampilkan Estimasi Waktu Proses dan perkiraan waktu tunggu kepada pengguna.
-    *   *Polling* atau implementasi WebSocket untuk pembaruan status real-time saat pegawai memproses pesanan.
-*   **Tugas 3.2: Detail Pesanan (Aktif)**
-    *   Pembuatan antarmuka rincian pesanan yang sedang berjalan.
-    *   Menampilkan ID pesanan, rincian barang, total item, dan harga.
-*   **Tugas 3.3: Riwayat Pesanan**
-    *   Pembuatan halaman "Riwayat" untuk menampilkan pesanan sebelumnya (status Selesai/Batal).
-    *   Integrasi API untuk mengambil data arsip pesanan berdasarkan ID pelanggan.
+### Milestone 1: Data Dinamis & Integrasi Supabase (Hari 1)
+**Fokus:** Mengganti data mockup di dashboard dengan data riil.
+- [ ] **Fetch Profile User:** Mengambil nama pengguna yang sedang login dari tabel `profiles` atau Supabase Auth untuk ditampilkan di greeting ("Selamat datang, [Nama]").
+- [ ] **Kalkulasi Statistik Riil:**
+  - **Pesanan Aktif:** Mengambil jumlah pesanan milik user dengan status `waiting` atau `processing`.
+  - **Total Belanja:** Mengambil jumlah seluruh pesanan yang pernah dibuat oleh user tersebut.
+  - **Estimasi Tunggu:** Menampilkan `ewp` dari pesanan aktif user (atau menghitung posisi antrean).
+  - **Poin Loyalitas:** ⚠️ *Catatan: Tabel `profiles` saat ini belum memiliki kolom poin. Perlu diputuskan apakah akan menambahkan kolom `points` di tabel `profiles` atau menyembunyikan fitur ini.*
+- [ ] **Riwayat Pesanan Riil:** Mengambil data dari tabel `orders` yang difilter berdasarkan `user_id` yang sedang login dan diurutkan dari yang terbaru.
 
----
+### Milestone 2: Real-time Queue Tracking (Hari 1-2)
+**Fokus:** Visualisasi posisi antrean secara langsung.
+- [ ] **Supabase Realtime Subscription:** Mengaktifkan subscription pada tabel `orders` khusus untuk baris yang memiliki `user_id` sama dengan user yang login.
+- [ ] **Update Progress Otomatis:** Ketika kasir mengubah status pesanan menjadi `processing` atau `done`, UI di dashboard customer akan otomatis memperbarui progress bar dan status tanpa perlu reload halaman.
+- [ ] **Penentuan Nomor Antrean:** Menghitung posisi pesanan user di dalam antrean (berapa banyak pesanan dengan prioritas lebih tinggi/EWP lebih kecil yang berstatus `waiting` atau `processing`).
 
-## 🚩 Milestone 4: Pembayaran & Finalisasi
-**Fokus:** Menghubungkan proses digital dengan operasional fisik di kasir.
-
-*   **Tugas 4.1: Konfirmasi Pembayaran (Instruksi Cash)**
-    *   Pembuatan halaman ringkasan pembayaran setelah barang berstatus "Selesai/Siap Diambil".
-    *   Penambahan instruksi visual kepada pelanggan untuk menuju kasir dan melakukan pembayaran tunai.
-    *   Pembaruan status otomatis menjadi "Lunas/Selesai" (Triggered dari aksi Kasir di Dashboard Admin).
-    *   Pembaruan stok final di sistem inventaris.
+### Milestone 3: Detail Pesanan (Hari 2)
+**Fokus:** Memberikan transparansi rincian belanja kepada customer.
+- [ ] **Modal Detail Riwayat:** Membuat komponen modal yang muncul ketika tombol "Detail" di tabel riwayat diklik.
+- [ ] **Fetch Order Items:** Mengambil data dari `order_items` yang berelasi dengan `order_id` tersebut, lengkap dengan nama produk dan harganya.
 
 ---
 
-## 📈 Rencana Alur Kerja (Workflow)
-1.  **Fase Desain & Mockup UI:** Merancang UI/UX untuk semua halaman (Beranda, Keranjang, Checkout, Status).
-2.  **Fase Backend & API:** Menyiapkan endpoint untuk Katalog, Cart, Checkout (Min-Heap Insert), dan Status Polling.
-3.  **Fase Frontend (Integrasi):** Menghubungkan UI dengan API Backend.
-4.  **Fase Testing & QA:** Uji coba end-to-end, memastikan kalkulasi harga, logika *Priority Queue* (SJF) berjalan akurat, dan pembaruan stok aman (*concurrency handling*).
+## 💡 Opsi Pengembangan Lanjutan (Opsional)
+Fitur ini bisa ditambahkan jika ingin membuat halaman customer lebih interaktif:
+
+1. **Self-Ordering (Pemesanan Mandiri):**
+   - Mengubah halaman `app/customer/shop/page.tsx` dari yang saat ini hanya "Read-only Catalog" menjadi bisa menambah item ke keranjang dan melakukan checkout sendiri.
+2. **Sistem Poin Loyalitas:**
+   - Menambahkan kolom `points` pada tabel `profiles` dan menambahkan logika penambahan poin setiap kali pesanan selesai (misal: 10% dari total belanja).
+
+---
+
+## ⚠️ Temuan Keamanan (Penting)
+Saat melakukan inspeksi database, ditemukan bahwa tabel `public.staff` memiliki **Row Level Security (RLS) yang dinonaktifkan**. Hal ini memungkinkan siapa saja yang memiliki anon key untuk membaca atau memodifikasi data staf. Disarankan untuk mengaktifkan RLS pada tabel tersebut.

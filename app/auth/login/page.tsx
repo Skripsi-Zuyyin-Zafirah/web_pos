@@ -49,7 +49,7 @@ export default function LoginPage() {
       } else if (profile?.role === 'cashier') {
         window.location.href = '/cashier/pos'
       } else {
-        window.location.href = '/menu'
+        window.location.href = '/customer/shop'
       }
     }
   }

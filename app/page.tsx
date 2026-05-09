@@ -72,7 +72,7 @@ export default function LandingPage() {
               </p>
               
               <div className="flex flex-wrap gap-4 pt-2">
-                <Link href="/menu">
+                <Link href="/customer/shop">
                   <Button size="lg" className="h-14 px-8 text-lg font-bold rounded-full bg-[#2FA4AF] hover:bg-[#258a94] border-none shadow-xl shadow-[#2FA4AF]/20 text-white">
                     Lihat Menu <IconArrowRight className="ml-2 h-5 w-5" />
                   </Button>

@@ -63,7 +63,7 @@ export default function HistoryPage() {
 
   if (loading) {
     return (
-      <div className="p-6 md:p-10 max-w-6xl mx-auto space-y-6">
+      <div className="space-y-6">
         <div className="animate-pulse space-y-4">
           <div className="h-10 bg-slate-200 rounded-lg w-1/4"></div>
           <div className="h-64 bg-slate-100 rounded-xl"></div>
@@ -73,12 +73,7 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-6xl mx-auto space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-black tracking-tighter text-slate-900">Riwayat Pesanan</h1>
-        <p className="text-slate-500 text-sm">Lihat semua pesanan Anda yang telah selesai atau dibatalkan.</p>
-      </div>
+    <div className="space-y-8">
 
       {/* Controls */}
       <div className="relative max-w-md">

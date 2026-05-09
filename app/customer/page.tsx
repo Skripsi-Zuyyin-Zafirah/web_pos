@@ -61,7 +61,6 @@ export default function CustomerDashboard() {
 
   useEffect(() => {
     const supabase = createClient()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let channel: any
 
     const fetchData = async () => {
@@ -125,29 +124,25 @@ export default function CustomerDashboard() {
       setLoading(false)
     }
 
-    const setupSubscription = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      channel = supabase
-        .channel('customer_dashboard')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'orders',
-          },
-          (payload) => {
-            console.log('Realtime change received:', payload)
-            fetchData()
-          }
-        )
-        .subscribe()
-    }
-
+    // Initialize data
     fetchData()
-    setupSubscription()
+
+    // Setup Realtime Subscription
+    // We create the channel and subscribe in one go to avoid "after subscribe" errors
+    channel = supabase
+      .channel('customer_dashboard_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+        },
+        () => {
+          fetchData()
+        }
+      )
+      .subscribe()
 
     return () => {
       if (channel) {
@@ -178,7 +173,7 @@ export default function CustomerDashboard() {
 
   if (loading) {
     return (
-      <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-6">
+      <div className="space-y-6">
         <div className="animate-pulse space-y-4">
           <div className="h-10 bg-slate-200 rounded-lg w-1/4"></div>
           <div className="h-64 bg-slate-100 rounded-xl"></div>
@@ -188,18 +183,10 @@ export default function CustomerDashboard() {
   }
 
   return (
-    <div className="p-6 md:p-10 space-y-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-black tracking-tighter text-slate-900">Dashboard</h1>
-          <p className="text-slate-500 text-sm">Selamat datang kembali, {profile?.full_name || 'Pelanggan'}!</p>
-        </div>
-        <Link href="/customer/shop">
-          <Button className="bg-[#2FA4AF] hover:bg-[#258a94] text-white rounded-full font-bold shadow-lg shadow-[#2FA4AF]/20">
-            Mulai Belanja <IconShoppingCart size={18} className="ml-2" />
-          </Button>
-        </Link>
+    <div className="space-y-8">
+      {/* Welcome Message (Instead of full header) */}
+      <div>
+        <p className="text-slate-500 text-sm">Selamat datang kembali, <span className="font-bold text-slate-900">{profile?.full_name || 'Pelanggan'}</span>!</p>
       </div>
 
       {/* Stats Grid */}

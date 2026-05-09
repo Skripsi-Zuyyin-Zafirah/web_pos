@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   IconArchive,
   IconCategory,
@@ -11,7 +12,9 @@ import {
   IconShoppingCart,
   IconUsers,
   IconHistory,
-  IconPackage
+  IconPackage,
+  IconClock2,
+  IconUser
 } from "@tabler/icons-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -28,9 +31,13 @@ import {
 import { useAuth } from "@/components/providers/auth-provider"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, profile } = useAuth()
+  const { user, profile, loading } = useAuth()
+  const pathname = usePathname()
   
-  const role = profile?.role || 'pelanggan'
+  const role = (profile?.role || 'pelanggan').toLowerCase()
+  const isCustomerPath = pathname.startsWith('/customer')
+
+  if (loading) return <Sidebar {...props} /> // Tetap tampilkan rangka sidebar kosong saat loading
   
   // Define menu items based on role
   const adminItems = [
@@ -80,6 +87,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
   ]
 
+  const customerItems = [
+    {
+      title: "Dasbor",
+      url: "/customer",
+      icon: IconLayoutDashboard,
+    },
+    {
+      title: "Belanja",
+      url: "/customer/shop",
+      icon: IconShoppingCart,
+    },
+    {
+      title: "Riwayat",
+      url: "/customer/history",
+      icon: IconClock2,
+    },
+    {
+      title: "Profil",
+      url: "/customer/profile",
+      icon: IconUser,
+    },
+  ]
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -100,8 +130,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {role === 'admin' && <NavMain items={adminItems} label="Manajemen" />}
-        {(role === 'admin' || role === 'cashier') && <NavMain items={cashierItems} label="Transaksi" />}
+        {isCustomerPath ? (
+          <NavMain items={customerItems} label="Menu Pelanggan" />
+        ) : (
+          <>
+            {role === 'admin' && <NavMain items={adminItems} label="Manajemen" />}
+            {(role === 'admin' || role === 'cashier') && <NavMain items={cashierItems} label="Transaksi" />}
+          </>
+        )}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={{

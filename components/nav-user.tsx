@@ -20,9 +20,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { IconDotsVertical, IconUserCircle, IconLogout } from "@tabler/icons-react"
+import { IconDotsVertical, IconUserCircle, IconLogout, IconLoader2 } from "@tabler/icons-react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { toast } from "sonner"
 
 export function NavUser({
   user,
@@ -37,10 +39,23 @@ export function NavUser({
   const supabase = createClient()
   const router = useRouter()
 
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.refresh()
-    router.push('/auth/login')
+    if (!confirm('Apakah Anda yakin ingin keluar?')) return
+
+    setIsLoggingOut(true)
+    const toastId = toast.loading('Sedang keluar...')
+
+    try {
+      await supabase.auth.signOut()
+      toast.success('Berhasil keluar', { id: toastId })
+      // Use window.location.href for a full refresh to clear all states
+      window.location.href = '/auth/login'
+    } catch (error: any) {
+      toast.error('Gagal keluar: ' + error.message, { id: toastId })
+      setIsLoggingOut(false)
+    }
   }
 
   return (
@@ -97,9 +112,17 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
-              <IconLogout />
-              Keluar
+            <DropdownMenuItem 
+              onClick={handleLogout} 
+              disabled={isLoggingOut}
+              className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer font-bold"
+            >
+              {isLoggingOut ? (
+                <IconLoader2 className="animate-spin" />
+              ) : (
+                <IconLogout />
+              )}
+              {isLoggingOut ? 'Mengeluarkan...' : 'Keluar'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

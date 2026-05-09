@@ -209,14 +209,14 @@ export default function ShopPage() {
   } as const
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
-      {/* Hero Section with Premium Gradient and Glassmorphism */}
-      <div className="relative bg-gradient-to-br from-[#2FA4AF] via-[#258a94] to-[#1a656c] text-white py-16 px-6 overflow-hidden">
+    <div className="space-y-8 pb-10">
+      {/* Hero Section - Refined for Inset Layout */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#2FA4AF] via-[#258a94] to-[#1a656c] text-white p-8 md:p-12">
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
         
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -248,7 +248,7 @@ export default function ShopPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto -mt-10 px-6 pb-20 space-y-8 relative z-20">
+      <div className="-mt-10 px-4 space-y-8 relative z-20">
         {/* Controls Card - Glassmorphism styled */}
         <Card className="shadow-xl border-slate-100/50 bg-white/90 backdrop-blur-md">
           <CardContent className="p-6 space-y-6">

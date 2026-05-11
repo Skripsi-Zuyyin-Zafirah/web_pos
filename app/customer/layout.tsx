@@ -17,7 +17,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 const navItems = [
   { href: '/customer', icon: IconLayoutDashboard, label: 'Dasbor' },
   { href: '/customer/shop', icon: IconShoppingCart, label: 'Belanja' },
-  { href: '/customer/history', icon: IconClock2, label: 'Riwayat' },
+  { href: '/transactions', icon: IconClock2, label: 'Riwayat' },
   { href: '/profile', icon: IconUser, label: 'Profil' },
 ]
 

@@ -14,7 +14,8 @@ import {
   IconHistory,
   IconPackage,
   IconClock2,
-  IconUser
+  IconUser,
+  IconReceipt
 } from "@tabler/icons-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -67,6 +68,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: "/admin/users",
       icon: IconUsers,
     },
+    {
+      title: "Riwayat Transaksi",
+      url: "/transactions",
+      icon: IconReceipt,
+    },
   ]
 
   const cashierItems = [
@@ -85,6 +91,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: "/cashier/queue",
       icon: IconHistory,
     },
+    {
+      title: "Riwayat Transaksi",
+      url: "/transactions",
+      icon: IconReceipt,
+    },
   ]
 
   const customerItems = [
@@ -100,7 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
     {
       title: "Riwayat",
-      url: "/customer/history",
+      url: "/transactions",
       icon: IconClock2,
     },
     {

@@ -23,6 +23,7 @@ import {
 import { IconDotsVertical, IconUserCircle, IconLogout, IconLoader2 } from "@tabler/icons-react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -106,10 +107,12 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Akun
-              </DropdownMenuItem>
+              <Link href="/profile">
+                <DropdownMenuItem className="cursor-pointer font-bold">
+                  <IconUserCircle />
+                  Akun
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem 

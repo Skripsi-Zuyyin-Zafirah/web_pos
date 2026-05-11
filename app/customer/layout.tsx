@@ -18,7 +18,7 @@ const navItems = [
   { href: '/customer', icon: IconLayoutDashboard, label: 'Dasbor' },
   { href: '/customer/shop', icon: IconShoppingCart, label: 'Belanja' },
   { href: '/customer/history', icon: IconClock2, label: 'Riwayat' },
-  { href: '/customer/profile', icon: IconUser, label: 'Profil' },
+  { href: '/profile', icon: IconUser, label: 'Profil' },
 ]
 
 export default function CustomerLayout({
@@ -37,7 +37,7 @@ export default function CustomerLayout({
     breadcrumbs.push({ label: "Belanja" })
   } else if (pathname === '/customer/history') {
     breadcrumbs.push({ label: "Riwayat" })
-  } else if (pathname === '/customer/profile') {
+  } else if (pathname === '/profile') {
     breadcrumbs.push({ label: "Profil" })
   } else if (pathname === '/customer') {
     breadcrumbs.push({ label: "Dasbor" })

@@ -1,14 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { IconLoader2, IconUserShield, IconUser, IconTruck, IconUsers, IconMail } from '@tabler/icons-react'
+import { IconLoader2, IconUserShield, IconUser, IconTruck, IconUsers, IconMail, IconPlus, IconLock, IconKey } from '@tabler/icons-react'
+import { createUser } from './user-actions'
 
 type Profile = {
   id: string
@@ -20,6 +24,8 @@ type Profile = {
 export default function UsersPage() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
+  const [isPending, startTransition] = useTransition()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -55,6 +61,19 @@ export default function UsersPage() {
     }
   }
 
+  const handleAddUser = async (formData: FormData) => {
+    startTransition(async () => {
+      const result = await createUser(formData)
+      if (result.error) {
+        toast.error(result.error)
+      } else {
+        toast.success('Pengguna baru berhasil dibuat')
+        setIsDialogOpen(false)
+        fetchProfiles()
+      }
+    })
+  }
+
   const getRoleBadge = (role: string) => {
     switch (role) {
       case 'admin':
@@ -85,6 +104,100 @@ export default function UsersPage() {
           <h1 className="text-3xl font-black tracking-tighter uppercase">Kontrol Akses Pengguna</h1>
           <p className="text-muted-foreground font-medium">Kelola izin dan peran untuk tim dan pelanggan Anda.</p>
         </div>
+        
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-[#2FA4AF] hover:bg-[#258a94] text-white font-black px-6 h-12 rounded-2xl shadow-xl shadow-[#2FA4AF]/20 transition-all active:scale-95 gap-2">
+              <IconPlus size={18} />
+              Tambah Pengguna
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] rounded-3xl border-none shadow-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-black tracking-tight">Buat Akun Baru</DialogTitle>
+              <DialogDescription className="font-medium text-slate-500">
+                Daftarkan anggota tim atau pelanggan baru secara langsung.
+              </DialogDescription>
+            </DialogHeader>
+            <form action={handleAddUser} className="space-y-6 pt-4">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Nama Lengkap</Label>
+                  <div className="relative group">
+                    <IconUser className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-[#2FA4AF] transition-colors" />
+                    <Input
+                      id="fullName"
+                      name="fullName"
+                      required
+                      className="pl-10 h-12 border-slate-200 rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium"
+                      placeholder="Contoh: Budi Santoso"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Alamat Email</Label>
+                  <div className="relative group">
+                    <IconMail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-[#2FA4AF] transition-colors" />
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      className="pl-10 h-12 border-slate-200 rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium"
+                      placeholder="budi@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Kata Sandi</Label>
+                  <div className="relative group">
+                    <IconKey className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-[#2FA4AF] transition-colors" />
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      minLength={6}
+                      className="pl-10 h-12 border-slate-200 rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="role" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Peran Akses</Label>
+                  <Select name="role" defaultValue="customer">
+                    <SelectTrigger className="h-12 border-slate-200 rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-bold">
+                      <SelectValue placeholder="Pilih Peran" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="admin" className="font-bold text-red-600">Akses Admin</SelectItem>
+                      <SelectItem value="cashier" className="font-bold text-blue-600">Akses Kasir</SelectItem>
+                      <SelectItem value="customer" className="font-bold text-slate-600">Akses Pelanggan</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <DialogFooter className="pt-2">
+                <Button 
+                  type="submit" 
+                  disabled={isPending}
+                  className="w-full bg-[#2FA4AF] hover:bg-[#258a94] text-white font-black h-12 rounded-2xl shadow-xl shadow-[#2FA4AF]/20 transition-all active:scale-95"
+                >
+                  {isPending ? (
+                    <span className="flex items-center gap-2">
+                      <IconLoader2 className="animate-spin" size={18} />
+                      Mendaftarkan...
+                    </span>
+                  ) : 'Simpan Pengguna'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">

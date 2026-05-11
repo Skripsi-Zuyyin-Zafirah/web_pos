@@ -46,14 +46,15 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = pathname.startsWith('/auth')
   const isAdminPage = pathname.startsWith('/admin')
   const isCashierPage = pathname.startsWith('/cashier')
+  const isProfilePage = pathname.startsWith('/profile')
 
   // 2. Early exit for public pages if not trying to access auth pages
-  if (!user && !isAdminPage && !isCashierPage) {
+  if (!user && !isAdminPage && !isCashierPage && !isProfilePage) {
     return supabaseResponse
   }
 
   // 3. If NOT logged in and trying to access private pages, redirect to login
-  if (!user && (isAdminPage || isCashierPage)) {
+  if (!user && (isAdminPage || isCashierPage || isProfilePage)) {
     const url = new URL('/auth/login', request.url)
     url.searchParams.set('next', pathname)
     return NextResponse.redirect(url)

@@ -105,7 +105,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
     {
       title: "Profil",
-      url: "/customer/profile",
+      url: "/profile",
       icon: IconUser,
     },
   ]

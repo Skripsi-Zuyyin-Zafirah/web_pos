@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 import { 
   IconSearch, 
   IconFlame, 
@@ -45,6 +46,14 @@ type Category = {
   name: string
 }
 
+type ProductUnit = {
+  id: string
+  product_id: string
+  name: string
+  multiplier: number
+  price: number
+}
+
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -52,7 +61,8 @@ export default function ShopPage() {
   const [mounted, setMounted] = useState(false)
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [cart, setCart] = useState<{product: Product, quantity: number}[]>([])
+  const [cart, setCart] = useState<{product: Product, quantity: number, unit?: ProductUnit}[]>([])
+  const [productUnits, setProductUnits] = useState<Record<string, ProductUnit[]>>({})
   const [isCartOpen, setIsCartOpen] = useState(false)
 
   const supabase = createClient()
@@ -64,13 +74,23 @@ export default function ShopPage() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-      const [prodRes, catRes] = await Promise.all([
+      const [prodRes, catRes, unitRes] = await Promise.all([
         supabase.from('products').select('*').order('name'),
-        supabase.from('categories').select('*').order('name')
+        supabase.from('categories').select('*').order('name'),
+        supabase.from('product_units').select('*')
       ])
 
       if (!prodRes.error) setProducts(prodRes.data || [])
       if (!catRes.error) setCategories(catRes.data || [])
+      
+      if (!unitRes.error && unitRes.data) {
+        const unitsByProduct: Record<string, ProductUnit[]> = {}
+        unitRes.data.forEach(unit => {
+          if (!unitsByProduct[unit.product_id]) unitsByProduct[unit.product_id] = []
+          unitsByProduct[unit.product_id].push(unit)
+        })
+        setProductUnits(unitsByProduct)
+      }
       setLoading(false)
     }
 
@@ -98,36 +118,48 @@ export default function ShopPage() {
     }
   }, [])
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, unit?: ProductUnit) => {
     setCart(prev => {
-      const existing = prev.find(item => item.product.id === product.id)
+      const existing = prev.find(item => 
+        item.product.id === product.id && 
+        ((!unit && !item.unit) || (unit?.id === item.unit?.id))
+      )
       if (existing) {
         return prev.map(item => 
-          item.product.id === product.id 
+          (item.product.id === product.id && ((!unit && !item.unit) || (unit?.id === item.unit?.id)))
             ? { ...item, quantity: item.quantity + 1 } 
             : item
         )
       }
-      return [...prev, { product, quantity: 1 }]
+      return [...prev, { product, quantity: 1, unit }]
     })
+    toast.success(`${product.name} (${unit?.name || product.unit}) ditambahkan`)
   }
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (productId: string, unitId: string | undefined, quantity: number) => {
     if (quantity <= 0) {
-      setCart(prev => prev.filter(item => item.product.id !== productId))
+      setCart(prev => prev.filter(item => !(item.product.id === productId && item.unit?.id === unitId)))
       return
     }
     setCart(prev => prev.map(item => 
-      item.product.id === productId ? { ...item, quantity } : item
+      (item.product.id === productId && item.unit?.id === unitId) ? { ...item, quantity } : item
     ))
   }
 
-  const removeFromCart = (productId: string) => {
-    setCart(prev => prev.filter(item => item.product.id !== productId))
+  const removeFromCart = (productId: string, unitId: string | undefined) => {
+    setCart(prev => prev.filter(item => !(item.product.id === productId && item.unit?.id === unitId)))
   }
 
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0)
-  const totalPrice = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0)
+  const totalItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0)
+  const totalBaseItems = cart.reduce((acc, item) => {
+    const multiplier = item.unit?.multiplier || 1
+    return acc + (item.quantity * multiplier)
+  }, 0)
+  const totalPrice = cart.reduce((acc, item) => {
+    const price = item.unit?.price || item.product.price
+    return acc + (price * item.quantity)
+  }, 0)
+  const estimatedTime = totalBaseItems * 30 // EWP calculation
 
   const handleCheckout = async () => {
     console.log('Checkout triggered')
@@ -147,14 +179,15 @@ export default function ShopPage() {
       console.warn('Profile fetch error:', profileError)
     }
 
-    // Create order
+    // Create order with EWP and converted total_items
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
         user_id: user.id,
         customer_name: profile?.full_name || 'Customer',
         total_price: totalPrice,
-        total_items: totalItems,
+        total_items: totalBaseItems, // USE CONVERTED TOTAL
+        ewp: estimatedTime,          // USE CALCULATED EWP
         status: 'waiting',
         payment_status: 'unpaid'
       })
@@ -167,12 +200,13 @@ export default function ShopPage() {
       return
     }
 
-    // Create order items
+    // Create order items with unit_id support
     const orderItemsData = cart.map(item => ({
       order_id: order.id,
       product_id: item.product.id,
+      unit_id: item.unit?.id || null, // Track the chosen unit
       quantity: item.quantity,
-      price: item.product.price
+      price: item.unit?.price || item.product.price
     }))
 
     const { error: itemsError } = await supabase
@@ -396,14 +430,39 @@ export default function ShopPage() {
                         </span>
                       </div>
 
-                      {/* Add to Cart Button */}
-                      <Button 
-                        className="w-full bg-[#2FA4AF] hover:bg-[#258a94] text-white font-bold rounded-xl gap-2"
-                        onClick={() => addToCart(product)}
-                        disabled={product.stock === 0}
-                      >
-                        <IconPlus size={16} /> Tambah
-                      </Button>
+                      {/* Add to Cart Section - Multi Unit Support */}
+                      <div className="flex flex-col gap-2">
+                        {/* Base Unit Button */}
+                        <Button 
+                          variant="outline"
+                          size="sm"
+                          className="w-full border-dashed border-[#2FA4AF]/30 hover:border-[#2FA4AF] hover:bg-[#2FA4AF]/5 text-xs font-bold rounded-xl h-9"
+                          onClick={() => addToCart(product)}
+                          disabled={product.stock === 0}
+                        >
+                          Beli {product.unit} (Rp {product.price.toLocaleString('id-ID')})
+                        </Button>
+
+                        {/* Bulk Units Buttons */}
+                        {productUnits[product.id]?.map(unit => (
+                          <Button 
+                            key={unit.id}
+                            variant="outline"
+                            size="sm"
+                            className="w-full border-2 border-[#2FA4AF]/20 hover:border-[#2FA4AF] hover:bg-[#2FA4AF]/10 text-xs font-black rounded-xl h-10 text-[#2FA4AF]"
+                            onClick={() => addToCart(product, unit)}
+                            disabled={product.stock < unit.multiplier}
+                          >
+                            Beli {unit.name} ({unit.multiplier} {product.unit}) - Rp {unit.price.toLocaleString('id-ID')}
+                          </Button>
+                        ))}
+
+                        {product.stock === 0 && (
+                          <Button disabled className="w-full bg-slate-100 text-slate-400 font-bold rounded-xl">
+                            Stok Habis
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </Card>
@@ -414,7 +473,7 @@ export default function ShopPage() {
       </div>
 
       {/* Floating Cart Button */}
-      {totalItems > 0 && (
+      {totalItemsCount > 0 && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -426,7 +485,7 @@ export default function ShopPage() {
           >
             <IconShoppingCart size={24} />
             <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center">
-              {totalItems}
+              {totalItemsCount}
             </span>
           </Button>
         </motion.div>
@@ -442,10 +501,16 @@ export default function ShopPage() {
             <div className="flex items-center justify-between">
               <SheetTitle className="font-bold text-slate-900 flex items-center gap-2 text-xl">
                 <IconShoppingCart size={24} className="text-[#2FA4AF]" />
-                Keranjang Belanja
+                 Keranjang Belanja
               </SheetTitle>
               <Badge variant="outline" className="text-[#2FA4AF] border-[#2FA4AF]/20 bg-[#2FA4AF]/5 font-bold">
-                {totalItems} Item
+                {totalItemsCount} Unit Pesanan
+              </Badge>
+            </div>
+            <div className="mt-2 flex items-center justify-between bg-amber-50 p-2 rounded-lg border border-amber-100">
+              <span className="text-[10px] font-bold text-amber-800 uppercase">Estimasi Beban Kerja:</span>
+              <Badge variant="secondary" className="bg-amber-200 text-amber-900 font-black text-[10px]">
+                {totalBaseItems} Item Dasar ({Math.ceil(estimatedTime / 60)} Menit)
               </Badge>
             </div>
             <SheetDescription className="text-slate-500 text-xs">
@@ -464,7 +529,7 @@ export default function ShopPage() {
               <AnimatePresence>
                 {cart.map((item) => (
                   <motion.div 
-                    key={item.product.id} 
+                    key={`${item.product.id}-${item.unit?.id || 'base'}`} 
                     className="flex gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -483,19 +548,30 @@ export default function ShopPage() {
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
                         <h4 className="font-bold text-slate-900 text-sm line-clamp-1">{item.product.name}</h4>
-                        <div className="flex items-baseline gap-1 mt-0.5">
-                          <span className="text-sm font-black text-[#2FA4AF]">Rp {item.product.price.toLocaleString('id-ID')}</span>
-                          <span className="text-xs font-medium text-slate-400">/ {item.product.unit || 'pcs'}</span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <Badge className="bg-[#2FA4AF]/10 text-[#2FA4AF] hover:bg-[#2FA4AF]/20 border-none text-[10px] h-5">
+                            {item.unit?.name || item.product.unit}
+                          </Badge>
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-sm font-black text-[#2FA4AF]">
+                              Rp {(item.unit?.price || item.product.price).toLocaleString('id-ID')}
+                            </span>
+                          </div>
                         </div>
+                        {item.unit && (
+                          <p className="text-[10px] text-muted-foreground mt-1">
+                            Ekivalensi: {item.unit.multiplier} {item.product.unit} per {item.unit.name}
+                          </p>
+                        )}
                       </div>
                       <div className="flex justify-between items-center mt-2">
                         {/* Quantity Controls */}
                         <div className="flex items-center gap-1 bg-slate-50 rounded-full border border-slate-100 p-0.5">
                           <Button 
                             variant="ghost" 
-                            size="icon" 
+                             size="icon" 
                             className="h-7 w-7 rounded-full text-slate-500 hover:text-[#2FA4AF] hover:bg-white transition-colors"
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.product.id, item.unit?.id, item.quantity - 1)}
                           >
                             <IconMinus size={12} />
                           </Button>
@@ -504,7 +580,7 @@ export default function ShopPage() {
                             variant="ghost" 
                             size="icon" 
                             className="h-7 w-7 rounded-full text-slate-500 hover:text-[#2FA4AF] hover:bg-white transition-colors"
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.product.id, item.unit?.id, item.quantity + 1)}
                           >
                             <IconPlus size={12} />
                           </Button>
@@ -515,7 +591,7 @@ export default function ShopPage() {
                           variant="ghost" 
                           size="icon" 
                           className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-full h-8 w-8 transition-colors"
-                          onClick={() => removeFromCart(item.product.id)}
+                          onClick={() => removeFromCart(item.product.id, item.unit?.id)}
                         >
                           <IconTrash size={16} />
                         </Button>

@@ -126,6 +126,20 @@ Sistem ini mengimplementasikan konsep **Shortest Job First (SJF)** menggunakan s
 - [x] **Otomatisasi Database (Triggers):**
     - **Trigger Pesanan Baru:** Otomatis mengirim notifikasi ke Kasir saat customer checkout.
     - **Trigger Stok Rendah:** Otomatis mengirim peringatan ke Admin & Kasir saat stok produk < 10 unit.
-- [x] **Notifikasi Sisi Pelanggan:**
-    - Implementasi notifikasi status pesanan ("Diproses", "Selesai") khusus untuk akun pelanggan.
-    - Notifikasi sambutan otomatis saat pertama kali mendaftar.
+- [x] Notifikasi sambutan otomatis saat pertama kali mendaftar.
+
+### Milestone 7: Multi-Unit Inventory & Intelligent EWP Conversion (Minggu 7)
+**Fokus: Akurasi Algoritma Priority Queue melalui Konversi Stok**
+- [ ] **Infrastruktur Multi-Satuan:**
+    - Pengembangan tabel `product_units` untuk menyimpan satuan besar (Dus, Slop, Pack) dan faktor pengalinya ke Satuan Dasar (Pcs).
+    - Refactor tabel `products` agar memiliki relasi dinamis dengan berbagai jenis satuan.
+- [ ] **Admin - Manajemen Konversi:**
+    - UI di halaman Produk untuk menentukan Satuan Dasar dan menambah satuan grosir (Contoh: "1 Dus = 12 Pcs").
+    - Validasi otomatis agar stok selalu tersinkronisasi secara total meskipun dijual dalam satuan berbeda.
+- [ ] **POS & Shop - Automasi Konversi:**
+    - Implementasi logika konversi pada Keranjang (Cart): Saat user memilih "Dus", sistem otomatis menghitung ekivalensi ke Satuan Dasar.
+    - Update tampilan harga agar menyesuaikan dengan satuan yang dipilih secara dinamis.
+- [ ] **Integrasi Priority Queue (EWP):**
+    - Refactor rumus EWP: `Total_Items` kini diambil dari `SUM(Quantity * Multiplier)` setiap item.
+    - Uji Coba Algoritma: Memastikan pesanan "1 Dus (12 Pcs)" mendapatkan antrean yang lebih lama (EWP lebih besar) daripada "2 Pcs" mie instan.
+    - Sinkronisasi Real-time: Memastikan dashboard antrean Admin/Kasir menampilkan detail konversi satuan agar staf gudang tahu persis apa yang harus diambil.

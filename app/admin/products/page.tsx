@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
@@ -32,6 +33,13 @@ type Category = {
   name: string
 }
 
+type ProductUnit = {
+  id?: string
+  name: string
+  multiplier: number
+  price: number
+}
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -48,6 +56,7 @@ export default function ProductsPage() {
     category_id: '',
     image: null as File | null,
   })
+  const [productUnits, setProductUnits] = useState<ProductUnit[]>([])
 
   const supabase = createClient()
 
@@ -129,6 +138,23 @@ export default function ProductsPage() {
     if (error) {
       toast.error(error.message)
     } else {
+      // Save product units
+      const productId = editingProduct ? editingProduct.id : (await supabase.from('products').select('id').eq('name', payload.name).order('created_at', { ascending: false }).limit(1).single()).data?.id
+      
+      if (productId) {
+        // Simple strategy: delete and re-insert units
+        await supabase.from('product_units').delete().eq('product_id', productId)
+        if (productUnits.length > 0) {
+          const unitsToInsert = productUnits.map(u => ({
+            product_id: productId,
+            name: u.name,
+            multiplier: u.multiplier,
+            price: u.price
+          }))
+          await supabase.from('product_units').insert(unitsToInsert)
+        }
+      }
+
       toast.success(editingProduct ? 'Produk diperbarui' : 'Produk ditambahkan')
       setIsDialogOpen(false)
       resetForm()
@@ -159,6 +185,7 @@ export default function ProductsPage() {
       category_id: '',
       image: null,
     })
+    setProductUnits([])
     setEditingProduct(null)
   }
 
@@ -182,107 +209,186 @@ export default function ProductsPage() {
               <IconPlus className="mr-2 h-5 w-5" /> Tambah Produk Baru
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl">
-            <form onSubmit={handleSave}>
-              <DialogHeader>
+          <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden rounded-3xl border-none shadow-2xl">
+            <form onSubmit={handleSave} className="flex flex-col max-h-[90vh]">
+              <DialogHeader className="p-6 pb-4 border-b">
                 <DialogTitle className="text-2xl font-black">{editingProduct ? 'Perbarui Produk' : 'Buat Produk'}</DialogTitle>
                 <DialogDescription className="font-medium">
-                  Masukkan detail untuk produk grosir Anda.
+                  Masukkan detail produk grosir Anda di sini.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-6 py-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="name" className="font-bold">Nama Produk</Label>
-                  <Input
-                    id="name"
-                    placeholder="e.g. Premium Rice 25kg"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                    className="h-11 rounded-xl"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="category" className="font-bold">Kategori</Label>
-                  <Select
-                    value={formData.category_id}
-                    onValueChange={(value) => setFormData({ ...formData, category_id: value })}
-                  >
-                    <SelectTrigger className="h-11 rounded-xl">
-                      <SelectValue placeholder="Pilih Kategori" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                      {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
+              
+              <ScrollArea className="flex-1 max-h-[60vh]">
+                <div className="p-6 space-y-6">
                   <div className="grid gap-2">
-                    <Label htmlFor="price" className="font-bold">Harga (Rp)</Label>
+                    <Label htmlFor="name" className="font-bold">Nama Produk</Label>
                     <Input
-                      id="price"
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                      id="name"
+                      placeholder="e.g. Beras Premium 25kg"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
                       className="h-11 rounded-xl"
                     />
                   </div>
+                  
                   <div className="grid gap-2">
-                    <Label htmlFor="stock" className="font-bold">Jumlah Stok</Label>
-                    <Input
-                      id="stock"
-                      type="number"
-                      value={formData.stock}
-                      onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) })}
-                      required
-                      className="h-11 rounded-xl"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="unit" className="font-bold">Satuan</Label>
+                    <Label htmlFor="category" className="font-bold">Kategori</Label>
                     <Select
-                      value={formData.unit}
-                      onValueChange={(value) => setFormData({ ...formData, unit: value })}
+                      value={formData.category_id}
+                      onValueChange={(value) => setFormData({ ...formData, category_id: value })}
                     >
                       <SelectTrigger className="h-11 rounded-xl">
-                        <SelectValue placeholder="Satuan" />
+                        <SelectValue placeholder="Pilih Kategori" />
                       </SelectTrigger>
                       <SelectContent className="rounded-xl">
-                        <SelectItem value="pcs">pcs</SelectItem>
-                        <SelectItem value="karton">karton</SelectItem>
-                        <SelectItem value="slop">slop</SelectItem>
+                        {categories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="price" className="font-bold">Harga (Rp)</Label>
+                      <Input
+                        id="price"
+                        type="number"
+                        value={isNaN(formData.price) ? '' : formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                        required
+                        className="h-11 rounded-xl px-3"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="stock" className="font-bold">Stok</Label>
+                      <Input
+                        id="stock"
+                        type="number"
+                        value={isNaN(formData.stock) ? '' : formData.stock}
+                        onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                        required
+                        className="h-11 rounded-xl px-3"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="unit" className="font-bold">Satuan</Label>
+                      <Select
+                        value={formData.unit}
+                        onValueChange={(value) => setFormData({ ...formData, unit: value })}
+                      >
+                        <SelectTrigger className="h-11 rounded-xl">
+                          <SelectValue placeholder="Unit" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="pcs">pcs</SelectItem>
+                          <SelectItem value="karton">karton</SelectItem>
+                          <SelectItem value="slop">slop</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="description" className="font-bold">Deskripsi</Label>
+                    <Textarea
+                      id="description"
+                      placeholder="Deskripsi singkat produk..."
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      className="rounded-xl min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="image" className="font-bold">Gambar Produk</Label>
+                    <Input
+                      id="image"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
+                      className="cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:text-white file:font-bold h-auto py-2"
+                    />
+                  </div>
+
+                  {/* Multi-Unit Section */}
+                  <div className="space-y-4 pt-6 border-t">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-base font-black">Satuan Grosir</Label>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => setProductUnits([...productUnits, { name: '', multiplier: 1, price: 0 }])}
+                        className="h-8 rounded-lg border-2 font-bold"
+                      >
+                        <IconPlus className="mr-1 h-4 w-4" /> Tambah
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {productUnits.map((unit, index) => (
+                        <div key={index} className="grid grid-cols-[1fr_70px_1fr_40px] gap-2 items-end bg-muted/30 p-3 rounded-xl border">
+                          <div className="grid gap-1">
+                            <Label className="text-[10px] font-bold uppercase text-muted-foreground">Unit</Label>
+                            <Input 
+                              placeholder="Dus" 
+                              value={unit.name} 
+                              onChange={(e) => {
+                                const newUnits = [...productUnits]
+                                newUnits[index].name = e.target.value
+                                setProductUnits(newUnits)
+                              }}
+                              className="h-9 rounded-lg"
+                            />
+                          </div>
+                          <div className="grid gap-1">
+                            <Label className="text-[10px] font-bold uppercase text-muted-foreground">Isi</Label>
+                            <Input 
+                              type="number" 
+                              value={isNaN(unit.multiplier) ? '' : unit.multiplier} 
+                              onChange={(e) => {
+                                const newUnits = [...productUnits]
+                                newUnits[index].multiplier = parseInt(e.target.value) || 0
+                                setProductUnits(newUnits)
+                              }}
+                              className="h-9 rounded-lg"
+                            />
+                          </div>
+                          <div className="grid gap-1">
+                            <Label className="text-[10px] font-bold uppercase text-muted-foreground">Harga</Label>
+                            <Input 
+                              type="number" 
+                              value={isNaN(unit.price) ? '' : unit.price} 
+                              onChange={(e) => {
+                                const newUnits = [...productUnits]
+                                newUnits[index].price = parseFloat(e.target.value) || 0
+                                setProductUnits(newUnits)
+                              }}
+                              className="h-9 rounded-lg"
+                            />
+                          </div>
+                          <Button 
+                            type="button" 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => setProductUnits(productUnits.filter((_, i) => i !== index))}
+                            className="h-9 w-9 text-rose-500 hover:bg-rose-500/10"
+                          >
+                            <IconTrash className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="description" className="font-bold">Deskripsi</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Deskripsi singkat produk..."
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="rounded-xl min-h-[100px]"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="image" className="font-bold">Gambar Produk</Label>
-                  <Input
-                    id="image"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
-                    className="h-11 rounded-xl pt-2.5"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit" disabled={loading} className="w-full h-12 font-bold rounded-xl">
+              </ScrollArea>
+
+              <DialogFooter className="p-6 border-t">
+                <Button type="submit" disabled={loading} className="w-full h-12 font-bold rounded-xl shadow-md">
                   {loading ? <IconLoader2 className="animate-spin" /> : editingProduct ? 'Perbarui Produk' : 'Simpan Produk'}
                 </Button>
               </DialogFooter>
@@ -412,7 +518,7 @@ export default function ProductsPage() {
                         size="icon"
                         variant="ghost"
                         className="h-9 w-9 rounded-xl hover:bg-blue-500/10 text-blue-500"
-                        onClick={() => {
+                        onClick={async () => {
                           setEditingProduct(product)
                           setFormData({
                             name: product.name,
@@ -423,6 +529,14 @@ export default function ProductsPage() {
                             category_id: product.category_id || '',
                             image: null,
                           })
+                          
+                          // Fetch product units
+                          const { data: units } = await supabase
+                            .from('product_units')
+                            .select('*')
+                            .eq('product_id', product.id)
+                          
+                          setProductUnits(units || [])
                           setIsDialogOpen(true)
                         }}
                       >

@@ -31,8 +31,17 @@ type Product = {
   name: string
   price: number
   stock: number
+  unit: string
   image_url: string | null
   category_id: string | null
+}
+
+type ProductUnit = {
+  id: string
+  product_id: string
+  name: string
+  multiplier: number
+  price: number
 }
 
 type Category = {
@@ -48,6 +57,7 @@ export default function POSPage() {
   const [customerName, setCustomerName] = useState('')
   const [checkoutLoading, setCheckoutLoading] = useState(false)
   const [activeCategory, setActiveCategory] = useState('all')
+  const [productUnits, setProductUnits] = useState<Record<string, ProductUnit[]>>({})
   
   const { user } = useAuth()
   const supabase = createClient()
@@ -59,16 +69,24 @@ export default function POSPage() {
 
   const fetchData = async () => {
     setLoading(true)
-    const [prodRes, catRes] = await Promise.all([
+    const [prodRes, catRes, unitRes] = await Promise.all([
       supabase.from('products').select('*').order('name'),
-      supabase.from('categories').select('*').order('name')
+      supabase.from('categories').select('*').order('name'),
+      supabase.from('product_units').select('*')
     ])
 
-    if (prodRes.error || catRes.error) {
+    if (prodRes.error || catRes.error || unitRes.error) {
       toast.error('Gagal mengambil data')
     } else {
       setProducts(prodRes.data || [])
       setCategories(catRes.data || [])
+      
+      const unitsByProduct: Record<string, ProductUnit[]> = {}
+      unitRes.data?.forEach(unit => {
+        if (!unitsByProduct[unit.product_id]) unitsByProduct[unit.product_id] = []
+        unitsByProduct[unit.product_id].push(unit)
+      })
+      setProductUnits(unitsByProduct)
     }
     setLoading(false)
   }
@@ -90,7 +108,7 @@ export default function POSPage() {
           cashier_id: user?.id,
           customer_name: customerName || 'Tamu',
           total_price: cart.totalPrice(),
-          total_items: cart.totalItems(),
+          total_items: cart.totalBaseItems(), // USE CONVERTED TOTAL
           ewp: cart.ewp(),
           status: 'waiting'
         }
@@ -108,6 +126,7 @@ export default function POSPage() {
     const orderItems = cart.items.map((item) => ({
       order_id: order.id,
       product_id: item.id,
+      unit_id: item.unit_id,
       quantity: item.quantity,
       price: item.price
     }))
@@ -181,8 +200,7 @@ export default function POSPage() {
               {filteredProducts.map((product) => (
                 <Card 
                   key={product.id} 
-                  className="group relative flex flex-col border-none shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer overflow-hidden rounded-3xl bg-background"
-                  onClick={() => cart.addItem(product)}
+                  className="group relative flex flex-col border-none shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all overflow-hidden rounded-3xl bg-background"
                 >
                   <div className="aspect-square relative overflow-hidden bg-muted/30">
                     {product.image_url ? (
@@ -204,8 +222,31 @@ export default function POSPage() {
                   </div>
                   <CardHeader className="p-4 flex-1">
                     <CardTitle className="text-base font-black leading-tight mb-1">{product.name}</CardTitle>
-                    <div className="mt-auto flex items-center justify-between">
-                      <span className="text-primary font-black text-lg">Rp {product.price.toLocaleString()}</span>
+                    <div className="flex flex-col gap-1.5 mt-2">
+                      <Button 
+                        size="sm" 
+                        variant="secondary" 
+                        className="w-full h-8 text-[10px] font-black uppercase rounded-lg justify-between px-2 bg-primary/5 hover:bg-primary/10 text-primary border border-primary/10"
+                        onClick={() => cart.addItem(product)}
+                        disabled={product.stock === 0}
+                      >
+                        <span>{product.unit || 'PCS'}</span>
+                        <span>Rp {product.price.toLocaleString()}</span>
+                      </Button>
+                      
+                      {productUnits[product.id]?.map(unit => (
+                        <Button 
+                          key={unit.id}
+                          size="sm" 
+                          variant="outline" 
+                          className="w-full h-8 text-[10px] font-black uppercase rounded-lg justify-between px-2 border-primary/20 hover:border-primary hover:bg-primary/5 text-primary"
+                          onClick={() => cart.addItem(product, unit)}
+                          disabled={product.stock < unit.multiplier}
+                        >
+                          <span>{unit.name}</span>
+                          <span>Rp {unit.price.toLocaleString()}</span>
+                        </Button>
+                      ))}
                     </div>
                   </CardHeader>
                   <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
@@ -257,7 +298,7 @@ export default function POSPage() {
           ) : (
             <div className="p-4 space-y-3">
               {cart.items.map((item) => (
-                <div key={item.id} className="group relative bg-muted/20 hover:bg-muted/40 p-3 rounded-2xl transition-all border border-transparent hover:border-muted-foreground/10">
+                <div key={`${item.id}-${item.unit_id}`} className="group relative bg-muted/20 hover:bg-muted/40 p-3 rounded-2xl transition-all border border-transparent hover:border-muted-foreground/10">
                   <div className="flex gap-4">
                     <div className="h-16 w-16 rounded-xl bg-background overflow-hidden flex-shrink-0 shadow-sm border">
                       {item.image_url ? (
@@ -269,14 +310,19 @@ export default function POSPage() {
                     <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                       <div>
                         <p className="text-sm font-black line-clamp-1">{item.name}</p>
-                        <p className="text-xs font-bold text-primary">Rp {item.price.toLocaleString()}</p>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="h-4 px-1 text-[8px] font-black border-primary/30 text-primary">
+                            {item.unit_name || 'PCS'}
+                          </Badge>
+                          <p className="text-xs font-bold text-primary">Rp {item.price.toLocaleString()}</p>
+                        </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <Button 
                           size="icon" 
                           variant="secondary" 
                           className="h-7 w-7 rounded-lg shadow-sm"
-                          onClick={() => cart.updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => cart.updateQuantity(item.id, item.unit_id, item.quantity - 1)}
                         >
                           <IconMinus size={14} />
                         </Button>
@@ -285,7 +331,7 @@ export default function POSPage() {
                           size="icon" 
                           variant="secondary" 
                           className="h-7 w-7 rounded-lg shadow-sm"
-                          onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => cart.updateQuantity(item.id, item.unit_id, item.quantity + 1)}
                         >
                           <IconPlus size={14} />
                         </Button>
@@ -297,7 +343,7 @@ export default function POSPage() {
                         variant="ghost" 
                         size="icon" 
                         className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => cart.removeItem(item.id)}
+                        onClick={() => cart.removeItem(item.id, item.unit_id)}
                       >
                         <IconTrash size={16} />
                       </Button>
@@ -312,8 +358,8 @@ export default function POSPage() {
         <div className="p-6 bg-background border-t space-y-6 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
           <div className="space-y-3">
             <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground px-1">
-              <span>Total Volume</span>
-              <span>{cart.totalItems()} Unit</span>
+              <span>Volume Ekivalen</span>
+              <span>{cart.totalBaseItems()} Item Dasar</span>
             </div>
             
             <div className="flex justify-between items-center bg-blue-500/5 p-4 rounded-2xl border-2 border-blue-500/10">

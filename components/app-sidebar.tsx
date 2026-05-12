@@ -141,14 +141,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {isCustomerPath ? (
+        {role === 'admin' && <NavMain items={adminItems} label="Manajemen Admin" />}
+        {role === 'cashier' && <NavMain items={cashierItems} label="Menu Kasir" />}
+        {role === 'customer' || role === 'pelanggan' ? (
           <NavMain items={customerItems} label="Menu Pelanggan" />
-        ) : (
-          <>
-            {role === 'admin' && <NavMain items={adminItems} label="Manajemen" />}
-            {(role === 'admin' || role === 'cashier') && <NavMain items={cashierItems} label="Transaksi" />}
-          </>
-        )}
+        ) : null}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={{

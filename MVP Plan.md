@@ -97,18 +97,35 @@ Sistem ini mengimplementasikan konsep **Shortest Job First (SJF)** menggunakan s
 - [x] **Quality Assurance:**
     - Uji coba skenario "SJF": Memasukkan pesanan banyak item, lalu memasukkan pesanan 1 item (harus menyalip ke atas).
     - Validasi Keamanan (RLS Policies): Pelanggan tidak bisa mengubah status antrian.
-- [x] **Polishing:** Final UI adjustments & Dokumentasi Kode.
-101: 
-102: ### Milestone 5: Role-Based UI Refactor & Standardization (Minggu 5)
-103: **Fokus: Konsistensi UI & Premium Dashboard Experience**
-104: - [x] **Standardisasi Layout:**
-105:     - Refactor seluruh halaman Admin (`/admin/*`) menggunakan `SidebarProvider` dan `SiteHeader` sesuai style `@app/dashboard`.
-106:     - Pastikan penggunaan `AppSidebar variant="inset"` konsisten di seluruh role Admin dan Kasir.
-107: - [x] **Admin Refactor:**
-108:     - Halaman Manajemen Produk: Integrasi style tabel dan modal yang lebih modern.
-109:     - Halaman Manajemen Kategori & User: Penyesuaian ke layout sidebar baru.
-110: - [x] **Kasir Refactor:**
-111:     - Halaman POS & Queue: Update header dan sidebar agar sesuai dengan standar desain baru.
-112: - [x] **Polishing:**
-113:     - Implementasi Breadcrumbs dinamis di `SiteHeader`.
-114:     - Transisi antar halaman yang lebih smooth.
+- [x] Polishing: Final UI adjustments & Dokumentasi Kode.
+
+### Milestone 5: Role-Based UI Refactor & Standardization (Minggu 5)
+**Fokus: Konsistensi UI & Premium Dashboard Experience**
+- [x] **Standardisasi Layout:**
+    - Refactor seluruh halaman Admin (`/admin/*`) menggunakan `SidebarProvider` dan `SiteHeader` sesuai style `@app/dashboard`.
+    - Pastikan penggunaan `AppSidebar variant="inset"` konsisten di seluruh role Admin dan Kasir.
+- [x] **Admin Refactor:**
+    - Halaman Manajemen Produk: Integrasi style tabel dan modal yang lebih modern.
+    - Halaman Manajemen Kategori & User: Penyesuaian ke layout sidebar baru.
+- [x] **Kasir Refactor:**
+    - Halaman POS & Queue: Update header dan sidebar agar sesuai dengan standar desain baru.
+- [x] **Polishing:**
+    - Implementasi Breadcrumbs dinamis di `SiteHeader`.
+    - Transisi antar halaman yang lebih smooth.
+
+### Milestone 6: Real-time Notification System (Minggu 6)
+**Fokus: Sinkronisasi & Komunikasi Antar Role**
+- [x] **Infrastruktur Notifikasi:**
+    - Pembuatan tabel `notifications` di Supabase dengan dukungan Realtime.
+    - Implementasi Global State Management (Zustand) untuk sinkronisasi notifikasi di seluruh aplikasi.
+    - Pembuatan hook `useNotifications` untuk pemicu pesan melayang (Sonner Toast).
+- [x] **UI & Navigasi Notifikasi:**
+    - Ikon `NotificationBell` premium dengan badge unread dan dropdown list di header.
+    - Halaman `/notifications` untuk manajemen riwayat aktivitas lengkap.
+    - Integrasi navigasi otomatis (link) saat notifikasi diklik.
+- [x] **Otomatisasi Database (Triggers):**
+    - **Trigger Pesanan Baru:** Otomatis mengirim notifikasi ke Kasir saat customer checkout.
+    - **Trigger Stok Rendah:** Otomatis mengirim peringatan ke Admin & Kasir saat stok produk < 10 unit.
+- [x] **Notifikasi Sisi Pelanggan:**
+    - Implementasi notifikasi status pesanan ("Diproses", "Selesai") khusus untuk akun pelanggan.
+    - Notifikasi sambutan otomatis saat pertama kali mendaftar.

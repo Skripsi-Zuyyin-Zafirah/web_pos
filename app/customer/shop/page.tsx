@@ -49,12 +49,17 @@ export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [cart, setCart] = useState<{product: Product, quantity: number}[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
 
   const supabase = createClient()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -269,20 +274,22 @@ export default function ShopPage() {
                 <IconFilter size={18} className="text-[#2FA4AF]" />
                 Kategori:
               </div>
-              <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedCategory}>
-                <ScrollArea className="w-full whitespace-nowrap">
-                  <TabsList className="h-11 inline-flex w-full md:w-auto p-1 bg-slate-100 rounded-lg">
-                    <TabsTrigger value="all" className="px-6 font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#2FA4AF] data-[state=active]:shadow-sm rounded-md transition-all">
-                      Semua Produk
-                    </TabsTrigger>
-                    {categories.map(cat => (
-                      <TabsTrigger key={cat.id} value={cat.id} className="px-6 font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#2FA4AF] data-[state=active]:shadow-sm rounded-md transition-all">
-                        {cat.name}
+              {mounted && (
+                <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedCategory}>
+                  <ScrollArea className="w-full whitespace-nowrap">
+                    <TabsList className="h-11 inline-flex w-full md:w-auto p-1 bg-slate-100 rounded-lg">
+                      <TabsTrigger value="all" className="px-6 font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#2FA4AF] data-[state=active]:shadow-sm rounded-md transition-all">
+                        Semua Produk
                       </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </ScrollArea>
-              </Tabs>
+                      {categories.map(cat => (
+                        <TabsTrigger key={cat.id} value={cat.id} className="px-6 font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#2FA4AF] data-[state=active]:shadow-sm rounded-md transition-all">
+                          {cat.name}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </ScrollArea>
+                </Tabs>
+              )}
             </div>
           </CardContent>
         </Card>

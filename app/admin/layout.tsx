@@ -2,6 +2,7 @@ import * as React from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { BottomBar } from "@/components/bottom-bar"
 
 export default function AdminLayout({
   children,
@@ -20,13 +21,16 @@ export default function AdminLayout({
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Dasbor" }]} />
-        <div className="flex flex-1 flex-col">
+        <main className="flex flex-1 flex-col pb-28 md:pb-0">
+          <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6 bg-muted/20 min-h-full">
               {children}
             </div>
           </div>
         </div>
+      </main>
+        <BottomBar />
       </SidebarInset>
     </SidebarProvider>
   )

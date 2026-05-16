@@ -4,6 +4,7 @@ import React from 'react'
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { BottomBar } from "@/components/bottom-bar"
 
 export default function TransactionsLayout({
   children,
@@ -31,6 +32,7 @@ export default function TransactionsLayout({
             </div>
           </div>
         </main>
+        <BottomBar />
       </SidebarInset>
     </SidebarProvider>
   )

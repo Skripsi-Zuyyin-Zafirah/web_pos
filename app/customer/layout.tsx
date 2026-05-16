@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { BottomBar } from "@/components/bottom-bar"
 
 const navItems = [
   { href: '/customer', icon: IconLayoutDashboard, label: 'Dasbor' },
@@ -65,23 +66,7 @@ export default function CustomerLayout({
           </div>
         </main>
 
-        {/* Bottom Bar - Mobile */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-background border-t flex justify-around items-center h-16 md:hidden z-50">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href
-            return (
-              <Link key={item.href} href={item.href} className="flex-1 flex flex-col items-center justify-center h-full">
-                <div className={cn(
-                  "flex flex-col items-center gap-1 text-[10px] font-medium transition-all",
-                  isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                )}>
-                  <item.icon size={20} stroke={2} />
-                  <span>{item.label}</span>
-                </div>
-              </Link>
-            )
-          })}
-        </nav>
+        <BottomBar />
       </SidebarInset>
     </SidebarProvider>
   )

@@ -2,6 +2,7 @@ import * as React from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { BottomBar } from "@/components/bottom-bar"
 
 export default function CashierLayout({
   children,
@@ -20,9 +21,12 @@ export default function CashierLayout({
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader breadcrumbs={[{ label: "Kasir", href: "/cashier/pos" }, { label: "Antarmuka POS" }]} />
-        <div className="flex flex-1 flex-col overflow-hidden">
-          {children}
-        </div>
+        <main className="flex flex-1 flex-col pb-28 md:pb-0 overflow-hidden">
+          <div className="flex flex-1 flex-col overflow-hidden">
+            {children}
+          </div>
+        </main>
+        <BottomBar />
       </SidebarInset>
     </SidebarProvider>
   )

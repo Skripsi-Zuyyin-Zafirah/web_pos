@@ -102,9 +102,11 @@ export default function RegisterPage() {
             </Button>
             <p className="text-center text-sm text-slate-500">
               Sudah punya akun?{' '}
-              <Link href="/auth/login" className="text-[#2FA4AF] hover:text-[#258a94] hover:underline font-bold">
-                Masuk
-              </Link>
+              <Button variant="link" className="text-[#2FA4AF] hover:text-[#258a94] font-bold p-0" asChild>
+                <Link href="/auth/login">
+                  Masuk
+                </Link>
+              </Button>
             </p>
           </CardFooter>
         </form>

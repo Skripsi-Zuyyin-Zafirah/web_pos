@@ -169,10 +169,15 @@ export default function TransactionsPage() {
                   </TableRow>
                 ) : filteredOrders.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-20 text-muted-foreground">
-                      <div className="flex flex-col items-center gap-2 opacity-50 font-medium">
-                        <IconReceipt size={48} />
-                        <p>Belum ada riwayat transaksi.</p>
+                    <TableCell colSpan={6} className="text-center py-24">
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="h-20 w-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                          <IconReceipt size={40} className="text-slate-400" />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Riwayat Kosong</h3>
+                        <p className="text-sm text-slate-500 max-w-sm mx-auto">
+                          Tidak ditemukan riwayat transaksi yang sesuai dengan pencarian Anda.
+                        </p>
                       </div>
                     </TableCell>
                   </TableRow>

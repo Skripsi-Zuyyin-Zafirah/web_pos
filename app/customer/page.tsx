@@ -259,10 +259,19 @@ export default function CustomerDashboard() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-10 text-slate-500">
-              <IconReceipt size={40} className="mx-auto text-slate-300 mb-2" />
-              <p className="font-medium">Tidak ada pesanan aktif saat ini.</p>
-              <p className="text-xs text-slate-400 mt-1">Mulai belanja untuk membuat pesanan baru.</p>
+            <div className="text-center py-12 px-6 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50 mt-4 mb-4">
+              <div className="h-20 w-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                <IconReceipt size={40} className="text-[#2FA4AF]/50" />
+              </div>
+              <h3 className="font-bold text-lg text-slate-900 mb-2">Belum Ada Pesanan Aktif</h3>
+              <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">
+                Anda belum memiliki pesanan yang sedang diproses. Mulai belanja untuk melihat status pesanan Anda di sini.
+              </p>
+              <Link href="/customer/shop">
+                <Button className="rounded-xl font-bold bg-[#2FA4AF] hover:bg-[#258a94] text-white px-8">
+                  Mulai Belanja
+                </Button>
+              </Link>
             </div>
           )}
         </CardContent>
@@ -288,10 +297,15 @@ export default function CustomerDashboard() {
               <tbody>
                 {recentOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-10 text-center text-slate-500">
-                      <div className="flex flex-col items-center gap-2">
-                        <IconReceipt size={40} className="text-slate-300" />
-                        <p className="font-medium">Tidak ada riwayat pesanan.</p>
+                    <td colSpan={5} className="px-6 py-16 text-center">
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="h-16 w-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                          <IconChecklist size={32} className="text-slate-400" />
+                        </div>
+                        <h4 className="font-bold text-slate-900 mb-1">Riwayat Kosong</h4>
+                        <p className="text-sm text-slate-500 max-w-xs mx-auto">
+                          Semua transaksi yang Anda lakukan akan tampil di sini.
+                        </p>
                       </div>
                     </td>
                   </tr>

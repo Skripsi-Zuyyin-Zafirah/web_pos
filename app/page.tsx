@@ -9,10 +9,12 @@ import {
   IconUsers, 
   IconArrowRight, 
   IconLayoutDashboard,
-  IconClock2
+  IconClock2,
+  IconMenu2
 } from '@tabler/icons-react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 export default function LandingPage() {
   return (
@@ -27,17 +29,42 @@ export default function LandingPage() {
             WHOLESALE POS
           </span>
         </div>
-        <div className="flex items-center gap-4">
-          <Link href="/auth/login">
-            <Button variant="ghost" className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold">
+        <div className="hidden md:flex items-center gap-4">
+          <Button variant="ghost" className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold" asChild>
+            <Link href="/auth/login">
               Masuk
-            </Button>
-          </Link>
-          <Link href="/auth/register">
-            <Button className="font-bold rounded-full px-6 bg-[#2FA4AF] hover:bg-[#258a94] border-none shadow-lg shadow-[#2FA4AF]/30 text-white">
+            </Link>
+          </Button>
+          <Button className="font-bold rounded-xl px-6 bg-[#2FA4AF] hover:bg-[#258a94] border-none shadow-lg shadow-[#2FA4AF]/30 text-white" asChild>
+            <Link href="/auth/register">
               Daftar
-            </Button>
-          </Link>
+            </Link>
+          </Button>
+        </div>
+        
+        {/* Mobile Menu */}
+        <div className="md:hidden flex items-center">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-slate-600">
+                <IconMenu2 className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <div className="flex flex-col gap-4 mt-8">
+                <Button variant="ghost" className="w-full justify-start text-lg font-bold" asChild>
+                  <Link href="/auth/login" className="w-full">
+                    Masuk
+                  </Link>
+                </Button>
+                <Button className="w-full justify-start text-lg font-bold rounded-xl bg-[#2FA4AF] hover:bg-[#258a94] text-white" asChild>
+                  <Link href="/auth/register" className="w-full">
+                    Daftar
+                  </Link>
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
@@ -63,7 +90,7 @@ export default function LandingPage() {
                 <span className="text-xs font-bold uppercase tracking-wider text-[#2FA4AF]">Sistem POS Generasi Baru</span>
               </div>
               
-              <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-none text-slate-900">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-none text-slate-900">
                 Sistem Kasir Pintar untuk Perdagangan Grosir
               </h1>
               
@@ -71,17 +98,17 @@ export default function LandingPage() {
                 Maksimalkan efisiensi dengan antrean prioritas <span className="text-[#2FA4AF] font-bold">Min-Heap</span> otomatis. Pesanan terkecil diproses lebih dulu, menjaga kepuasan pelanggan dan produktivitas staf Anda.
               </p>
               
-              <div className="flex flex-wrap gap-4 pt-2">
-                <Link href="/customer/shop">
-                  <Button size="lg" className="h-14 px-8 text-lg font-bold rounded-full bg-[#2FA4AF] hover:bg-[#258a94] border-none shadow-xl shadow-[#2FA4AF]/20 text-white">
+              <div className="flex flex-wrap gap-4 pt-8 md:pt-10">
+                <Button size="lg" className="h-14 px-8 text-lg font-bold rounded-xl bg-[#2FA4AF] hover:bg-[#258a94] border-none shadow-xl shadow-[#2FA4AF]/20 text-white" asChild>
+                  <Link href="/customer/shop">
                     Lihat Menu <IconArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link href="/queue">
-                  <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-bold rounded-full border-slate-300 hover:bg-slate-100 text-slate-700">
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-bold rounded-xl border-slate-300 hover:bg-slate-100 text-slate-700" asChild>
+                  <Link href="/queue">
                     Pantau Antrean <IconClock2 className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </motion.div>
 

@@ -57,11 +57,11 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-md mb-4">
-        <Link href="/">
-          <Button variant="ghost" className="text-slate-600 hover:text-slate-900 font-bold hover:bg-slate-100 rounded-full">
+        <Button variant="ghost" className="text-slate-600 hover:text-slate-900 font-bold hover:bg-slate-100 rounded-full" asChild>
+          <Link href="/">
             <IconChevronLeft size={18} className="mr-2" /> Kembali ke Beranda
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
       <Card className="w-full max-w-md border-slate-100 shadow-sm overflow-hidden">
         <CardHeader className="space-y-2 border-b border-slate-100 pb-6">

@@ -22,7 +22,7 @@ export default function TransactionsLayout({
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader breadcrumbs={[{ label: 'Transaksi', href: '/transactions' }, { label: 'Riwayat' }]} />
-        <main className="flex flex-1 flex-col pb-20 md:pb-0">
+        <main className="flex flex-1 flex-col pb-28 md:pb-0">
           <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
               <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6 bg-muted/20 min-h-full">

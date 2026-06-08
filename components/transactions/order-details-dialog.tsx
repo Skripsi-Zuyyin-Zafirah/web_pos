@@ -82,14 +82,14 @@ export function OrderDetailsDialog({ orderId, isOpen, onClose }: OrderDetailsDia
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl rounded-3xl border-none shadow-2xl p-0 overflow-hidden">
-        <DialogHeader className="bg-muted/30 p-6 border-b">
+      <DialogContent className="max-w-2xl rounded-3xl border-none dark:border dark:border-slate-800 shadow-2xl bg-white dark:bg-slate-900 p-0 overflow-hidden">
+        <DialogHeader className="bg-muted/30 dark:bg-slate-950/20 p-6 border-b dark:border-slate-800">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <DialogTitle className="text-2xl font-black tracking-tight flex items-center gap-2">
+              <DialogTitle className="text-2xl font-black tracking-tight flex items-center gap-2 text-slate-900 dark:text-white">
                 <IconReceipt className="text-primary" /> Detail Pesanan
               </DialogTitle>
-              <DialogDescription className="font-mono text-[10px] uppercase tracking-widest font-bold opacity-70">
+              <DialogDescription className="font-mono text-[10px] uppercase tracking-widest font-bold opacity-70 dark:text-slate-400">
                 ID: {orderId}
               </DialogDescription>
             </div>
@@ -107,17 +107,17 @@ export function OrderDetailsDialog({ orderId, isOpen, onClose }: OrderDetailsDia
             <>
               {/* Order Info Cards */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl bg-muted/30 space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                <div className="p-4 rounded-2xl bg-muted/30 dark:bg-slate-950/40 space-y-1">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-400 flex items-center gap-1">
                     <IconUser size={12} /> Pelanggan
                   </p>
-                  <p className="font-bold text-sm truncate">{details.customer_name || 'Anonim'}</p>
+                  <p className="font-bold text-sm truncate text-slate-900 dark:text-white">{details.customer_name || 'Anonim'}</p>
                 </div>
-                <div className="p-4 rounded-2xl bg-muted/30 space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                <div className="p-4 rounded-2xl bg-muted/30 dark:bg-slate-950/40 space-y-1">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-400 flex items-center gap-1">
                     <IconCalendar size={12} /> Tanggal
                   </p>
-                  <p className="font-bold text-sm">
+                  <p className="font-bold text-sm text-slate-900 dark:text-white">
                     {new Date(details.created_at).toLocaleDateString('id-ID', {
                       day: '2-digit',
                       month: 'long',
@@ -129,30 +129,30 @@ export function OrderDetailsDialog({ orderId, isOpen, onClose }: OrderDetailsDia
 
               {/* Items Table */}
               <div className="space-y-3">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1 ml-1">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-450 flex items-center gap-1 ml-1">
                   <IconPackage size={12} /> Rincian Item
                 </p>
-                <div className="rounded-2xl border overflow-hidden">
+                <div className="rounded-2xl border dark:border-slate-800 overflow-hidden">
                   <Table>
-                    <TableHeader className="bg-muted/50">
-                      <TableRow>
-                        <TableHead className="font-bold text-xs uppercase">Produk</TableHead>
-                        <TableHead className="text-center font-bold text-xs uppercase">Qty</TableHead>
-                        <TableHead className="text-right font-bold text-xs uppercase">Harga</TableHead>
-                        <TableHead className="text-right font-bold text-xs uppercase">Subtotal</TableHead>
+                    <TableHeader className="bg-muted/50 dark:bg-slate-950/40">
+                      <TableRow className="hover:bg-transparent border-b dark:border-slate-800">
+                        <TableHead className="font-bold text-xs uppercase dark:text-slate-350">Produk</TableHead>
+                        <TableHead className="text-center font-bold text-xs uppercase dark:text-slate-350">Qty</TableHead>
+                        <TableHead className="text-right font-bold text-xs uppercase dark:text-slate-350">Harga</TableHead>
+                        <TableHead className="text-right font-bold text-xs uppercase dark:text-slate-350">Subtotal</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {items.map((item) => (
-                        <TableRow key={item.id}>
-                          <TableCell className="font-bold">{item.products.name}</TableCell>
-                          <TableCell className="text-center font-medium">
-                            {item.quantity} <span className="text-[10px] text-muted-foreground">{item.products.unit}</span>
+                        <TableRow key={item.id} className="border-b dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <TableCell className="font-bold text-slate-900 dark:text-white">{item.products.name}</TableCell>
+                          <TableCell className="text-center font-medium text-slate-900 dark:text-white">
+                            {item.quantity} <span className="text-[10px] text-muted-foreground dark:text-slate-400">{item.products.unit}</span>
                           </TableCell>
-                          <TableCell className="text-right font-medium">
+                          <TableCell className="text-right font-medium text-slate-900 dark:text-white">
                             Rp {Number(item.price).toLocaleString()}
                           </TableCell>
-                          <TableCell className="text-right font-black text-primary">
+                          <TableCell className="text-right font-black text-primary dark:text-[#2FA4AF]">
                             Rp {(item.quantity * item.price).toLocaleString()}
                           </TableCell>
                         </TableRow>
@@ -163,15 +163,15 @@ export function OrderDetailsDialog({ orderId, isOpen, onClose }: OrderDetailsDia
               </div>
 
               {/* Total Footer */}
-              <div className="flex justify-between items-center pt-4 border-t border-dashed">
-                <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Total Bayar</p>
-                <p className="text-3xl font-black tracking-tighter text-primary">
+              <div className="flex justify-between items-center pt-4 border-t dark:border-slate-800 border-dashed">
+                <p className="text-sm font-bold text-muted-foreground dark:text-slate-400 uppercase tracking-widest">Total Bayar</p>
+                <p className="text-3xl font-black tracking-tighter text-primary dark:text-[#2FA4AF]">
                   Rp {Number(details.total_price).toLocaleString()}
                 </p>
               </div>
             </>
           ) : (
-            <div className="text-center py-10 opacity-50">
+            <div className="text-center py-10 opacity-50 dark:text-slate-450">
               <p>Data pesanan tidak ditemukan.</p>
             </div>
           )}

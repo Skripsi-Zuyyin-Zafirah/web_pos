@@ -20,12 +20,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { IconDotsVertical, IconUserCircle, IconLogout, IconLoader2 } from "@tabler/icons-react"
+import { IconDotsVertical, IconUserCircle, IconLogout, IconLoader2, IconSun, IconMoon } from "@tabler/icons-react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { toast } from "sonner"
+import { useTheme } from "next-themes"
 
 export function NavUser({
   user,
@@ -39,6 +40,12 @@ export function NavUser({
   const { isMobile } = useSidebar()
   const supabase = createClient()
   const router = useRouter()
+  const { resolvedTheme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
@@ -113,6 +120,29 @@ export function NavUser({
                   Akun
                 </DropdownMenuItem>
               </Link>
+              {mounted ? (
+                <DropdownMenuItem 
+                  onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                  className="cursor-pointer font-bold"
+                >
+                  {resolvedTheme === "dark" ? (
+                    <>
+                      <IconSun className="text-amber-500" />
+                      Mode Terang
+                    </>
+                  ) : (
+                    <>
+                      <IconMoon className="text-blue-400" />
+                      Mode Gelap
+                    </>
+                  )}
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem className="cursor-pointer font-bold opacity-50" disabled>
+                  <IconSun />
+                  Pilih Tema
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem 

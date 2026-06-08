@@ -15,22 +15,24 @@ import {
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
       {/* Navbar */}
-      <header className="h-20 border-b border-slate-200 flex items-center justify-between px-6 md:px-20 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+      <header className="h-20 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 md:px-20 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="flex items-center gap-2">
           <div className="bg-gradient-to-br from-[#2FA4AF] to-[#258a94] p-2 rounded-xl shadow-lg shadow-[#2FA4AF]/20">
             <IconTrendingUp className="h-6 w-6 text-white" />
           </div>
-          <span className="text-xl font-black tracking-tighter text-slate-900">
+          <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white">
             WHOLESALE POS
           </span>
         </div>
         <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold" asChild>
+          <ThemeToggle />
+          <Button variant="ghost" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 font-bold" asChild>
             <Link href="/auth/login">
               Masuk
             </Link>
@@ -43,14 +45,15 @@ export default function LandingPage() {
         </div>
         
         {/* Mobile Menu */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-slate-600">
+              <Button variant="ghost" size="icon" className="text-slate-600 dark:text-slate-400">
                 <IconMenu2 className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
               <div className="flex flex-col gap-4 mt-8">
                 <Button variant="ghost" className="w-full justify-start text-lg font-bold" asChild>
                   <Link href="/auth/login" className="w-full">
@@ -70,7 +73,7 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative pt-24 pb-32 px-6 md:px-20 overflow-hidden bg-white">
+        <section className="relative pt-24 pb-32 px-6 md:px-20 overflow-hidden bg-white dark:bg-slate-950">
           {/* Background Glows */}
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2FA4AF]/10 blur-[100px] rounded-full -z-10" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#2FA4AF]/5 blur-[100px] rounded-full -z-10" />
@@ -82,7 +85,7 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-full border border-slate-200">
+              <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-900 px-4 py-2 rounded-full border border-slate-200 dark:border-slate-800">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2FA4AF] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2FA4AF]"></span>
@@ -90,11 +93,11 @@ export default function LandingPage() {
                 <span className="text-xs font-bold uppercase tracking-wider text-[#2FA4AF]">Sistem POS Generasi Baru</span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-none text-slate-900">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-none text-slate-900 dark:text-white">
                 Sistem Kasir Pintar untuk Perdagangan Grosir
               </h1>
               
-              <p className="text-lg text-slate-600 font-medium leading-relaxed max-w-xl">
+              <p className="text-lg text-slate-600 dark:text-slate-400 font-medium leading-relaxed max-w-xl">
                 Maksimalkan efisiensi dengan antrean prioritas <span className="text-[#2FA4AF] font-bold">Min-Heap</span> otomatis. Pesanan terkecil diproses lebih dulu, menjaga kepuasan pelanggan dan produktivitas staf Anda.
               </p>
               
@@ -104,7 +107,7 @@ export default function LandingPage() {
                     Lihat Menu <IconArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-bold rounded-xl border-slate-300 hover:bg-slate-100 text-slate-700" asChild>
+                <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-bold rounded-xl border-slate-300 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300" asChild>
                   <Link href="/queue">
                     Pantau Antrean <IconClock2 className="ml-2 h-5 w-5" />
                   </Link>
@@ -119,13 +122,13 @@ export default function LandingPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-[#2FA4AF]/10 to-transparent blur-3xl rounded-3xl" />
-              <div className="relative rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-200/50 overflow-hidden w-full max-w-md lg:max-w-none">
+              <div className="relative rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2 shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden w-full max-w-md lg:max-w-none">
                 <Image 
                   src="/pos_dashboard_light.png" 
                   alt="POS Dashboard Mockup" 
                   width={800} 
                   height={600} 
-                  className="rounded-xl w-full h-auto object-cover"
+                  className="rounded-xl w-full h-auto object-cover dark:brightness-90"
                 />
               </div>
             </motion.div>
@@ -133,11 +136,11 @@ export default function LandingPage() {
         </section>
 
         {/* Section: Cara Kerja (Min-Heap) */}
-        <section className="py-24 px-6 md:px-20 bg-slate-50 border-t border-b border-slate-200 relative">
+        <section className="py-24 px-6 md:px-20 bg-slate-50 dark:bg-slate-900/40 border-t border-b border-slate-200 dark:border-slate-800/80 relative">
           <div className="max-w-5xl mx-auto text-center space-y-4 mb-16">
             <span className="text-[#2FA4AF] font-bold uppercase tracking-wider text-sm">Algoritma Cerdas</span>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900">Bagaimana Min-Heap Membantu Anda?</h2>
-            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 dark:text-white">Bagaimana Min-Heap Membantu Anda?</h2>
+            <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">
               Kami memecahkan masalah antrean panjang akibat transaksi grosir besar dengan algoritma prioritas.
             </p>
           </div>
@@ -163,64 +166,64 @@ export default function LandingPage() {
                 icon: <IconTrendingUp className="h-8 w-8" />
               }
             ].map((item, index) => (
-              <div key={index} className="relative p-8 bg-white rounded-3xl border border-slate-100 shadow-sm group hover:border-[#2FA4AF]/50 transition-all duration-300">
-                <div className="absolute top-4 right-4 text-5xl font-black text-slate-100 group-hover:text-[#2FA4AF]/10 transition-colors">
+              <div key={index} className="relative p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm group hover:border-[#2FA4AF]/50 transition-all duration-300">
+                <div className="absolute top-4 right-4 text-5xl font-black text-slate-100 dark:text-slate-800 group-hover:text-[#2FA4AF]/10 transition-colors">
                   {item.step}
                 </div>
                 <div className="h-14 w-14 rounded-2xl bg-[#2FA4AF]/10 flex items-center justify-center text-[#2FA4AF] mb-6 group-hover:bg-[#2FA4AF] group-hover:text-white transition-all duration-300">
                   {item.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-slate-900">{item.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">{item.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Feature Grid */}
-        <section className="py-24 px-6 md:px-20 max-w-7xl mx-auto bg-white">
+        <section className="py-24 px-6 md:px-20 max-w-7xl mx-auto bg-white dark:bg-slate-950">
           <div className="text-center space-y-4 mb-16">
             <span className="text-[#2FA4AF] font-bold uppercase tracking-wider text-sm">Fitur Unggulan</span>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900">Dirancang untuk Skala Besar</h2>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 dark:text-white">Dirancang untuk Skala Besar</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-slate-100 bg-slate-50 rounded-3xl overflow-hidden group hover:border-[#2FA4AF]/50 transition-all duration-300">
+            <Card className="border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 rounded-3xl overflow-hidden group hover:border-[#2FA4AF]/50 transition-all duration-300">
               <CardContent className="p-10 space-y-4 flex flex-col h-full justify-between">
                 <div>
                   <div className="h-14 w-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform">
                     <IconTrendingUp size={32} />
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Antrean Prioritas</h3>
-                  <p className="text-slate-600 leading-relaxed text-sm">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Antrean Prioritas</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
                     Algoritma kami secara otomatis memprioritaskan pesanan kecil, mengurangi hambatan dari transaksi grosir yang besar.
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-slate-100 bg-slate-50 rounded-3xl overflow-hidden group hover:border-[#2FA4AF]/50 transition-all duration-300">
+            <Card className="border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 rounded-3xl overflow-hidden group hover:border-[#2FA4AF]/50 transition-all duration-300">
               <CardContent className="p-10 space-y-4 flex flex-col h-full justify-between">
                 <div>
                   <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 mb-6 group-hover:scale-110 transition-transform">
                     <IconShoppingCart size={32} />
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Kasir Grosir</h3>
-                  <p className="text-slate-600 leading-relaxed text-sm">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Kasir Grosir</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
                     Manajemen pesanan dalam jumlah besar dengan pelacakan stok real-time dan perhitungan EWP otomatis untuk setiap transaksi.
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-slate-100 bg-slate-50 rounded-3xl overflow-hidden group hover:border-[#2FA4AF]/50 transition-all duration-300">
+            <Card className="border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 rounded-3xl overflow-hidden group hover:border-[#2FA4AF]/50 transition-all duration-300">
               <CardContent className="p-10 space-y-4 flex flex-col h-full justify-between">
                 <div>
                   <div className="h-14 w-14 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 mb-6 group-hover:scale-110 transition-transform">
                     <IconLayoutDashboard size={32} />
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Wawasan Admin</h3>
-                  <p className="text-slate-600 leading-relaxed text-sm">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Wawasan Admin</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
                     Pantau performa bisnis Anda dengan analitik yang menawan, tren penjualan, dan metrik produktivitas staf.
                   </p>
                 </div>
@@ -230,12 +233,12 @@ export default function LandingPage() {
         </section>
 
         {/* Section: Testimoni / Social Proof */}
-        <section className="py-24 px-6 md:px-20 bg-slate-50 border-t border-b border-slate-200">
+        <section className="py-24 px-6 md:px-20 bg-slate-50 dark:bg-slate-900/40 border-t border-b border-slate-200 dark:border-slate-800/80">
           <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-1 space-y-4">
               <span className="text-[#2FA4AF] font-bold uppercase tracking-wider text-sm">Testimoni</span>
-              <h2 className="text-4xl font-black tracking-tighter text-slate-900">Apa Kata Mereka?</h2>
-              <p className="text-slate-600 text-sm">
+              <h2 className="text-4xl font-black tracking-tighter text-slate-900 dark:text-white">Apa Kata Mereka?</h2>
+              <p className="text-slate-600 dark:text-slate-400 text-sm">
                 Dipercaya oleh pemilik bisnis grosir untuk meningkatkan efisiensi harian mereka.
               </p>
             </div>
@@ -253,11 +256,11 @@ export default function LandingPage() {
                   role: "Manager Operasional"
                 }
               ].map((testi, index) => (
-                <div key={index} className="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm space-y-4 flex flex-col justify-between">
-                  <p className="text-slate-600 text-sm leading-relaxed italic">"{testi.quote}"</p>
+                <div key={index} className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-sm space-y-4 flex flex-col justify-between">
+                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed italic">"{testi.quote}"</p>
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm">{testi.author}</h4>
-                    <p className="text-xs text-slate-500">{testi.role}</p>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">{testi.author}</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{testi.role}</p>
                   </div>
                 </div>
               ))}
@@ -266,25 +269,25 @@ export default function LandingPage() {
         </section>
 
         {/* Quick Links / CTA */}
-        <section className="py-24 px-6 md:px-20 relative overflow-hidden bg-white">
+        <section className="py-24 px-6 md:px-20 relative overflow-hidden bg-white dark:bg-slate-950">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#2FA4AF]/5 -z-10" />
           <div className="max-w-4xl mx-auto text-center space-y-12">
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900">
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 dark:text-white">
               Siap untuk mengoptimalkan staf Anda?
             </h2>
             <div className="grid sm:grid-cols-2 gap-6">
               <Link href="/admin">
-                <div className="p-8 bg-white rounded-3xl shadow-lg border border-slate-200 hover:border-[#2FA4AF]/50 transition-all group cursor-pointer">
-                  <IconUsers size={40} className="mx-auto mb-4 text-slate-400 group-hover:text-[#2FA4AF] transition-colors" />
-                  <h4 className="text-xl font-bold text-slate-900">Portal Admin</h4>
-                  <p className="text-sm text-slate-600 mt-2">Kelola produk, pengguna, dan lihat analitik.</p>
+                <div className="p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800/80 hover:border-[#2FA4AF]/50 transition-all group cursor-pointer">
+                  <IconUsers size={40} className="mx-auto mb-4 text-slate-400 dark:text-slate-500 group-hover:text-[#2FA4AF] transition-colors" />
+                  <h4 className="text-xl font-bold text-slate-900 dark:text-white">Portal Admin</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">Kelola produk, pengguna, dan lihat analitik.</p>
                 </div>
               </Link>
               <Link href="/cashier/pos">
-                <div className="p-8 bg-white rounded-3xl shadow-lg border border-slate-200 hover:border-[#2FA4AF]/50 transition-all group cursor-pointer">
-                  <IconShoppingCart size={40} className="mx-auto mb-4 text-slate-400 group-hover:text-[#2FA4AF] transition-colors" />
-                  <h4 className="text-xl font-bold text-slate-900">Antarmuka Kasir</h4>
-                  <p className="text-sm text-slate-600 mt-2">Input transaksi cepat dan manajemen antrean.</p>
+                <div className="p-8 bg-white dark:bg-slate-900 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800/80 hover:border-[#2FA4AF]/50 transition-all group cursor-pointer">
+                  <IconShoppingCart size={40} className="mx-auto mb-4 text-slate-400 dark:text-slate-500 group-hover:text-[#2FA4AF] transition-colors" />
+                  <h4 className="text-xl font-bold text-slate-900 dark:text-white">Antarmuka Kasir</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">Input transaksi cepat dan manajemen antrean.</p>
                 </div>
               </Link>
             </div>
@@ -293,7 +296,7 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-10 border-t border-slate-200 text-center text-slate-500 text-sm font-medium bg-white">
+      <footer className="py-10 border-t border-slate-200 dark:border-slate-800 text-center text-slate-500 dark:text-slate-400 text-sm font-medium bg-white dark:bg-slate-950">
         <p>&copy; 2026 Sistem Kasir Grosir. Dibangun untuk kecepatan dan efisiensi.</p>
       </footer>
     </div>

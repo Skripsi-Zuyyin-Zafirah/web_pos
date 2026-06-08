@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { IconLoader2, IconUserPlus } from '@tabler/icons-react'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('')
@@ -44,18 +45,21 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
-      <Card className="w-full max-w-md border-slate-100 shadow-sm overflow-hidden">
-        <CardHeader className="space-y-2 border-b border-slate-100 pb-6">
-          <CardTitle className="text-3xl font-black tracking-tighter text-slate-900 text-center">Buat Akun</CardTitle>
-          <CardDescription className="text-center text-slate-500 text-sm">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      <Card className="w-full max-w-md border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden bg-white dark:bg-slate-900">
+        <CardHeader className="space-y-2 border-b border-slate-100 dark:border-slate-800 pb-6">
+          <CardTitle className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white text-center">Buat Akun</CardTitle>
+          <CardDescription className="text-center text-slate-500 dark:text-slate-400 text-sm">
             Masukkan detail Anda untuk mendaftar sebagai pelanggan baru
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleRegister}>
           <CardContent className="space-y-4 pt-6">
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-sm font-medium text-slate-700">Nama Lengkap</Label>
+              <Label htmlFor="fullName" className="text-sm font-medium text-slate-700 dark:text-slate-300">Nama Lengkap</Label>
               <Input
                 id="fullName"
                 type="text"
@@ -63,11 +67,11 @@ export default function RegisterPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="bg-white border-slate-200 focus-visible:ring-[#2FA4AF]"
+                className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus-visible:ring-[#2FA4AF]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-slate-700 dark:text-slate-300">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -75,18 +79,18 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-white border-slate-200 focus-visible:ring-[#2FA4AF]"
+                className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus-visible:ring-[#2FA4AF]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium text-slate-700">Kata Sandi</Label>
+              <Label htmlFor="password" className="text-sm font-medium text-slate-700 dark:text-slate-300">Kata Sandi</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-white border-slate-200 focus-visible:ring-[#2FA4AF]"
+                className="bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus-visible:ring-[#2FA4AF]"
               />
             </div>
           </CardContent>
@@ -100,7 +104,7 @@ export default function RegisterPage() {
                 </>
               )}
             </Button>
-            <p className="text-center text-sm text-slate-500">
+            <p className="text-center text-sm text-slate-500 dark:text-slate-400">
               Sudah punya akun?{' '}
               <Button variant="link" className="text-[#2FA4AF] hover:text-[#258a94] font-bold p-0" asChild>
                 <Link href="/auth/login">

@@ -289,14 +289,14 @@ export default function ShopPage() {
 
       <div className="-mt-10 px-4 space-y-8 relative z-20">
         {/* Controls Card - Glassmorphism styled */}
-        <Card className="shadow-xl border-slate-100/50 bg-white/90 backdrop-blur-md">
+        <Card className="shadow-xl border-slate-100/50 dark:border-slate-850 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
           <CardContent className="p-6 space-y-6">
             {/* Search Input */}
             <div className="relative">
               <IconSearch className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
               <Input 
                 placeholder="Cari produk favorit Anda..." 
-                className="pl-12 h-14 text-base bg-slate-50 border-slate-100 focus:border-[#2FA4AF] focus:ring-[#2FA4AF]/10 rounded-xl shadow-inner transition-all"
+                className="pl-12 h-14 text-base bg-slate-50 dark:bg-slate-950 border-slate-100 dark:border-slate-800 text-slate-900 dark:text-white focus:border-[#2FA4AF] focus:ring-[#2FA4AF]/10 rounded-xl shadow-inner transition-all"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -304,19 +304,19 @@ export default function ShopPage() {
             
             {/* Categories Tabs */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="flex items-center gap-2 text-sm font-bold text-slate-700 whitespace-nowrap">
+              <div className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
                 <IconFilter size={18} className="text-[#2FA4AF]" />
                 Kategori:
               </div>
               {mounted && (
                 <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedCategory}>
                   <ScrollArea className="w-full whitespace-nowrap">
-                    <TabsList className="h-11 inline-flex w-full md:w-auto p-1 bg-slate-100 rounded-lg">
-                      <TabsTrigger value="all" className="px-6 font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#2FA4AF] data-[state=active]:shadow-sm rounded-md transition-all">
+                    <TabsList className="h-11 inline-flex w-full md:w-auto p-1 bg-slate-100 dark:bg-slate-950 rounded-lg">
+                      <TabsTrigger value="all" className="px-6 font-medium text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:text-[#2FA4AF] data-[state=active]:shadow-sm rounded-md transition-all">
                         Semua Produk
                       </TabsTrigger>
                       {categories.map(cat => (
-                        <TabsTrigger key={cat.id} value={cat.id} className="px-6 font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#2FA4AF] data-[state=active]:shadow-sm rounded-md transition-all">
+                        <TabsTrigger key={cat.id} value={cat.id} className="px-6 font-medium text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:text-[#2FA4AF] data-[state=active]:shadow-sm rounded-md transition-all">
                           {cat.name}
                         </TabsTrigger>
                       ))}
@@ -332,18 +332,18 @@ export default function ShopPage() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
-              <Card key={i} className="animate-pulse bg-white border-slate-100 h-[380px] rounded-2xl" />
+              <Card key={i} className="animate-pulse bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 h-[380px] rounded-2xl" />
             ))}
           </div>
         ) : filteredProducts.length === 0 ? (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-20 space-y-4 bg-white rounded-2xl border border-slate-100 shadow-sm"
+            className="text-center py-20 space-y-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm"
           >
             <IconSoup className="mx-auto h-16 w-16 text-slate-300" stroke={1.5} />
-            <p className="text-xl text-slate-600 font-bold">Produk tidak ditemukan</p>
-            <p className="text-sm text-slate-400">Coba gunakan kata kunci lain atau pilih kategori yang berbeda.</p>
+            <p className="text-xl text-slate-600 dark:text-slate-300 font-bold">Produk tidak ditemukan</p>
+            <p className="text-sm text-slate-400 dark:text-slate-500">Coba gunakan kata kunci lain atau pilih kategori yang berbeda.</p>
           </motion.div>
         ) : (
           <motion.div 
@@ -355,10 +355,10 @@ export default function ShopPage() {
             {filteredProducts.map((product) => (
               <motion.div key={product.id} variants={itemVariants}>
                 <Card 
-                  className="group overflow-hidden rounded-2xl border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 bg-white flex flex-col h-[400px]"
+                  className="group overflow-hidden rounded-2xl border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-900 flex flex-col h-[400px]"
                 >
                   {/* Image Container */}
-                  <div className="aspect-[4/3] relative overflow-hidden bg-slate-50">
+                  <div className="aspect-[4/3] relative overflow-hidden bg-slate-50 dark:bg-slate-950">
                     {product.image_url ? (
                       <img 
                         src={product.image_url} 
@@ -366,14 +366,14 @@ export default function ShopPage() {
                         className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-slate-300 bg-slate-100">
+                      <div className="flex items-center justify-center h-full text-slate-300 bg-slate-100 dark:bg-slate-950">
                         <IconGlassFull size={48} stroke={1.5} />
                       </div>
                     )}
                     
                     {/* Floating Badges */}
                     <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                      <span className="px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-700 text-xs font-bold rounded-full shadow-sm">
+                      <span className="px-2.5 py-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-slate-700 dark:text-slate-300 text-xs font-bold rounded-full shadow-sm">
                         {categories.find(c => c.id === product.category_id)?.name || 'Umum'}
                       </span>
                       
@@ -384,7 +384,7 @@ export default function ShopPage() {
                       )}
                       
                       {product.stock === 0 && (
-                        <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] flex items-center justify-center rounded-2xl">
+                        <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-[2px] flex items-center justify-center rounded-2xl">
                           <span className="text-rose-600 text-sm font-black uppercase tracking-wider border-2 border-rose-600 px-4 py-1.5 rounded-lg">
                             Habis
                           </span>
@@ -396,35 +396,35 @@ export default function ShopPage() {
                   {/* Content */}
                   <div className="p-5 flex flex-col flex-1 justify-between gap-4">
                     <div className="space-y-2">
-                      <h3 className="text-base font-bold text-slate-900 group-hover:text-[#2FA4AF] transition-colors line-clamp-1">
+                      <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-[#2FA4AF] transition-colors line-clamp-1">
                         {product.name}
                       </h3>
-                      <p className="text-xs text-slate-500 line-clamp-2 min-h-[32px]">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 min-h-[32px]">
                         {product.description || 'Tidak ada deskripsi tersedia untuk produk ini.'}
                       </p>
                     </div>
 
-                    <div className="space-y-3 pt-2 border-t border-slate-100">
+                    <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
                       {/* Price & Unit */}
                       <div className="flex items-baseline gap-1">
                         <span className="text-xl font-black text-[#2FA4AF]">
                           Rp {product.price.toLocaleString('id-ID')}
                         </span>
-                        <span className="text-xs font-medium text-slate-400">
+                        <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
                           / {product.unit || 'pcs'}
                         </span>
                       </div>
 
                       {/* Stock Info */}
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-medium text-slate-500">Stok Tersedia:</span>
+                        <span className="font-medium text-slate-500 dark:text-slate-400">Stok Tersedia:</span>
                         <span className={cn(
                           "font-bold px-2 py-0.5 rounded-full",
                           product.stock === 0 
-                            ? "text-rose-600 bg-rose-50" 
+                            ? "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30" 
                             : product.stock <= 5 
-                              ? "text-amber-600 bg-amber-50" 
-                              : "text-emerald-600 bg-emerald-50"
+                              ? "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30" 
+                              : "text-emerald-600 dark:text-emerald-450 bg-emerald-50 dark:bg-emerald-950/30"
                         )}>
                           {product.stock} {product.unit || 'pcs'}
                         </span>
@@ -436,7 +436,7 @@ export default function ShopPage() {
                         <Button 
                           variant="outline"
                           size="sm"
-                          className="w-full border-dashed border-[#2FA4AF]/30 hover:border-[#2FA4AF] hover:bg-[#2FA4AF]/5 text-xs font-bold rounded-xl h-9"
+                          className="w-full border-dashed border-[#2FA4AF]/30 dark:border-[#2FA4AF]/50 hover:border-[#2FA4AF] hover:bg-[#2FA4AF]/5 dark:hover:bg-[#2FA4AF]/10 text-xs font-bold rounded-xl h-9 text-slate-900 dark:text-slate-350"
                           onClick={() => addToCart(product)}
                           disabled={product.stock === 0}
                         >
@@ -449,7 +449,7 @@ export default function ShopPage() {
                             key={unit.id}
                             variant="outline"
                             size="sm"
-                            className="w-full border-2 border-[#2FA4AF]/20 hover:border-[#2FA4AF] hover:bg-[#2FA4AF]/10 text-xs font-black rounded-xl h-10 text-[#2FA4AF]"
+                            className="w-full border-2 border-[#2FA4AF]/20 dark:border-[#2FA4AF]/40 hover:border-[#2FA4AF] hover:bg-[#2FA4AF]/10 dark:hover:bg-[#2FA4AF]/20 text-xs font-black rounded-xl h-10 text-[#2FA4AF]"
                             onClick={() => addToCart(product, unit)}
                             disabled={product.stock < unit.multiplier}
                           >
@@ -458,7 +458,7 @@ export default function ShopPage() {
                         ))}
 
                         {product.stock === 0 && (
-                          <Button disabled className="w-full bg-slate-100 text-slate-400 font-bold rounded-xl">
+                          <Button disabled className="w-full bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-bold rounded-xl">
                             Stok Habis
                           </Button>
                         )}
@@ -493,13 +493,13 @@ export default function ShopPage() {
 
       {/* Cart Sheet */}
       <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-        <SheetContent side="bottom" className="w-full max-w-lg mx-auto flex flex-col h-[85vh] rounded-t-3xl border-t border-slate-100 shadow-2xl bg-white p-0">
+        <SheetContent side="bottom" className="w-full max-w-lg mx-auto flex flex-col h-[85vh] rounded-t-3xl border-t border-slate-100 dark:border-slate-800 shadow-2xl bg-white dark:bg-slate-900 p-0">
           {/* Handle bar for bottom sheet feeling */}
-          <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-3 flex-shrink-0" />
+          <div className="w-12 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full mx-auto mt-3 flex-shrink-0" />
           
-          <SheetHeader className="border-b border-slate-100 pb-4 px-6 mt-2">
+          <SheetHeader className="border-b border-slate-100 dark:border-slate-800 pb-4 px-6 mt-2">
             <div className="flex items-center justify-between">
-              <SheetTitle className="font-bold text-slate-900 flex items-center gap-2 text-xl">
+              <SheetTitle className="font-bold text-slate-900 dark:text-white flex items-center gap-2 text-xl">
                 <IconShoppingCart size={24} className="text-[#2FA4AF]" />
                  Keranjang Belanja
               </SheetTitle>
@@ -507,47 +507,47 @@ export default function ShopPage() {
                 {totalItemsCount} Unit Pesanan
               </Badge>
             </div>
-            <div className="mt-2 flex items-center justify-between bg-amber-50 p-2 rounded-lg border border-amber-100">
-              <span className="text-[10px] font-bold text-amber-800 uppercase">Estimasi Beban Kerja:</span>
-              <Badge variant="secondary" className="bg-amber-200 text-amber-900 font-black text-[10px]">
+            <div className="mt-2 flex items-center justify-between bg-amber-50 dark:bg-amber-950/20 p-2 rounded-lg border border-amber-100 dark:border-amber-900/30">
+              <span className="text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase">Estimasi Beban Kerja:</span>
+              <Badge variant="secondary" className="bg-amber-200 dark:bg-amber-900/45 text-amber-900 dark:text-amber-300 font-black text-[10px]">
                 {totalBaseItems} Item Dasar ({Math.ceil(estimatedTime / 60)} Menit)
               </Badge>
             </div>
-            <SheetDescription className="text-slate-500 text-xs">
+            <SheetDescription className="text-slate-500 dark:text-slate-450 text-xs">
               Tinjau item Anda sebelum melakukan pemesanan.
             </SheetDescription>
           </SheetHeader>
 
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-slate-50/50">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-slate-50/50 dark:bg-slate-950/30">
             {cart.length === 0 ? (
               <div className="text-center py-20 text-slate-400">
                 <IconShoppingCart size={64} stroke={1} className="mx-auto text-slate-300 mb-4" />
-                <p className="font-bold text-slate-600 text-lg">Keranjang Kosong</p>
-                <p className="text-sm text-slate-400 mt-1 max-w-[200px] mx-auto">Tambahkan beberapa produk lezat untuk memulai.</p>
+                <p className="font-bold text-slate-600 dark:text-slate-300 text-lg">Keranjang Kosong</p>
+                <p className="text-sm text-slate-400 dark:text-slate-500 mt-1 max-w-[200px] mx-auto">Tambahkan beberapa produk lezat untuk memulai.</p>
               </div>
             ) : (
               <AnimatePresence>
                 {cart.map((item) => (
                   <motion.div 
                     key={`${item.product.id}-${item.unit?.id || 'base'}`} 
-                    className="flex gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
+                    className="flex gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     layout
                   >
-                    <div className="h-20 w-20 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100">
+                    <div className="h-20 w-20 bg-slate-50 dark:bg-slate-950 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100 dark:border-slate-800">
                       {item.product.image_url ? (
                         <img src={item.product.image_url} alt={item.product.name} className="h-full w-full object-cover" />
                       ) : (
-                        <div className="flex items-center justify-center h-full text-slate-300">
+                        <div className="flex items-center justify-center h-full text-slate-300 dark:text-slate-700">
                           <IconGlassFull size={28} stroke={1.5} />
                         </div>
                       )}
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
-                        <h4 className="font-bold text-slate-900 text-sm line-clamp-1">{item.product.name}</h4>
+                        <h4 className="font-bold text-slate-900 dark:text-white text-sm line-clamp-1">{item.product.name}</h4>
                         <div className="flex items-center gap-2 mt-0.5">
                           <Badge className="bg-[#2FA4AF]/10 text-[#2FA4AF] hover:bg-[#2FA4AF]/20 border-none text-[10px] h-5">
                             {item.unit?.name || item.product.unit}
@@ -566,20 +566,20 @@ export default function ShopPage() {
                       </div>
                       <div className="flex justify-between items-center mt-2">
                         {/* Quantity Controls */}
-                        <div className="flex items-center gap-1 bg-slate-50 rounded-full border border-slate-100 p-0.5">
+                        <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-950 rounded-full border border-slate-100 dark:border-slate-800 p-0.5">
                           <Button 
                             variant="ghost" 
                              size="icon" 
-                            className="h-7 w-7 rounded-full text-slate-500 hover:text-[#2FA4AF] hover:bg-white transition-colors"
+                            className="h-7 w-7 rounded-full text-slate-500 hover:text-[#2FA4AF] hover:bg-white dark:hover:bg-slate-800 transition-colors"
                             onClick={() => updateQuantity(item.product.id, item.unit?.id, item.quantity - 1)}
                           >
                             <IconMinus size={12} />
                           </Button>
-                          <span className="text-xs font-bold w-6 text-center text-slate-700">{item.quantity}</span>
+                          <span className="text-xs font-bold w-6 text-center text-slate-700 dark:text-slate-300">{item.quantity}</span>
                           <Button 
                             variant="ghost" 
                             size="icon" 
-                            className="h-7 w-7 rounded-full text-slate-500 hover:text-[#2FA4AF] hover:bg-white transition-colors"
+                            className="h-7 w-7 rounded-full text-slate-500 hover:text-[#2FA4AF] hover:bg-white dark:hover:bg-slate-800 transition-colors"
                             onClick={() => updateQuantity(item.product.id, item.unit?.id, item.quantity + 1)}
                           >
                             <IconPlus size={12} />
@@ -590,7 +590,7 @@ export default function ShopPage() {
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-full h-8 w-8 transition-colors"
+                          className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-full h-8 w-8 transition-colors"
                           onClick={() => removeFromCart(item.product.id, item.unit?.id)}
                         >
                           <IconTrash size={16} />
@@ -604,11 +604,11 @@ export default function ShopPage() {
           </div>
 
           {/* Footer Section */}
-          <div className="border-t border-slate-100 p-6 space-y-4 bg-white">
-            <div className="flex justify-between items-center font-bold text-slate-900">
+          <div className="border-t border-slate-100 dark:border-slate-800 p-6 space-y-4 bg-white dark:bg-slate-900">
+            <div className="flex justify-between items-center font-bold text-slate-900 dark:text-white">
               <div className="space-y-0.5">
-                <p className="text-xs text-slate-500 font-medium">Total Pembayaran</p>
-                <p className="text-xs text-slate-400 font-normal">Sudah termasuk PPN jika berlaku</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Total Pembayaran</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 font-normal">Sudah termasuk PPN jika berlaku</p>
               </div>
               <span className="text-[#2FA4AF] text-2xl font-black">Rp {totalPrice.toLocaleString('id-ID')}</span>
             </div>

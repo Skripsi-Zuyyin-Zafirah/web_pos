@@ -10,6 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { NotificationBell } from "@/components/notification-bell"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 interface SiteHeaderProps {
   title?: string
@@ -52,6 +53,7 @@ export function SiteHeader({ title, breadcrumbs }: SiteHeaderProps) {
           </Breadcrumb>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <NotificationBell />
         </div>
       </div>

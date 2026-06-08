@@ -175,8 +175,8 @@ export default function CustomerDashboard() {
     return (
       <div className="space-y-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-10 bg-slate-200 rounded-lg w-1/4"></div>
-          <div className="h-64 bg-slate-100 rounded-xl"></div>
+          <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/4"></div>
+          <div className="h-64 bg-slate-100 dark:bg-slate-800/50 rounded-xl"></div>
         </div>
       </div>
     )
@@ -186,43 +186,43 @@ export default function CustomerDashboard() {
     <div className="space-y-8">
       {/* Welcome Message (Instead of full header) */}
       <div>
-        <p className="text-slate-500 text-sm">Selamat datang kembali, <span className="font-bold text-slate-900">{profile?.full_name || 'Pelanggan'}</span>!</p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">Selamat datang kembali, <span className="font-bold text-slate-900 dark:text-white">{profile?.full_name || 'Pelanggan'}</span>!</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { title: 'Pesanan Aktif', value: stats.activeOrders.toString(), icon: IconClock2, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-          { title: 'Total Belanja', value: stats.totalOrders.toString(), icon: IconChecklist, color: 'text-[#2FA4AF]', bg: 'bg-[#2FA4AF]/10' },
-          { title: 'Estimasi Tunggu', value: stats.waitTime, icon: IconClock2, color: 'text-violet-500', bg: 'bg-violet-500/10' },
+          { title: 'Pesanan Aktif', value: stats.activeOrders.toString(), icon: IconClock2, color: 'text-amber-500', bg: 'bg-amber-500/10 dark:bg-amber-500/20' },
+          { title: 'Total Belanja', value: stats.totalOrders.toString(), icon: IconChecklist, color: 'text-[#2FA4AF]', bg: 'bg-[#2FA4AF]/10 dark:bg-[#2FA4AF]/20' },
+          { title: 'Estimasi Tunggu', value: stats.waitTime, icon: IconClock2, color: 'text-violet-500', bg: 'bg-violet-500/10 dark:bg-violet-500/20' },
         ].map((stat, index) => (
-          <Card key={index} className="border-slate-100 shadow-sm">
+          <Card key={index} className="border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex flex-col gap-2">
               <div className={`h-10 w-10 rounded-xl ${stat.bg} flex items-center justify-center ${stat.color}`}>
                 <stat.icon size={22} />
               </div>
-              <p className="text-xs font-medium text-slate-500 mt-2">{stat.title}</p>
-              <h3 className="text-2xl font-bold text-slate-900">{stat.value}</h3>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-2">{stat.title}</p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</h3>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Active Order Status - Large Widget */}
-      <Card className="border-slate-100 shadow-sm overflow-hidden">
-        <CardHeader className="border-b border-slate-100">
-          <CardTitle className="text-lg font-bold">Status Pesanan Aktif</CardTitle>
+      <Card className="border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden bg-white dark:bg-slate-900">
+        <CardHeader className="border-b border-slate-100 dark:border-slate-800">
+          <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Status Pesanan Aktif</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           {activeOrder ? (
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Queue Circle */}
               <div className="relative h-32 w-32 flex-shrink-0">
-                <div className="absolute inset-0 bg-slate-100 rounded-full" />
+                <div className="absolute inset-0 bg-slate-100 dark:bg-slate-800 rounded-full" />
                 <div className="absolute inset-0 border-4 border-[#2FA4AF] rounded-full border-t-transparent animate-spin-slow" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-3xl font-black text-[#2FA4AF]">#{queuePosition || '-'}</span>
-                  <span className="text-xs font-medium text-slate-500">Antrean</span>
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Antrean</span>
                 </div>
               </div>
 
@@ -230,11 +230,11 @@ export default function CustomerDashboard() {
               <div className="flex-1 space-y-4 w-full">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h4 className="font-bold text-slate-900">Pesanan #{activeOrder.id.slice(0, 8)}...</h4>
-                    <p className="text-xs text-slate-500">{activeOrder.total_items} item • Rp {activeOrder.total_price.toLocaleString('id-ID')}</p>
+                    <h4 className="font-bold text-slate-900 dark:text-white">Pesanan #{activeOrder.id.slice(0, 8)}...</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{activeOrder.total_items} item • Rp {activeOrder.total_price.toLocaleString('id-ID')}</p>
                   </div>
                   <span className={`px-3 py-1 ${
-                    activeOrder.status === 'processing' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'
+                    activeOrder.status === 'processing' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                   } text-xs font-bold rounded-full`}>
                     {activeOrder.status === 'processing' ? 'Sedang Diproses' : 'Menunggu'}
                   </span>
@@ -242,16 +242,16 @@ export default function CustomerDashboard() {
 
                 {/* Progress Bar */}
                 <div className="space-y-1">
-                  <div className="flex justify-between text-xs font-medium">
+                  <div className="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300">
                     <span>Progres</span>
                     <span>{activeOrder.status === 'processing' ? '60%' : '10%'}</span>
                   </div>
-                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div className="h-full bg-[#2FA4AF] rounded-full" style={{ width: activeOrder.status === 'processing' ? '60%' : '10%' }} />
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   {activeOrder.status === 'processing' 
                     ? 'Pesanan Anda sedang diproses oleh staf kami.'
                     : 'Pesanan Anda berada dalam antrean.'}
@@ -259,12 +259,12 @@ export default function CustomerDashboard() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 px-6 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50 mt-4 mb-4">
-              <div className="h-20 w-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+            <div className="text-center py-12 px-6 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/10 mt-4 mb-4">
+              <div className="h-20 w-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
                 <IconReceipt size={40} className="text-[#2FA4AF]/50" />
               </div>
-              <h3 className="font-bold text-lg text-slate-900 mb-2">Belum Ada Pesanan Aktif</h3>
-              <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">Belum Ada Pesanan Aktif</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-sm mx-auto">
                 Anda belum memiliki pesanan yang sedang diproses. Mulai belanja untuk melihat status pesanan Anda di sini.
               </p>
               <Link href="/customer/shop">
@@ -278,14 +278,14 @@ export default function CustomerDashboard() {
       </Card>
 
       {/* Recent Orders Table */}
-      <Card className="border-slate-100 shadow-sm">
-        <CardHeader className="border-b border-slate-100">
-          <CardTitle className="text-lg font-bold">Riwayat Pesanan Terakhir</CardTitle>
+      <Card className="border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
+        <CardHeader className="border-b border-slate-100 dark:border-slate-800">
+          <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Riwayat Pesanan Terakhir</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-slate-500">
-              <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-100">
+            <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
+              <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-850">
                 <tr>
                   <th scope="col" className="px-6 py-4 font-bold">ID Pesanan</th>
                   <th scope="col" className="px-6 py-4 font-bold">Tanggal</th>
@@ -299,30 +299,30 @@ export default function CustomerDashboard() {
                   <tr>
                     <td colSpan={5} className="px-6 py-16 text-center">
                       <div className="flex flex-col items-center justify-center">
-                        <div className="h-16 w-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                          <IconChecklist size={32} className="text-slate-400" />
+                        <div className="h-16 w-16 bg-slate-100 dark:bg-slate-850 rounded-full flex items-center justify-center mb-4">
+                          <IconChecklist size={32} className="text-slate-400 dark:text-slate-500" />
                         </div>
-                        <h4 className="font-bold text-slate-900 mb-1">Riwayat Kosong</h4>
-                        <p className="text-sm text-slate-500 max-w-xs mx-auto">
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-1">Riwayat Kosong</h4>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
                           Semua transaksi yang Anda lakukan akan tampil di sini.
-                        </p>
+                         </p>
                       </div>
                     </td>
                   </tr>
                 ) : (
                   recentOrders.map((order) => (
-                    <tr key={order.id} className="bg-white border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                      <th scope="row" className="px-6 py-4 font-bold text-slate-900 truncate max-w-[150px]">
+                    <tr key={order.id} className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                      <th scope="row" className="px-6 py-4 font-bold text-slate-900 dark:text-white truncate max-w-[150px]">
                         #{order.id.slice(0, 8)}...
                       </th>
                       <td className="px-6 py-4">{new Date(order.created_at).toLocaleDateString('id-ID')}</td>
-                      <td className="px-6 py-4 font-medium text-slate-900">Rp {order.total_price.toLocaleString('id-ID')}</td>
+                      <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">Rp {order.total_price.toLocaleString('id-ID')}</td>
                       <td className="px-6 py-4">
                         <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${
-                          order.status === 'done' ? 'bg-emerald-100 text-emerald-700' :
-                          order.status === 'cancelled' ? 'bg-rose-100 text-rose-700' :
-                          order.status === 'processing' ? 'bg-amber-100 text-amber-700' :
-                          'bg-slate-100 text-slate-700'
+                          order.status === 'done' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' :
+                          order.status === 'cancelled' ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400' :
+                          order.status === 'processing' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' :
+                          'bg-slate-100 dark:bg-slate-850 text-slate-700 dark:text-slate-300'
                         }`}>
                           {order.status === 'done' ? 'Selesai' :
                            order.status === 'cancelled' ? 'Dibatalkan' :
@@ -333,7 +333,7 @@ export default function CustomerDashboard() {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="text-[#2FA4AF] hover:text-[#258a94] hover:bg-[#2FA4AF]/5 font-bold"
+                          className="text-[#2FA4AF] hover:text-[#258a94] hover:bg-[#2FA4AF]/5 dark:hover:bg-[#2FA4AF]/10 font-bold"
                           onClick={() => viewDetail(order)}
                         >
                           Detail
@@ -352,7 +352,7 @@ export default function CustomerDashboard() {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle className="font-bold text-slate-900">Rincian Pesanan</DialogTitle>
+            <DialogTitle className="font-bold text-slate-900 dark:text-white">Rincian Pesanan</DialogTitle>
             <DialogDescription>
               Pesanan #{selectedOrder?.id.slice(0, 8)}... pada {selectedOrder && new Date(selectedOrder.created_at).toLocaleDateString('id-ID')}
             </DialogDescription>
@@ -360,21 +360,21 @@ export default function CustomerDashboard() {
           <div className="mt-4 space-y-4">
             <div className="max-h-[300px] overflow-y-auto space-y-3">
               {orderItems.length === 0 ? (
-                <p className="text-center text-slate-500 text-sm py-4">Memuat rincian...</p>
+                <p className="text-center text-slate-500 dark:text-slate-400 text-sm py-4">Memuat rincian...</p>
               ) : (
                 orderItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center text-sm border-b border-slate-100 pb-2">
+                  <div key={item.id} className="flex justify-between items-center text-sm border-b border-slate-100 dark:border-slate-800 pb-2">
                     <div>
-                      <p className="font-medium text-slate-900">{item.products?.name || 'Produk'}</p>
-                      <p className="text-xs text-slate-500">{item.quantity} x Rp {item.price.toLocaleString('id-ID')}</p>
+                      <p className="font-medium text-slate-900 dark:text-white">{item.products?.name || 'Produk'}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{item.quantity} x Rp {item.price.toLocaleString('id-ID')}</p>
                     </div>
-                    <p className="font-bold text-slate-900">Rp {(item.quantity * item.price).toLocaleString('id-ID')}</p>
+                    <p className="font-bold text-slate-900 dark:text-white">Rp {(item.quantity * item.price).toLocaleString('id-ID')}</p>
                   </div>
                 ))
               )}
             </div>
             
-            <div className="border-t border-slate-200 pt-3 flex justify-between items-center font-bold text-slate-900">
+            <div className="border-t border-slate-200 dark:border-slate-800 pt-3 flex justify-between items-center font-bold text-slate-900 dark:text-white">
               <span>Total</span>
               <span>Rp {selectedOrder?.total_price.toLocaleString('id-ID')}</span>
             </div>

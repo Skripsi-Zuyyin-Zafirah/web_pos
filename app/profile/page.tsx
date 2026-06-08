@@ -125,10 +125,10 @@ export default function ProfilePage() {
     return (
       <div className="space-y-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-10 bg-slate-200 rounded-lg w-1/4"></div>
+          <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/4"></div>
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="h-96 bg-slate-100 rounded-3xl"></div>
-            <div className="h-96 bg-slate-100 rounded-3xl"></div>
+            <div className="h-96 bg-slate-100 dark:bg-slate-800/50 rounded-3xl"></div>
+            <div className="h-96 bg-slate-100 dark:bg-slate-800/50 rounded-3xl"></div>
           </div>
         </div>
       </div>
@@ -138,8 +138,8 @@ export default function ProfilePage() {
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-10">
       <header className="flex flex-col gap-1">
-        <h1 className="text-3xl font-black tracking-tighter uppercase text-slate-900">Pengaturan Akun</h1>
-        <p className="text-slate-500 font-medium">Kelola informasi profil dan keamanan akun Anda.</p>
+        <h1 className="text-3xl font-black tracking-tighter uppercase text-slate-900 dark:text-white">Pengaturan Akun</h1>
+        <p className="text-slate-500 dark:text-slate-400 font-medium">Kelola informasi profil dan keamanan akun Anda.</p>
       </header>
 
       <div className="grid gap-8 lg:grid-cols-3">
@@ -150,16 +150,16 @@ export default function ProfilePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <Card className="border-none shadow-xl shadow-slate-200/50 rounded-3xl overflow-hidden overflow-visible relative">
+            <Card className="border-none shadow-xl shadow-slate-200/50 dark:shadow-none rounded-3xl overflow-hidden overflow-visible relative bg-white dark:bg-slate-900">
               <div className="absolute -top-4 -right-4 h-24 w-24 bg-[#2FA4AF]/5 rounded-full blur-2xl -z-10" />
-              <CardHeader className="border-b border-slate-50 bg-slate-50/30 pb-6">
+              <CardHeader className="border-b border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/10 pb-6">
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-2xl bg-[#2FA4AF]/10 flex items-center justify-center text-[#2FA4AF]">
+                  <div className="h-12 w-12 rounded-2xl bg-[#2FA4AF]/10 dark:bg-[#2FA4AF]/20 flex items-center justify-center text-[#2FA4AF]">
                     <IconUser size={24} />
                   </div>
                   <div>
-                    <CardTitle className="text-xl font-black tracking-tight text-slate-900">Informasi Pribadi</CardTitle>
-                    <CardDescription className="font-medium text-slate-500 text-xs uppercase tracking-wider">Detail profil Anda</CardDescription>
+                    <CardTitle className="text-xl font-black tracking-tight text-slate-900 dark:text-white">Informasi Pribadi</CardTitle>
+                    <CardDescription className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Detail profil Anda</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -167,14 +167,14 @@ export default function ProfilePage() {
                 <div className="grid gap-6 md:grid-cols-2">
                   {/* Full Name */}
                   <div className="space-y-2">
-                    <Label htmlFor="fullName" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Nama Lengkap</Label>
+                    <Label htmlFor="fullName" className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-1">Nama Lengkap</Label>
                     <div className="relative group">
                       <IconUser className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-[#2FA4AF] transition-colors" />
                       <Input
                         id="fullName"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="pl-10 h-12 border-slate-200 rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium"
+                        className="pl-10 h-12 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium"
                         placeholder="Nama lengkap"
                       />
                     </div>
@@ -182,28 +182,28 @@ export default function ProfilePage() {
 
                   {/* Email (Readonly) */}
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Alamat Email</Label>
+                    <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-1">Alamat Email</Label>
                     <div className="relative">
                       <IconMail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                       <Input
                         id="email"
                         value={email}
                         readOnly
-                        className="pl-10 h-12 bg-slate-50 border-slate-200 rounded-xl text-slate-500 cursor-not-allowed font-medium"
+                        className="pl-10 h-12 bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 cursor-not-allowed font-medium"
                       />
                     </div>
                   </div>
 
                   {/* Phone Number */}
                   <div className="space-y-2">
-                    <Label htmlFor="phoneNumber" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Nomor Telepon</Label>
+                    <Label htmlFor="phoneNumber" className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-1">Nomor Telepon</Label>
                     <div className="relative group">
                       <IconPhone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-[#2FA4AF] transition-colors" />
                       <Input
                         id="phoneNumber"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
-                        className="pl-10 h-12 border-slate-200 rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium"
+                        className="pl-10 h-12 bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium"
                         placeholder="0812xxxx"
                       />
                     </div>
@@ -211,14 +211,14 @@ export default function ProfilePage() {
 
                   {/* Role (Readonly) */}
                   <div className="space-y-2">
-                    <Label htmlFor="role" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Peran Akun</Label>
+                    <Label htmlFor="role" className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-1">Peran Akun</Label>
                     <div className="relative">
                       <IconShield className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                       <Input
                         id="role"
                         value={profile?.role || 'Pelanggan'}
                         readOnly
-                        className="pl-10 h-12 bg-slate-50 border-slate-200 rounded-xl text-slate-500 capitalize cursor-not-allowed font-bold"
+                        className="pl-10 h-12 bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 dark:text-slate-400 capitalize cursor-not-allowed font-bold"
                       />
                     </div>
                   </div>
@@ -226,14 +226,14 @@ export default function ProfilePage() {
 
                 {/* Address */}
                 <div className="space-y-2">
-                  <Label htmlFor="address" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Alamat Lengkap</Label>
+                  <Label htmlFor="address" className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-1">Alamat Lengkap</Label>
                   <div className="relative group">
                     <IconMapPin className="absolute left-3 top-4 h-5 w-5 text-slate-400 group-focus-within:text-[#2FA4AF] transition-colors" />
                     <Textarea
                       id="address"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="pl-10 min-h-[100px] border-slate-200 rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium resize-none"
+                      className="pl-10 min-h-[100px] bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl focus:ring-4 focus:ring-[#2FA4AF]/10 focus:border-[#2FA4AF] transition-all font-medium resize-none"
                       placeholder="Masukkan alamat lengkap Anda..."
                     />
                   </div>
@@ -270,7 +270,7 @@ export default function ProfilePage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <Card className="border-none shadow-xl shadow-slate-200/50 rounded-3xl overflow-hidden bg-slate-900 text-white relative">
+            <Card className="border-none shadow-xl shadow-slate-200/50 dark:shadow-none rounded-3xl overflow-hidden bg-slate-900 dark:bg-slate-900/60 border border-transparent dark:border-slate-800 text-white relative">
               <div className="absolute top-0 right-0 h-32 w-32 bg-white/5 rounded-full blur-3xl -z-0" />
               <CardHeader className="border-b border-white/10 pb-6 relative z-10">
                 <div className="flex items-center gap-4">
@@ -318,7 +318,7 @@ export default function ProfilePage() {
                   <Button
                     onClick={handleChangePassword}
                     disabled={passwordUpdating || !newPassword}
-                    className="w-full bg-white hover:bg-slate-100 text-slate-900 font-black h-12 rounded-2xl shadow-xl shadow-black/20 transition-all active:scale-95"
+                    className="w-full bg-white hover:bg-slate-100 dark:bg-slate-100 dark:hover:bg-slate-200 text-slate-900 font-black h-12 rounded-2xl shadow-xl shadow-black/20 transition-all active:scale-95"
                   >
                     {passwordUpdating ? (
                       <span className="flex items-center gap-2">

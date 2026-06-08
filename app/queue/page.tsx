@@ -66,9 +66,9 @@ export default function QueueTrackingPage() {
   }, [orders, myOrderIndex])
 
   return (
-    <div className="min-h-screen bg-muted/20 pb-20">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20">
       {/* Hero Section */}
-      <div className="bg-slate-900 text-white py-16 px-6 relative overflow-hidden shadow-2xl">
+      <div className="bg-slate-900 dark:bg-slate-950 dark:border-b dark:border-slate-800 text-white py-16 px-6 relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 p-8 opacity-10 -rotate-12 translate-x-1/4">
           <IconTrendingUp size={240} />
         </div>
@@ -83,7 +83,7 @@ export default function QueueTrackingPage() {
             <IconSearch className="absolute left-4 top-[calc(1rem+50%)] -translate-y-1/2 h-6 w-6 text-slate-500" />
             <Input 
               placeholder="Masukkan ID Pesanan Anda (contoh: #abc12)" 
-              className="h-16 pl-12 text-lg bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 shadow-2xl rounded-2xl"
+              className="h-16 pl-12 text-lg bg-slate-800 dark:bg-slate-900 border-slate-700 dark:border-slate-800 text-white placeholder:text-slate-550 shadow-2xl rounded-2xl"
               value={searchId}
               onChange={(e) => setSearchId(e.target.value)}
             />
@@ -94,7 +94,7 @@ export default function QueueTrackingPage() {
       <div className="max-w-4xl mx-auto -mt-10 px-6 space-y-10">
         {/* Highlight Section */}
         {myOrderIndex !== -1 && (
-          <Card className="border-none shadow-2xl bg-primary text-primary-foreground rounded-3xl overflow-hidden">
+          <Card className="border-none shadow-2xl bg-[#2FA4AF] text-white rounded-3xl overflow-hidden">
             <CardContent className="p-8">
               <div className="flex flex-col md:flex-row justify-between gap-8">
                 <div className="space-y-4 flex-1">
@@ -102,19 +102,19 @@ export default function QueueTrackingPage() {
                     <div className="bg-white/20 p-2 rounded-lg">
                       <IconMoodSmile className="h-6 w-6" />
                     </div>
-                    <span className="font-bold uppercase tracking-widest text-sm text-primary-foreground/80">Status Pesanan Anda</span>
+                    <span className="font-bold uppercase tracking-widest text-sm text-white/80">Status Pesanan Anda</span>
                   </div>
                   <h2 className="text-5xl font-black tracking-tighter">
                     {myOrderIndex === 0 ? "Berikutnya!" : `${myOrderIndex} Pesanan Menunggu`}
                   </h2>
                   <div className="flex items-center gap-6">
                     <div className="space-y-1">
-                      <p className="text-xs text-primary-foreground/60 font-bold uppercase tracking-wider">Posisi Antrean</p>
+                      <p className="text-xs text-white/60 font-bold uppercase tracking-wider">Posisi Antrean</p>
                       <p className="text-2xl font-black">#{myOrderIndex + 1}</p>
                     </div>
-                    <div className="w-px h-10 bg-primary-foreground/20" />
+                    <div className="w-px h-10 bg-white/20" />
                     <div className="space-y-1">
-                      <p className="text-xs text-primary-foreground/60 font-bold uppercase tracking-wider">Estimasi Tunggu</p>
+                      <p className="text-xs text-white/60 font-bold uppercase tracking-wider">Estimasi Tunggu</p>
                       <p className="text-2xl font-black">{Math.ceil(totalWaitTime / 60)} Menit</p>
                     </div>
                   </div>
@@ -133,25 +133,25 @@ export default function QueueTrackingPage() {
         {/* Full Queue List */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+            <h3 className="text-2xl font-bold tracking-tight flex items-center gap-2 text-slate-900 dark:text-white">
               Papan Antrean Langsung
               <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
             </h3>
-            <Badge variant="outline" className="border-none bg-muted px-3 py-1 font-bold">
+            <Badge variant="outline" className="border-none bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-350 px-3 py-1 font-bold">
               {orders.length} Pesanan Aktif
             </Badge>
           </div>
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 space-y-4">
-              <IconLoader2 className="animate-spin h-10 w-10 text-primary" />
-              <p className="text-muted-foreground font-medium">Kalibrasi antrean prioritas...</p>
+              <IconLoader2 className="animate-spin h-10 w-10 text-[#2FA4AF]" />
+              <p className="text-muted-foreground dark:text-slate-400 font-medium">Kalibrasi antrean prioritas...</p>
             </div>
           ) : orders.length === 0 ? (
-            <div className="text-center py-20 bg-card rounded-3xl border-2 border-dashed flex flex-col items-center">
-              <IconCheck size={64} className="text-muted-foreground opacity-20 mb-4" />
-              <p className="text-xl text-muted-foreground font-bold">Semua selesai!</p>
-              <p className="text-muted-foreground">Tidak ada pesanan dalam daftar tunggu saat ini.</p>
+            <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 flex flex-col items-center">
+              <IconCheck size={64} className="text-muted-foreground dark:text-slate-500 opacity-20 mb-4" />
+              <p className="text-xl text-muted-foreground dark:text-slate-400 font-bold">Semua selesai!</p>
+              <p className="text-muted-foreground dark:text-slate-500">Tidak ada pesanan dalam daftar tunggu saat ini.</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -162,34 +162,34 @@ export default function QueueTrackingPage() {
                     key={order.id} 
                     className={`border-none shadow-sm transition-all duration-300 ${
                       isSelected 
-                        ? "ring-4 ring-primary ring-offset-4 scale-[1.02]" 
+                        ? "ring-4 ring-[#2FA4AF] ring-offset-4 dark:ring-offset-slate-950 scale-[1.02] bg-white dark:bg-slate-900" 
                         : index === 0 
-                        ? "bg-blue-50/50 dark:bg-blue-950/20" 
-                        : "bg-card"
+                        ? "bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100/30 dark:border-blue-950/30" 
+                        : "bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800"
                     } hover:shadow-md rounded-2xl`}
                   >
                     <CardContent className="p-5 flex items-center justify-between">
                       <div className="flex items-center gap-5">
                         <div className={`h-12 w-12 rounded-xl flex items-center justify-center font-black text-lg ${
-                          index === 0 ? "bg-blue-500 text-white shadow-lg shadow-blue-200" : "bg-muted text-muted-foreground"
+                          index === 0 ? "bg-blue-500 text-white shadow-lg shadow-blue-200 dark:shadow-none" : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-350"
                         }`}>
                           {index + 1}
                         </div>
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <span className="font-black text-lg uppercase tracking-tighter">#{order.id.slice(0, 5)}</span>
+                            <span className="font-black text-lg uppercase tracking-tighter text-slate-900 dark:text-white">#{order.id.slice(0, 5)}</span>
                             {order.status === 'processing' && (
                               <Badge variant="default" className="bg-orange-500 hover:bg-orange-600 border-none animate-pulse">
                                 Diproses
                               </Badge>
                             )}
                             {index === 0 && order.status === 'waiting' && (
-                              <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none">
+                              <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-950/50 border-none">
                                 Berikutnya
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm font-bold text-muted-foreground">
+                          <p className="text-sm font-bold text-muted-foreground dark:text-slate-400">
                             {order.customer_name}
                           </p>
                         </div>
@@ -197,7 +197,7 @@ export default function QueueTrackingPage() {
                       
                       <div className="flex items-center gap-8">
                         <div className="hidden sm:flex flex-col items-end">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Waktu Tunggu</p>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-450">Waktu Tunggu</p>
                           <div className="flex items-center gap-1.5">
                             <IconClock size={16} className="text-blue-500" />
                             <span className="text-lg font-black text-slate-700 dark:text-slate-200">
@@ -206,7 +206,7 @@ export default function QueueTrackingPage() {
                           </div>
                         </div>
                         {isSelected && (
-                          <div className="bg-primary text-primary-foreground p-2 rounded-full animate-bounce">
+                          <div className="bg-[#2FA4AF] text-white p-2 rounded-full animate-bounce">
                             <IconArrowBadgeUpFilled size={24} />
                           </div>
                         )}

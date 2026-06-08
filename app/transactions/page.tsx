@@ -108,8 +108,8 @@ export default function TransactionsPage() {
       {/* Header Area */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tighter uppercase">Riwayat Transaksi</h1>
-          <p className="text-muted-foreground font-medium">
+          <h1 className="text-3xl font-black tracking-tighter uppercase text-slate-900 dark:text-white">Riwayat Transaksi</h1>
+          <p className="text-muted-foreground dark:text-slate-400 font-medium">
             {userRole === 'customer' 
               ? 'Daftar semua pesanan yang pernah Anda lakukan.' 
               : 'Pantau semua arus transaksi di toko Anda.'}
@@ -120,7 +120,7 @@ export default function TransactionsPage() {
             <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Cari ID atau Nama..." 
-              className="pl-9 h-10 rounded-xl border-none shadow-sm bg-background"
+              className="pl-9 h-10 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -132,16 +132,16 @@ export default function TransactionsPage() {
       </div>
 
       {/* Main Content */}
-      <Card className="border-none shadow-xl rounded-3xl overflow-hidden bg-background">
-        <CardHeader className="bg-muted/30 pb-6 pt-6 border-b">
+      <Card className="border-none shadow-xl dark:shadow-none rounded-3xl overflow-hidden bg-white dark:bg-slate-900 border dark:border-slate-800">
+        <CardHeader className="bg-muted/30 dark:bg-slate-950/20 pb-6 pt-6 border-b dark:border-slate-800">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <CardTitle className="text-xl font-black tracking-tight">Data Pesanan</CardTitle>
-              <CardDescription className="font-medium text-xs uppercase tracking-widest">
+              <CardTitle className="text-xl font-black tracking-tight text-slate-900 dark:text-white">Data Pesanan</CardTitle>
+              <CardDescription className="font-medium text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">
                 Total {filteredOrders.length} Transaksi
               </CardDescription>
             </div>
-            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="h-10 w-10 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
               <IconReceipt size={20} />
             </div>
           </div>
@@ -149,14 +149,14 @@ export default function TransactionsPage() {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-muted/10">
-                <TableRow className="hover:bg-transparent">
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Transaksi</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pelanggan</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Waktu</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Total</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground"></th>
+              <TableHeader className="bg-muted/10 dark:bg-slate-950/45 border-b dark:border-slate-800">
+                <TableRow className="hover:bg-transparent border-b dark:border-slate-800">
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-400">Transaksi</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-400">Pelanggan</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-400">Waktu</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-400">Status</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-400 text-right">Total</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground dark:text-slate-400"></th>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -164,18 +164,18 @@ export default function TransactionsPage() {
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-20">
                       <IconLoader2 className="mx-auto h-10 w-10 animate-spin text-primary opacity-20" />
-                      <p className="mt-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">Menarik data...</p>
+                      <p className="mt-4 text-xs font-bold text-muted-foreground dark:text-slate-400 uppercase tracking-widest">Menarik data...</p>
                     </TableCell>
                   </TableRow>
                 ) : filteredOrders.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-24">
                       <div className="flex flex-col items-center justify-center">
-                        <div className="h-20 w-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
-                          <IconReceipt size={40} className="text-slate-400" />
+                        <div className="h-20 w-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                          <IconReceipt size={40} className="text-slate-400 dark:text-slate-500" />
                         </div>
-                        <h3 className="text-xl font-bold text-slate-900 mb-2">Riwayat Kosong</h3>
-                        <p className="text-sm text-slate-500 max-w-sm mx-auto">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Riwayat Kosong</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
                           Tidak ditemukan riwayat transaksi yang sesuai dengan pencarian Anda.
                         </p>
                       </div>
@@ -183,43 +183,43 @@ export default function TransactionsPage() {
                   </TableRow>
                 ) : (
                   filteredOrders.map((order) => (
-                    <TableRow key={order.id} className="group hover:bg-muted/30 transition-colors border-b">
+                    <TableRow key={order.id} className="group hover:bg-muted/30 dark:hover:bg-slate-800/40 transition-colors border-b dark:border-slate-800">
                       <TableCell className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-black text-xs">
+                          <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-450 font-black text-xs">
                             <IconReceipt size={18} />
                           </div>
                           <div className="flex flex-col">
-                            <span className="font-bold text-sm leading-tight">#{order.id.slice(0, 8).toUpperCase()}</span>
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase">{order.total_items} Item</span>
+                            <span className="font-bold text-sm leading-tight text-slate-900 dark:text-white">#{order.id.slice(0, 8).toUpperCase()}</span>
+                            <span className="text-[10px] font-bold text-muted-foreground dark:text-slate-400 uppercase">{order.total_items} Item</span>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                          <div className="h-6 w-6 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
                             <IconUser size={12} />
                           </div>
-                          <span className="font-bold text-sm">{order.customer_name || 'Anonim'}</span>
+                          <span className="font-bold text-sm text-slate-900 dark:text-white">{order.customer_name || 'Anonim'}</span>
                         </div>
                       </TableCell>
                       <TableCell className="px-6 py-4">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col text-slate-900 dark:text-white">
                           <span className="font-bold text-sm">{new Date(order.created_at).toLocaleDateString('id-ID')}</span>
-                          <span className="text-[10px] font-bold text-muted-foreground uppercase">{new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                          <span className="text-[10px] font-bold text-muted-foreground dark:text-slate-400 uppercase">{new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                       </TableCell>
                       <TableCell className="px-6 py-4">
                         {getStatusBadge(order.status)}
                       </TableCell>
                       <TableCell className="px-6 py-4 text-right">
-                        <span className="font-black text-primary">Rp {Number(order.total_price).toLocaleString()}</span>
+                        <span className="font-black text-primary dark:text-[#2FA4AF]">Rp {Number(order.total_price).toLocaleString()}</span>
                       </TableCell>
                       <TableCell className="px-6 py-4 text-right">
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="h-8 rounded-lg font-bold text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all group-hover:translate-x-1"
+                          className="h-8 rounded-lg font-bold text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white dark:hover:bg-primary transition-all group-hover:translate-x-1 text-slate-900 dark:text-slate-350"
                           onClick={() => {
                             setSelectedOrderId(order.id)
                             setIsDetailsOpen(true)

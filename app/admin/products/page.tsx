@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -27,7 +27,9 @@ import {
   IconChevronDown,
   IconSelector,
   IconChevronLeft,
-  IconChevronRight
+  IconChevronRight,
+  IconCamera,
+  IconCameraOff
 } from '@tabler/icons-react'
 
 type Product = {
@@ -79,6 +81,90 @@ export default function ProductsPage() {
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+
+  // Camera State & Refs
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const [isCameraActive, setIsCameraActive] = useState(false)
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null)
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null)
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' }
+      })
+      setMediaStream(stream)
+      setIsCameraActive(true)
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+        }
+      }, 100)
+    } catch (err) {
+      console.error(err)
+      toast.error('Gagal mengakses kamera. Pastikan izin kamera telah diberikan.')
+    }
+  }
+
+  const stopCamera = () => {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach((track) => track.stop())
+      setMediaStream(null)
+    }
+    setIsCameraActive(false)
+  }
+
+  const capturePhoto = () => {
+    if (videoRef.current) {
+      const video = videoRef.current
+      const canvas = document.createElement('canvas')
+      canvas.width = video.videoWidth || 640
+      canvas.height = video.videoHeight || 480
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], `captured_${Date.now()}.jpg`, { type: 'image/jpeg' })
+            setFormData((prev) => ({ ...prev, image: file }))
+            toast.success('Foto berhasil diambil!')
+            stopCamera()
+          }
+        }, 'image/jpeg')
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!isDialogOpen) {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach((track) => track.stop())
+        setMediaStream(null)
+      }
+      setIsCameraActive(false)
+    }
+  }, [isDialogOpen])
+
+  useEffect(() => {
+    if (!formData.image) {
+      setImagePreviewUrl(null)
+      return
+    }
+    const objectUrl = URL.createObjectURL(formData.image)
+    setImagePreviewUrl(objectUrl)
+    return () => {
+      URL.revokeObjectURL(objectUrl)
+    }
+  }, [formData.image])
+
+  // Clean up camera on component unmount
+  useEffect(() => {
+    return () => {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach((track) => track.stop())
+      }
+    }
+  }, [mediaStream])
 
   const supabase = createClient()
 
@@ -214,6 +300,7 @@ export default function ProductsPage() {
     })
     setProductUnits([])
     setEditingProduct(null)
+    stopCamera()
   }
 
   // Data Table features: search, filter, and sorting
@@ -397,15 +484,89 @@ export default function ProductsPage() {
                     />
                   </div>
 
-                  <div className="grid gap-2">
+                  <div className="grid gap-3">
                     <Label htmlFor="image" className="font-bold text-slate-700 dark:text-slate-300">Gambar Produk</Label>
-                    <Input
-                      id="image"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
-                      className="cursor-pointer file:rounded-lg file:border-0 file:bg-[#2FA4AF] file:text-white file:font-bold h-auto py-2 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
-                    />
+                    
+                    <div className="space-y-4">
+                      {/* Active Camera Video Stream */}
+                      {isCameraActive && (
+                        <div className="relative rounded-2xl overflow-hidden border-2 border-[#2FA4AF] bg-black aspect-video max-w-full flex items-center justify-center">
+                          <video 
+                            ref={videoRef} 
+                            autoPlay 
+                            playsInline 
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                            <Button 
+                              type="button" 
+                              onClick={capturePhoto} 
+                              className="bg-[#2FA4AF] hover:bg-[#258a94] text-white font-bold rounded-xl h-10 px-4 shadow-lg border-none"
+                            >
+                              <IconCamera className="mr-2 h-4 w-4" /> Ambil Gambar
+                            </Button>
+                            <Button 
+                              type="button" 
+                              onClick={stopCamera} 
+                              variant="destructive"
+                              className="font-bold rounded-xl h-10 px-4 shadow-lg border-none"
+                            >
+                              <IconCameraOff className="mr-2 h-4 w-4" /> Batal
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Photo preview (File Uploaded OR Camera Captured OR Existing Product Image) */}
+                      {!isCameraActive && (imagePreviewUrl || editingProduct?.image_url) && (
+                        <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 aspect-video max-w-full flex items-center justify-center">
+                          <img 
+                            src={imagePreviewUrl || editingProduct?.image_url || ''} 
+                            alt="Preview Produk" 
+                            className="w-full h-full object-cover"
+                          />
+                          <button 
+                            type="button" 
+                            onClick={() => {
+                              if (formData.image) {
+                                setFormData({ ...formData, image: null })
+                              } else if (editingProduct && editingProduct.image_url) {
+                                setEditingProduct({ ...editingProduct, image_url: null })
+                              }
+                            }}
+                            className="absolute top-2 right-2 bg-rose-500 hover:bg-rose-600 text-white rounded-full p-2 shadow-md transition-colors"
+                          >
+                            <IconTrash size={16} />
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Upload from file input & Camera Trigger */}
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <div className="flex-1">
+                          <Input
+                            id="image"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] || null
+                              setFormData({ ...formData, image: file })
+                            }}
+                            className="cursor-pointer file:rounded-lg file:border-0 file:bg-[#2FA4AF] file:text-white file:font-bold h-auto py-2 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white w-full"
+                          />
+                        </div>
+                        {!isCameraActive && (
+                          <Button
+                            type="button"
+                            onClick={startCamera}
+                            variant="outline"
+                            className="h-11 px-4 rounded-xl border-2 font-bold dark:border-slate-700 flex items-center justify-center whitespace-nowrap bg-white dark:bg-slate-900 text-slate-750 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-950"
+                          >
+                            <IconCamera className="mr-2 h-5 w-5 text-[#2FA4AF]" /> Kamera
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Multi-Unit Section */}
